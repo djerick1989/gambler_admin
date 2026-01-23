@@ -1,7 +1,8 @@
 import React, { useState } from 'react';
 import { Outlet, Link, useLocation, useNavigate } from 'react-router-dom';
-import { LayoutDashboard, Languages, UserCheck, LogOut, Menu, X, ChevronRight } from 'lucide-react';
-import { authService } from '../services/api';
+import { LayoutDashboard, Languages, UserCheck, LogOut, Menu, X, ChevronRight, Globe } from 'lucide-react';
+import { useAuth } from '../context/AuthContext';
+import { useTranslation } from 'react-i18next';
 
 const SidebarLink = ({ to, icon: Icon, label, active, onClick }) => (
     <Link
@@ -26,19 +27,30 @@ const SidebarLink = ({ to, icon: Icon, label, active, onClick }) => (
 );
 
 const MainLayout = () => {
+    const { t, i18n } = useTranslation();
     const [sidebarOpen, setSidebarOpen] = useState(true);
+    const { user, logout } = useAuth();
     const location = useLocation();
     const navigate = useNavigate();
 
     const handleLogout = () => {
-        authService.logout();
+        logout();
         navigate('/login');
     };
 
+    const changeLanguage = (lng) => {
+        i18n.changeLanguage(lng);
+    };
+
+    const getRoleName = (role) => {
+        const roles = ['CUSTOMER', 'ADMIN', 'SUPER_ADMIN', 'ADVISOR', 'AUTHOR'];
+        return roles[role] || 'Unknown';
+    };
+
     const menuItems = [
-        { path: '/', label: 'Dashboard', icon: LayoutDashboard },
-        { path: '/language', label: 'Language', icon: Languages },
-        { path: '/onboarding', label: 'OnBoarding', icon: UserCheck },
+        { path: '/', label: t('common.dashboard'), icon: LayoutDashboard },
+        { path: '/language', label: t('common.language'), icon: Languages },
+        { path: '/onboarding', label: t('common.onboarding'), icon: UserCheck },
     ];
 
     return (
@@ -60,7 +72,7 @@ const MainLayout = () => {
                     <div style={{ background: 'var(--primary)', width: '32px', height: '32px', borderRadius: '8px', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
                         <span style={{ fontWeight: 'bold' }}>G</span>
                     </div>
-                    <span style={{ fontSize: '1.25rem', fontWeight: '800' }}>Gambler Admin</span>
+                    <span style={{ fontSize: '1.25rem', fontWeight: '800' }}>{t('sidebar.title')}</span>
                 </div>
 
                 <nav style={{ flex: 1, padding: '1rem' }}>
@@ -93,7 +105,7 @@ const MainLayout = () => {
                         onMouseOut={(e) => e.currentTarget.style.background = 'transparent'}
                     >
                         <LogOut size={20} style={{ marginRight: '0.75rem' }} />
-                        <span>Cerrar Sesión</span>
+                        <span>{t('common.logout')}</span>
                     </button>
                 </div>
             </div>
@@ -113,19 +125,59 @@ const MainLayout = () => {
                     top: 0,
                     zIndex: 40
                 }}>
-                    <button
-                        onClick={() => setSidebarOpen(!sidebarOpen)}
-                        style={{ background: 'transparent', border: 'none', color: 'white', cursor: 'pointer' }}
-                    >
-                        {sidebarOpen ? <X size={24} /> : <Menu size={24} />}
-                    </button>
+                    <div style={{ display: 'flex', alignItems: 'center', gap: '1.5rem' }}>
+                        <button
+                            onClick={() => setSidebarOpen(!sidebarOpen)}
+                            style={{ background: 'transparent', border: 'none', color: 'white', cursor: 'pointer' }}
+                        >
+                            {sidebarOpen ? <X size={24} /> : <Menu size={24} />}
+                        </button>
+
+                        <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', background: 'rgba(255,255,255,0.05)', padding: '0.25rem', borderRadius: '0.5rem' }}>
+                            <button
+                                onClick={() => changeLanguage('en')}
+                                style={{
+                                    padding: '0.25rem 0.75rem',
+                                    borderRadius: '0.25rem',
+                                    background: i18n.language.startsWith('en') ? 'var(--primary)' : 'transparent',
+                                    color: 'white',
+                                    border: 'none',
+                                    cursor: 'pointer',
+                                    fontSize: '0.75rem',
+                                    fontWeight: '600'
+                                }}
+                            >
+                                EN
+                            </button>
+                            <button
+                                onClick={() => changeLanguage('es')}
+                                style={{
+                                    padding: '0.25rem 0.75rem',
+                                    borderRadius: '0.25rem',
+                                    background: i18n.language.startsWith('es') ? 'var(--primary)' : 'transparent',
+                                    color: 'white',
+                                    border: 'none',
+                                    cursor: 'pointer',
+                                    fontSize: '0.75rem',
+                                    fontWeight: '600'
+                                }}
+                            >
+                                ES
+                            </button>
+                        </div>
+                    </div>
 
                     <div style={{ display: 'flex', alignItems: 'center', gap: '1rem' }}>
                         <div style={{ textAlign: 'right' }}>
-                            <div style={{ fontSize: '0.875rem', fontWeight: '600' }}>Admin User</div>
-                            <div style={{ fontSize: '0.75rem', color: 'var(--text-muted)' }}>Super Admin</div>
+                            <div style={{ fontSize: '0.875rem', fontWeight: '600' }}>{user?.name || t('common.admin')}</div>
+                            <div style={{ fontSize: '0.75rem', color: 'var(--text-muted)' }}>{getRoleName(user?.role)}</div>
                         </div>
-                        <div style={{ width: '40px', height: '40px', borderRadius: '50%', background: 'linear-gradient(45deg, var(--primary), var(--accent))' }}></div>
+                        <div style={{
+                            width: '40px',
+                            height: '40px',
+                            borderRadius: '50%',
+                            background: user?.avatar ? `url(${user.avatar}) center/cover` : 'linear-gradient(45deg, var(--primary), var(--accent))'
+                        }}></div>
                     </div>
                 </header>
 

@@ -9,10 +9,19 @@ import Dashboard from './pages/Dashboard';
 import Language from './pages/Language';
 import OnBoarding from './pages/OnBoarding';
 import MainLayout from './layouts/MainLayout';
+import { AuthProvider, useAuth } from './context/AuthContext';
+import { useTranslation } from 'react-i18next';
 
 const ProtectedRoute = ({ children }) => {
+  const { t } = useTranslation();
+  const { user, loading } = useAuth();
   const token = localStorage.getItem('token');
-  if (!token) {
+
+  if (loading) {
+    return <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '100vh', color: 'white' }}>{t('common.loading')}</div>;
+  }
+
+  if (!token && !user) {
     return <Navigate to="/login" replace />;
   }
   return children;
@@ -20,25 +29,27 @@ const ProtectedRoute = ({ children }) => {
 
 function App() {
   return (
-    <Router>
-      <Routes>
-        <Route path="/login" element={<Login />} />
-        <Route path="/signup" element={<Signup />} />
-        <Route path="/verify-email" element={<VerifyEmail />} />
-        <Route path="/recovery-password" element={<RecoveryPassword />} />
-        <Route path="/reset-password" element={<ResetPassword />} />
+    <AuthProvider>
+      <Router>
+        <Routes>
+          <Route path="/login" element={<Login />} />
+          <Route path="/signup" element={<Signup />} />
+          <Route path="/verify-email" element={<VerifyEmail />} />
+          <Route path="/recovery-password" element={<RecoveryPassword />} />
+          <Route path="/reset-password" element={<ResetPassword />} />
 
-        <Route path="/" element={
-          <ProtectedRoute>
-            <MainLayout />
-          </ProtectedRoute>
-        }>
-          <Route index element={<Dashboard />} />
-          <Route path="language" element={<Language />} />
-          <Route path="onboarding" element={<OnBoarding />} />
-        </Route>
-      </Routes>
-    </Router>
+          <Route path="/" element={
+            <ProtectedRoute>
+              <MainLayout />
+            </ProtectedRoute>
+          }>
+            <Route index element={<Dashboard />} />
+            <Route path="language" element={<Language />} />
+            <Route path="onboarding" element={<OnBoarding />} />
+          </Route>
+        </Routes>
+      </Router>
+    </AuthProvider>
   );
 }
 

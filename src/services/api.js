@@ -47,12 +47,19 @@ export const authService = {
     const response = await apiClient.post('/api/Auth/recoveryPassword', data);
     return response.data;
   },
-  resetPassword: async (data) => {
-    const response = await apiClient.post('/api/Auth/resetPassword', data);
+  getUserInformation: async () => {
+    const response = await apiClient.get('/api/Auth/getUserInformation');
     return response.data;
   },
   logout: () => {
     localStorage.removeItem('token');
+  }
+};
+
+export const languageService = {
+  getAll: async () => {
+    const response = await apiClient.get('/api/Language/GetAll');
+    return response.data;
   }
 };
 

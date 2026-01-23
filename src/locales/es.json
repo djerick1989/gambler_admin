@@ -1,0 +1,55 @@
+{
+    "common": {
+        "dashboard": "Panel de Control",
+        "language": "Idioma",
+        "onboarding": "Bienvenida (OnBoarding)",
+        "logout": "Cerrar Sesión",
+        "loading": "Cargando...",
+        "welcome": "Bienvenido",
+        "welcome_back": "Bienvenido de nuevo",
+        "admin": "Administrador"
+    },
+    "login": {
+        "title": "Bienvenido",
+        "subtitle": "Admin Panel de Gambler",
+        "email_user": "Email / Usuario",
+        "email_placeholder": "Ingresa tu correo o usuario",
+        "password": "Contraseña",
+        "password_placeholder": "••••••••",
+        "button": "Iniciar Sesión",
+        "button_loading": "Iniciando...",
+        "forgot_password": "¿Olvidaste tu contraseña?",
+        "no_account": "¿No tienes cuenta?",
+        "signup": "Regístrate",
+        "error_default": "Error al iniciar sesión"
+    },
+    "dashboard": {
+        "overview": "Vista General del Dashboard",
+        "welcome_message": "Bienvenido de nuevo, {{name}}.",
+        "stats": {
+            "total_users": "Usuarios Totales",
+            "revenue": "Ingresos",
+            "active_sessions": "Sesiones Activas",
+            "conversion_rate": "Tasa de Conversión",
+            "vs_last_month": "vs mes pasado"
+        },
+        "charts_placeholder": "Gráficos y Estadísticas Avanzadas (Placeholder)"
+    },
+    "sidebar": {
+        "title": "Gambler Admin"
+    },
+    "language_mgmt": {
+        "title": "Gestión de Idiomas",
+        "subtitle": "Configura los idiomas habilitados en la plataforma.",
+        "table": {
+            "language": "Idioma",
+            "code": "Código",
+            "status": "Estado",
+            "actions": "Acciones"
+        },
+        "status": {
+            "active": "Activo",
+            "inactive": "Inactivo"
+        }
+    }
+}

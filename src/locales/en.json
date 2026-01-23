@@ -1,0 +1,55 @@
+{
+    "common": {
+        "dashboard": "Dashboard",
+        "language": "Language",
+        "onboarding": "OnBoarding",
+        "logout": "Logout",
+        "loading": "Loading...",
+        "welcome": "Welcome",
+        "welcome_back": "Welcome back",
+        "admin": "Administrator"
+    },
+    "login": {
+        "title": "Welcome",
+        "subtitle": "Gambler Admin Panel",
+        "email_user": "Email / Username",
+        "email_placeholder": "Enter your email or username",
+        "password": "Password",
+        "password_placeholder": "••••••••",
+        "button": "Sign In",
+        "button_loading": "Signing In...",
+        "forgot_password": "Forgot your password?",
+        "no_account": "Don't have an account?",
+        "signup": "Sign Up",
+        "error_default": "Error signing in"
+    },
+    "dashboard": {
+        "overview": "Dashboard Overview",
+        "welcome_message": "Welcome back, {{name}}.",
+        "stats": {
+            "total_users": "Total Users",
+            "revenue": "Revenue",
+            "active_sessions": "Active Sessions",
+            "conversion_rate": "Conversion Rate",
+            "vs_last_month": "vs last month"
+        },
+        "charts_placeholder": "Advanced Charts and Statistics (Placeholder)"
+    },
+    "sidebar": {
+        "title": "Gambler Admin"
+    },
+    "language_mgmt": {
+        "title": "Language Management",
+        "subtitle": "Configure enabled languages on the platform.",
+        "table": {
+            "language": "Language",
+            "code": "Code",
+            "status": "Status",
+            "actions": "Actions"
+        },
+        "status": {
+            "active": "Active",
+            "inactive": "Inactive"
+        }
+    }
+}
