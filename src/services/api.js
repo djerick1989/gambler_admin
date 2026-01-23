@@ -63,4 +63,42 @@ export const languageService = {
   }
 };
 
+export const mediaService = {
+  upload: async (file) => {
+    const formData = new FormData();
+    formData.append('file', file);
+    const response = await apiClient.post('/api/Media/upload', formData, {
+      headers: {
+        'Content-Type': 'multipart/form-data',
+      },
+    });
+    return response.data;
+  }
+};
+
+export const onboardingService = {
+  getAllByLanguage: async (languageId, page = 1, pageSize = 10) => {
+    const response = await apiClient.get(`/api/OnBoardingConfig/GetAllByLanguageId`, {
+      params: { languageId, page, pageSize }
+    });
+    return response.data;
+  },
+  getById: async (id) => {
+    const response = await apiClient.get(`/api/OnBoardingConfig/getOnBoardingConfigById/${id}`);
+    return response.data;
+  },
+  create: async (data) => {
+    const response = await apiClient.post('/api/OnBoardingConfig/createOnBoardingConfig', data);
+    return response.data;
+  },
+  update: async (data) => {
+    const response = await apiClient.put('/api/OnBoardingConfig/updateOnBoardingConfig', data);
+    return response.data;
+  },
+  delete: async (id) => {
+    const response = await apiClient.delete(`/api/OnBoardingConfig/deleteOnBoardingConfig/${id}`);
+    return response.data;
+  }
+};
+
 export default apiClient;
