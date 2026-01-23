@@ -1,0 +1,86 @@
+import React, { useState } from 'react';
+import { useNavigate, Link } from 'react-router-dom';
+import { authService } from '../services/api';
+import { LogIn, Mail, Lock, User } from 'lucide-react';
+
+const Login = () => {
+    const [formData, setFormData] = useState({ login: '', password: '', loginType: 0 });
+    const [error, setError] = useState('');
+    const [loading, setLoading] = useState(false);
+    const navigate = useNavigate();
+
+    const handleSubmit = async (e) => {
+        e.preventDefault();
+        setError('');
+        setLoading(true);
+        try {
+            await authService.signin(formData);
+            navigate('/');
+        } catch (err) {
+            setError(err.response?.data?.message || 'Error al iniciar sesión');
+        } finally {
+            setLoading(false);
+        }
+    };
+
+    return (
+        <div className="login-container" style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', minHeight: '100vh', padding: '1rem' }}>
+            <div className="glass-card animate-fade-in" style={{ width: '100%', maxWidth: '400px', padding: '2.5rem' }}>
+                <div style={{ textAlign: 'center', marginBottom: '2rem' }}>
+                    <div style={{ background: 'var(--primary)', width: '60px', height: '60px', borderRadius: '12px', display: 'flex', alignItems: 'center', justifyContent: 'center', margin: '0 auto 1.5rem' }}>
+                        <LogIn size={32} color="white" />
+                    </div>
+                    <h1 style={{ fontSize: '1.875rem', fontWeight: '800', marginBottom: '0.5rem' }}>Bienvenido</h1>
+                    <p style={{ color: 'var(--text-muted)' }}>Admin Panel de Gambler</p>
+                </div>
+
+                {error && <div style={{ background: 'rgba(239, 68, 68, 0.1)', border: '1px solid var(--danger)', color: 'var(--danger)', padding: '0.75rem', borderRadius: '0.5rem', marginBottom: '1.5rem', fontSize: '0.875rem' }}>{error}</div>}
+
+                <form onSubmit={handleSubmit}>
+                    <div className="input-group">
+                        <label>Email / Usuario</label>
+                        <div style={{ position: 'relative' }}>
+                            <Mail size={18} style={{ position: 'absolute', left: '12px', top: '50%', transform: 'translateY(-50%)', color: 'var(--text-muted)' }} />
+                            <input
+                                type="text"
+                                placeholder="Ingresa tu correo o usuario"
+                                style={{ paddingLeft: '2.5rem' }}
+                                value={formData.login}
+                                onChange={(e) => setFormData({ ...formData, login: e.target.value })}
+                                required
+                            />
+                        </div>
+                    </div>
+
+                    <div className="input-group">
+                        <label>Contraseña</label>
+                        <div style={{ position: 'relative' }}>
+                            <Lock size={18} style={{ position: 'absolute', left: '12px', top: '50%', transform: 'translateY(-50%)', color: 'var(--text-muted)' }} />
+                            <input
+                                type="password"
+                                placeholder="••••••••"
+                                style={{ paddingLeft: '2.5rem' }}
+                                value={formData.password}
+                                onChange={(e) => setFormData({ ...formData, password: e.target.value })}
+                                required
+                            />
+                        </div>
+                    </div>
+
+                    <button type="submit" className="btn btn-primary" style={{ width: '100%', marginTop: '1rem' }} disabled={loading}>
+                        {loading ? 'Iniciando...' : 'Iniciar Sesión'}
+                    </button>
+                </form>
+
+                <div style={{ marginTop: '2rem', textAlign: 'center', fontSize: '0.875rem', color: 'var(--text-muted)' }}>
+                    <Link to="/recovery-password" style={{ color: 'var(--primary)', textDecoration: 'none' }}>¿Olvidaste tu contraseña?</Link>
+                    <div style={{ marginTop: '1rem' }}>
+                        ¿No tienes cuenta? <Link to="/signup" style={{ color: 'var(--primary)', textDecoration: 'none', fontWeight: '600' }}>Regístrate</Link>
+                    </div>
+                </div>
+            </div>
+        </div>
+    );
+};
+
+export default Login;
