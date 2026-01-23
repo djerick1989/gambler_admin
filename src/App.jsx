@@ -8,6 +8,10 @@ import ResetPassword from './pages/ResetPassword';
 import Dashboard from './pages/Dashboard';
 import Language from './pages/Language';
 import OnBoarding from './pages/OnBoarding';
+import OnBoardingForm from './pages/OnBoardingForm';
+import Namespaces from './pages/I18n/Namespaces';
+import Keys from './pages/I18n/Keys';
+import KeyForm from './pages/I18n/KeyForm';
 import MainLayout from './layouts/MainLayout';
 import { AuthProvider, useAuth } from './context/AuthContext';
 import { useTranslation } from 'react-i18next';
@@ -46,6 +50,13 @@ function App() {
             <Route index element={<Dashboard />} />
             <Route path="language" element={<Language />} />
             <Route path="onboarding" element={<OnBoarding />} />
+            <Route path="onboarding/new" element={<OnBoardingForm />} />
+            <Route path="onboarding/edit/:id" element={<OnBoardingForm />} />
+
+            <Route path="i18n" element={<Namespaces />} />
+            <Route path="i18n/namespace/:id" element={<Keys />} />
+            <Route path="i18n/namespace/:namespaceId/key/new" element={<KeyForm />} />
+            <Route path="i18n/namespace/:namespaceId/key/edit/:id" element={<KeyForm />} />
           </Route>
         </Routes>
       </Router>

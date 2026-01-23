@@ -101,4 +101,63 @@ export const onboardingService = {
   }
 };
 
+export const i18nService = {
+  // Namespace operations
+  createNamespace: async (data) => {
+    const response = await apiClient.post('/api/I18n/createNamespace', data);
+    return response.data;
+  },
+  updateNamespace: async (data) => {
+    const response = await apiClient.put('/api/I18n/namespaceUpdate', data);
+    return response.data;
+  },
+  deleteNamespace: async (id) => {
+    const response = await apiClient.delete(`/api/I18n/namespaceDelete/${id}`);
+    return response.data;
+  },
+  getNamespaceById: async (id) => {
+    const response = await apiClient.get(`/api/I18n/getNamespaceById/${id}`);
+    return response.data;
+  },
+  getAllNamespaces: async (page = 1, pageSize = 10) => {
+    const response = await apiClient.get('/api/I18n/getAllNamespaces', {
+      params: { page, pageSize }
+    });
+    return response.data;
+  },
+
+  // Key operations
+  createKey: async (data) => {
+    const response = await apiClient.post('/api/I18n/keyCreate', data);
+    return response.data;
+  },
+  updateKey: async (data) => {
+    const response = await apiClient.put('/api/I18n/keyUpdate', data);
+    return response.data;
+  },
+  deleteKey: async (id) => {
+    const response = await apiClient.delete(`/api/I18n/keyDelete/${id}`);
+    return response.data;
+  },
+  getKeyById: async (id, languageId = null) => {
+    const headers = languageId ? { languageId } : {};
+    const response = await apiClient.get(`/api/I18n/GetKeyById/${id}`, { headers });
+    return response.data;
+  },
+  getKeysByNamespaceId: async (namespaceId, page = 1, pageSize = 200, languageId = null) => {
+    const headers = languageId ? { languageId } : {};
+    const response = await apiClient.get('/api/I18n/getKeysByNamespaceId', {
+      params: { namespaceId, page, pageSize },
+      headers
+    });
+    return response.data;
+  },
+
+  // Translation operations
+  updateTranslation: async (data) => {
+    const response = await apiClient.put('/api/I18n/translationUpdate', data);
+    return response.data;
+  }
+};
+
 export default apiClient;

@@ -9,7 +9,8 @@
         "welcome_back": "Bienvenido de nuevo",
         "admin": "Administrador",
         "page_x_of_y": "Página {{current}} de {{total}}",
-        "rows_per_page": "Registros por página:"
+        "rows_per_page": "Registros por página:",
+        "i18n": "Internacionalización"
     },
     "login": {
         "title": "Bienvenido",
@@ -79,5 +80,29 @@
             "actions": "Acciones"
         },
         "empty": "No hay pasos de onboarding para este idioma."
+    },
+    "i18n": {
+        "namespaces_title": "Gestión de Namespaces",
+        "namespaces_subtitle": "Administra los espacios de nombres para las traducciones.",
+        "keys_title": "Gestión de Keys",
+        "keys_subtitle": "Administra las claves y sus traducciones para el namespace: {{name}}",
+        "add_namespace": "Nuevo Namespace",
+        "edit_namespace": "Editar Namespace",
+        "add_key": "Nueva Key",
+        "edit_key": "Editar Key",
+        "table": {
+            "name": "Nombre",
+            "description": "Descripción",
+            "key": "Key",
+            "translations": "Traducciones",
+            "actions": "Acciones"
+        },
+        "form": {
+            "name": "Nombre",
+            "description": "Descripción",
+            "key": "Key (Clave)",
+            "value": "Valor de la traducción",
+            "language": "Idioma inicial"
+        }
     }
 }
