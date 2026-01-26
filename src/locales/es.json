@@ -10,7 +10,8 @@
         "admin": "Administrador",
         "page_x_of_y": "Página {{current}} de {{total}}",
         "rows_per_page": "Registros por página:",
-        "i18n": "Internacionalización"
+        "i18n": "Internacionalización",
+        "news": "Noticias"
     },
     "login": {
         "title": "Bienvenido",
@@ -104,5 +105,30 @@
             "value": "Valor de la traducción",
             "language": "Idioma inicial"
         }
+    },
+    "news_mgmt": {
+        "title": "Gestión de Noticias",
+        "subtitle": "Administra las noticias y artículos de la plataforma.",
+        "add_new": "Nueva Noticia",
+        "edit": "Editar Noticia",
+        "delete": "Eliminar Noticia",
+        "delete_confirm": "¿Estás seguro de que deseas eliminar esta noticia?",
+        "form": {
+            "title": "Título",
+            "title_placeholder": "Ingresa el título de la noticia...",
+            "thumbnail": "Imagen de Portada",
+            "content": "Contenido",
+            "media_type": "Tipo de Media",
+            "save": "Guardar Noticia",
+            "cancel": "Cancelar"
+        },
+        "table": {
+            "id": "ID",
+            "title": "Título",
+            "created": "Fecha de Creación",
+            "actions": "Acciones"
+        },
+        "empty": "No se encontraron noticias.",
+        "upload_image": "Subir imagen a la noticia"
     }
 }

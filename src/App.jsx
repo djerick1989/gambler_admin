@@ -12,6 +12,8 @@ import OnBoardingForm from './pages/OnBoardingForm';
 import Namespaces from './pages/I18n/Namespaces';
 import Keys from './pages/I18n/Keys';
 import KeyForm from './pages/I18n/KeyForm';
+import NewsList from './pages/NewsList';
+import NewsForm from './pages/NewsForm';
 import MainLayout from './layouts/MainLayout';
 import { AuthProvider, useAuth } from './context/AuthContext';
 import { useTranslation } from 'react-i18next';
@@ -57,6 +59,10 @@ function App() {
             <Route path="i18n/namespace/:id" element={<Keys />} />
             <Route path="i18n/namespace/:namespaceId/key/new" element={<KeyForm />} />
             <Route path="i18n/namespace/:namespaceId/key/edit/:id" element={<KeyForm />} />
+
+            <Route path="news" element={<NewsList />} />
+            <Route path="news/new" element={<NewsForm />} />
+            <Route path="news/edit/:id" element={<NewsForm />} />
           </Route>
         </Routes>
       </Router>

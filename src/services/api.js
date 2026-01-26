@@ -160,4 +160,32 @@ export const i18nService = {
   }
 };
 
+export const newsService = {
+  getAllNews: async (page = 1, pageSize = 10, languageId = null) => {
+    const headers = languageId ? { languageId } : {};
+    const response = await apiClient.get('/api/News/getAllNews', {
+      params: { page, pageSize },
+      headers
+    });
+    return response.data;
+  },
+  getNewsById: async (id, languageId = null) => {
+    const headers = languageId ? { languageId } : {};
+    const response = await apiClient.get(`/api/News/getNewsById/${id}`, { headers });
+    return response.data;
+  },
+  createNews: async (data) => {
+    const response = await apiClient.post('/api/News/createNews', data);
+    return response.data;
+  },
+  updateNews: async (data) => {
+    const response = await apiClient.put('/api/News/updateNews', data);
+    return response.data;
+  },
+  deleteNews: async (id) => {
+    const response = await apiClient.delete(`/api/News/deleteNews/${id}`);
+    return response.data;
+  }
+};
+
 export default apiClient;
