@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { Outlet, Link, useLocation, useNavigate } from 'react-router-dom';
-import { LayoutDashboard, Languages, UserCheck, LogOut, Menu, X, ChevronRight, Globe, Newspaper } from 'lucide-react';
+import { LayoutDashboard, Languages, UserCheck, LogOut, Menu, X, ChevronRight, Globe, Newspaper, MessageSquare } from 'lucide-react';
 import { useAuth } from '../context/AuthContext';
 import { useTranslation } from 'react-i18next';
 
@@ -53,6 +53,7 @@ const MainLayout = () => {
         { path: '/onboarding', label: t('common.onboarding'), icon: UserCheck },
         { path: '/i18n', label: t('common.i18n'), icon: Globe },
         { path: '/news', label: t('common.news'), icon: Newspaper },
+        { path: '/posts', label: t('common.posts') || 'Posts', icon: MessageSquare },
         { path: '/gamblers', label: t('gambler_mgmt.title'), icon: UserCheck },
     ];
 
@@ -172,7 +173,7 @@ const MainLayout = () => {
 
                     <div style={{ display: 'flex', alignItems: 'center', gap: '1rem' }}>
                         <div style={{ textAlign: 'right' }}>
-                            <div style={{ fontSize: '0.875rem', fontWeight: '600' }}>{user?.name || t('common.admin')}</div>
+                            <div style={{ fontSize: '0.875rem', fontWeight: '600' }}>{user?.nickName || user?.name || t('common.admin')}</div>
                             <div style={{ fontSize: '0.75rem', color: 'var(--text-muted)' }}>{getRoleName(user?.role)}</div>
                         </div>
                         <div style={{

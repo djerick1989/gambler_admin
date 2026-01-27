@@ -12,10 +12,36 @@
         "rows_per_page": "Registros por página:",
         "i18n": "Internacionalización",
         "news": "Noticias",
+        "add": "Añadir",
         "search": "Buscar...",
         "actions": "Acciones",
         "date": "Fecha",
+        "posts": "Posts",
+        "status": "Estado",
+        "update": "Actualizar",
+        "publish": "Publicar",
+        "cancel": "Cancelar",
+        "edit": "Editar",
+        "delete": "Eliminar",
+        "see_more": "Ver más",
+        "see_less": "Ver menos",
+        "load_more": "Cargar más",
+        "load_more_comments": "Cargar más comentarios",
         "delete_confirm": "¿Estás seguro de que deseas eliminar este elemento?"
+    },
+    "posts": {
+        "title": "Publicaciones de la Comunidad",
+        "subtitle": "Gestiona e interactúa con el contenido de la comunidad",
+        "create": "Crear Post",
+        "empty": "No hay publicaciones",
+        "edit": "Editar Post",
+        "add_new": "Nueva Publicación",
+        "form_subtitle": "Crea contenido atractivo para la comunidad",
+        "write_comment": "Escribe un comentario...",
+        "form": {
+            "content": "Contenido",
+            "media": "Galería de Medios"
+        }
     },
     "login": {
         "title": "Bienvenido",

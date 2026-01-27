@@ -29,7 +29,7 @@ const Dashboard = () => {
         <div>
             <div style={{ marginBottom: '2rem' }}>
                 <h1 style={{ fontSize: '1.875rem', fontWeight: '800' }}>{t('dashboard.overview')}</h1>
-                <p style={{ color: 'var(--text-muted)' }}>{t('dashboard.welcome_message', { name: user?.name || t('common.admin') })}</p>
+                <p style={{ color: 'var(--text-muted)' }}>{t('dashboard.welcome_message', { name: user?.nickName || user?.name || t('common.admin') })}</p>
             </div>
 
             <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(240px, 1fr))', gap: '1.5rem', marginBottom: '2rem' }}>

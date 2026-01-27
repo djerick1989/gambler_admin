@@ -1,0 +1,172 @@
+import React, { useState, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
+import { Plus, Loader2, MessageSquare, Search, AlertCircle } from 'lucide-react';
+import { postService } from '../services/api';
+import { useAuth } from '../context/AuthContext';
+import PostCard from '../components/PostCard';
+import { useTranslation } from 'react-i18next';
+
+const LANGUAGE_IDS = {
+    en: '11e8ba3a-b290-4a2c-9dad-0f40e457f72c',
+    es: '6892a523-0dc1-4e3b-9ddd-c9a558c7920b'
+};
+
+const PostList = () => {
+    const { t, i18n } = useTranslation();
+    const navigate = useNavigate();
+    const { user } = useAuth();
+
+    const [posts, setPosts] = useState([]);
+    const [loading, setLoading] = useState(true);
+    const [loadingMore, setLoadingMore] = useState(false);
+    const [error, setError] = useState(null);
+    const [pagination, setPagination] = useState({
+        page: 1,
+        pageSize: 10,
+        totalRecords: 0,
+        lastPage: 1
+    });
+
+    const isAdmin = user?.role === 1 || user?.role === 2;
+
+    useEffect(() => {
+        if (user?.userId) {
+            fetchPosts(1, true);
+        }
+    }, [user?.userId, i18n.language]);
+
+    const fetchPosts = async (page, reset = false) => {
+        if (reset) setLoading(true);
+        else setLoadingMore(true);
+
+        try {
+            const lang = i18n.language.substring(0, 2).toLowerCase();
+            const languageId = LANGUAGE_IDS[lang] || LANGUAGE_IDS.en;
+
+            const response = await postService.getAllPosts(user?.userId, page, pagination.pageSize, languageId);
+            if (response.status) {
+                if (reset) {
+                    setPosts(response.data.posts);
+                } else {
+                    setPosts(prev => [...prev, ...response.data.posts]);
+                }
+
+                setPagination({
+                    page: response.data.page,
+                    pageSize: response.data.pageSize,
+                    totalRecords: response.data.totalRecords,
+                    lastPage: response.data.lastPage
+                });
+            }
+        } catch (err) {
+            console.error("Error fetching posts:", err);
+            setError("Failed to load posts");
+        } finally {
+            setLoading(false);
+            setLoadingMore(false);
+        }
+    };
+
+    const handleLoadMore = () => {
+        if (pagination.page < pagination.lastPage) {
+            fetchPosts(pagination.page + 1);
+        }
+    };
+
+    const handleDelete = async (postId) => {
+        if (window.confirm(t('common.delete_confirm') || 'Are you sure you want to delete this post?')) {
+            try {
+                const response = await postService.deletePost(postId);
+                if (response.status) {
+                    setPosts(prev => prev.filter(p => p.postId !== postId));
+                }
+            } catch (err) {
+                console.error("Error deleting post:", err);
+                alert("Error deleting post");
+            }
+        }
+    };
+
+    const handleEdit = (post) => {
+        navigate(`/posts/edit/${post.postId}`);
+    };
+
+    if (loading) {
+        return (
+            <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '400px' }}>
+                <Loader2 size={48} className="animate-spin" color="var(--primary)" />
+            </div>
+        );
+    }
+
+    return (
+        <div style={{ maxWidth: '800px', margin: '0 auto' }}>
+            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '2rem' }}>
+                <div>
+                    <h1 style={{ fontSize: '2rem', fontWeight: '800' }}>{t('posts.title') || 'Posts'}</h1>
+                    <p style={{ color: 'var(--text-muted)' }}>{t('posts.subtitle') || 'Manage and interact with community content'}</p>
+                </div>
+                {!isAdmin && (
+                    <button
+                        onClick={() => navigate('/posts/new')}
+                        className="btn btn-primary"
+                        style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}
+                    >
+                        <Plus size={20} />
+                        {t('posts.create') || 'Create Post'}
+                    </button>
+                )}
+            </div>
+
+            {error && (
+                <div className="glass-card" style={{ padding: '1.5rem', marginBottom: '2rem', display: 'flex', alignItems: 'center', gap: '1rem', borderColor: 'var(--danger)' }}>
+                    <AlertCircle color="#ef4444" />
+                    <span style={{ color: '#ef4444' }}>{error}</span>
+                </div>
+            )}
+
+            {posts.length === 0 ? (
+                <div className="glass-card" style={{ padding: '4rem', textAlign: 'center' }}>
+                    <MessageSquare size={48} style={{ color: 'var(--text-muted)', marginBottom: '1rem', opacity: 0.5 }} />
+                    <h3 style={{ color: 'var(--text-muted)' }}>{t('posts.empty') || 'No posts found'}</h3>
+                </div>
+            ) : (
+                <>
+                    <div style={{ display: 'flex', flexDirection: 'column' }}>
+                        {posts.map(post => (
+                            <PostCard
+                                key={post.postId}
+                                post={post}
+                                onEdit={handleEdit}
+                                onDelete={handleDelete}
+                            />
+                        ))}
+                    </div>
+
+                    {pagination.page < pagination.lastPage && (
+                        <div style={{ display: 'flex', justifyContent: 'center', marginTop: '1rem', marginBottom: '3rem' }}>
+                            <button
+                                onClick={handleLoadMore}
+                                disabled={loadingMore}
+                                className="btn"
+                                style={{
+                                    background: 'rgba(255,255,255,0.05)',
+                                    color: 'white',
+                                    padding: '0.75rem 2rem',
+                                    display: 'flex',
+                                    alignItems: 'center',
+                                    gap: '0.5rem'
+                                }}
+                            >
+                                {loadingMore && <Loader2 size={18} className="animate-spin" />}
+                                {t('common.load_more') || 'Load more posts'}
+                            </button>
+                        </div>
+                    )}
+                </>
+            )}
+        </div>
+    );
+};
+
+export default PostList;

@@ -1,0 +1,428 @@
+import React, { useState, useEffect, useRef, useMemo } from 'react';
+import { useNavigate, useParams } from 'react-router-dom';
+import ReactQuill from 'react-quill-new';
+import 'react-quill-new/dist/quill.snow.css';
+import {
+    ChevronLeft, Loader2, Image as ImageIcon,
+    Save, X, Type, Video, Plus, Globe
+} from 'lucide-react';
+import { postService, mediaService } from '../services/api';
+import { useAuth } from '../context/AuthContext';
+import { useTranslation } from 'react-i18next';
+
+const LANGUAGE_IDS = {
+    en: '11e8ba3a-b290-4a2c-9dad-0f40e457f72c',
+    es: '6892a523-0dc1-4e3b-9ddd-c9a558c7920b'
+};
+
+const PostForm = () => {
+    const { t, i18n } = useTranslation();
+    const navigate = useNavigate();
+    const { id } = useParams();
+    const { user } = useAuth();
+    const quillRef = useRef(null);
+    const isEditing = Boolean(id);
+
+    const [loading, setLoading] = useState(isEditing);
+    const [saving, setSaving] = useState(false);
+    const [uploadingMedia, setUploadingMedia] = useState(false);
+
+    const [formData, setFormData] = useState({
+        contentHtml: '',
+        languageId: '',
+        postMediaList: []
+    });
+
+    const isAdmin = user?.role === 1 || user?.role === 2;
+
+    useEffect(() => {
+        if (!isEditing && isAdmin) {
+            alert("Admins cannot create new posts");
+            navigate('/posts');
+            return;
+        }
+
+        const lang = i18n.language.substring(0, 2).toLowerCase();
+        const defaultLangId = LANGUAGE_IDS[lang] || LANGUAGE_IDS.en;
+
+        if (isEditing) {
+            fetchPostDetail(id);
+        } else {
+            setFormData(prev => ({ ...prev, languageId: defaultLangId }));
+        }
+    }, [id, isEditing, isAdmin, i18n.language]);
+
+    const fetchPostDetail = async (postId) => {
+        try {
+            const lang = i18n.language.substring(0, 2).toLowerCase();
+            const languageId = LANGUAGE_IDS[lang] || LANGUAGE_IDS.en;
+            const response = await postService.getPostById(postId, languageId);
+            if (response.status && response.data) {
+                const item = response.data;
+                setFormData({
+                    idPost: item.postId, // Required for update
+                    contentHtml: item.postTranslations?.[0]?.contentHtml || item.contentHtml || '',
+                    languageId: item.languageId || LANGUAGE_IDS.en,
+                    active: item.active !== undefined ? item.active : true,
+                    postMediaList: item.postMedia || []
+                });
+            }
+        } catch (err) {
+            console.error("Error fetching post detail:", err);
+            alert("Error loading post data");
+            navigate('/posts');
+        } finally {
+            setLoading(false);
+        }
+    };
+
+    const handleMediaUpload = async (e) => {
+        const files = Array.from(e.target.files);
+        if (files.length === 0) return;
+
+        setUploadingMedia(true);
+        try {
+            const newMediaList = [...formData.postMediaList];
+
+            for (const file of files) {
+                const response = await mediaService.upload(file);
+                if (response.status && response.data?.url) {
+                    newMediaList.push({
+                        postMediaId: "",
+                        postId: isEditing ? id : "",
+                        mediaUrl: response.data.url,
+                        height: 0,
+                        width: 0,
+                        mediaType: file.type.startsWith('video') ? 1 : 0 // 0: Image, 1: Video
+                    });
+                }
+            }
+
+            setFormData(prev => ({ ...prev, postMediaList: newMediaList }));
+        } catch (err) {
+            console.error("Error uploading media:", err);
+            alert("Error uploading media");
+        } finally {
+            setUploadingMedia(false);
+        }
+    };
+
+    const removeMedia = (index) => {
+        setFormData(prev => ({
+            ...prev,
+            postMediaList: prev.postMediaList.filter((_, i) => i !== index)
+        }));
+    };
+
+    const imageHandler = () => {
+        const input = document.createElement('input');
+        input.setAttribute('type', 'file');
+        input.setAttribute('accept', 'image/*');
+        input.click();
+
+        input.onchange = async () => {
+            const file = input.files[0];
+            if (!file) return;
+
+            const quill = quillRef.current.getEditor();
+            const range = quill.getSelection(true);
+
+            try {
+                const response = await mediaService.upload(file);
+                if (response.status && response.data?.url) {
+                    quill.insertEmbed(range.index, 'image', response.data.url);
+                    quill.setSelection(range.index + 1);
+                }
+            } catch (err) {
+                console.error("Error uploading image to editor:", err);
+                alert("Error uploading image");
+            }
+        };
+    };
+
+    const modules = useMemo(() => ({
+        toolbar: {
+            container: [
+                [{ 'header': [1, 2, 3, false] }],
+                ['bold', 'italic', 'underline', 'strike'],
+                [{ 'list': 'ordered' }, { 'list': 'bullet' }],
+                [{ 'color': [] }, { 'background': [] }],
+                ['link', 'image'],
+                ['clean']
+            ],
+            handlers: {
+                image: imageHandler
+            }
+        }
+    }), []);
+
+    const handleSubmit = async (e) => {
+        e.preventDefault();
+        if (!formData.contentHtml) {
+            alert("Please fill in all required fields");
+            return;
+        }
+
+        setSaving(true);
+        try {
+            if (isEditing) {
+                const updatedMediaList = formData.postMediaList.map(m => ({
+                    ...m,
+                    postMediaId: m.postMediaId || "",
+                    postId: m.postId || formData.idPost
+                }));
+                await postService.updatePost({ ...formData, postMediaList: updatedMediaList });
+            } else {
+                await postService.createPost({
+                    ...formData,
+                    userId: user?.userId
+                });
+            }
+            navigate('/posts');
+        } catch (err) {
+            console.error("Error saving post:", err);
+            alert("Error saving post");
+        } finally {
+            setSaving(false);
+        }
+    };
+
+    if (loading) {
+        return (
+            <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '400px' }}>
+                <Loader2 size={48} className="animate-spin" color="var(--primary)" />
+            </div>
+        );
+    }
+
+    return (
+        <div style={{ maxWidth: '1000px', margin: '0 auto', padding: '1rem' }}>
+            <div style={{ display: 'flex', alignItems: 'center', gap: '1rem', marginBottom: '2rem' }}>
+                <button
+                    onClick={() => navigate('/posts')}
+                    style={{
+                        background: 'rgba(255,255,255,0.05)',
+                        border: 'none',
+                        color: 'white',
+                        padding: '0.5rem',
+                        borderRadius: '0.5rem',
+                        cursor: 'pointer',
+                        display: 'flex'
+                    }}
+                >
+                    <ChevronLeft size={24} />
+                </button>
+                <div>
+                    <h1 style={{ fontSize: '1.875rem', fontWeight: '800' }}>
+                        {isEditing ? t('posts.edit') || 'Edit Post' : t('posts.add_new') || 'Add New Post'}
+                    </h1>
+                    <p style={{ color: 'var(--text-muted)' }}>{t('posts.form_subtitle') || 'Create engaging content for the community'}</p>
+                </div>
+            </div>
+
+            <form onSubmit={handleSubmit} style={{ display: 'grid', gridTemplateColumns: '1fr 350px', gap: '2rem' }}>
+                <div style={{ display: 'flex', flexDirection: 'column', gap: '1.5rem' }}>
+                    <div className="glass-card" style={{ padding: '1.5rem' }}>
+
+                        <div className="input-group" style={{ marginBottom: 0 }}>
+                            <label>{t('posts.form.content') || 'Content'}</label>
+                            <div style={{ background: 'rgba(255,255,255,0.02)', borderRadius: '0.5rem', border: '1px solid var(--glass-border)', overflow: 'hidden' }}>
+                                <style>{`
+                                    .ql-toolbar.ql-snow { border: none; border-bottom: 1px solid var(--glass-border); background: rgba(255,255,255,0.05); }
+                                    .ql-container.ql-snow { border: none; min-height: 300px; font-size: 1rem; color: white; }
+                                    .ql-editor.ql-blank::before { color: var(--text-muted); }
+                                `}</style>
+                                <ReactQuill
+                                    ref={quillRef}
+                                    theme="snow"
+                                    value={formData.contentHtml}
+                                    onChange={(content) => setFormData({ ...formData, contentHtml: content })}
+                                    modules={modules}
+                                />
+                            </div>
+                        </div>
+                    </div>
+
+                    <div className="glass-card" style={{ padding: '1.5rem' }}>
+                        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '1rem' }}>
+                            <label style={{ margin: 0 }}>{t('posts.form.media') || 'Media Gallery'}</label>
+                            <button
+                                type="button"
+                                onClick={() => document.getElementById('media-upload').click()}
+                                disabled={uploadingMedia}
+                                style={{
+                                    background: 'var(--primary)',
+                                    color: 'white',
+                                    border: 'none',
+                                    borderRadius: '0.4rem',
+                                    padding: '0.4rem 0.75rem',
+                                    fontSize: '0.8rem',
+                                    cursor: 'pointer',
+                                    display: 'flex',
+                                    alignItems: 'center',
+                                    gap: '0.4rem'
+                                }}
+                            >
+                                {uploadingMedia ? <Loader2 size={14} className="animate-spin" /> : <Plus size={14} />}
+                                {t('common.add') || 'Add'}
+                            </button>
+                            <input
+                                id="media-upload"
+                                type="file"
+                                multiple
+                                accept="image/*,video/*"
+                                onChange={handleMediaUpload}
+                                style={{ display: 'none' }}
+                            />
+                        </div>
+
+                        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(100px, 1fr))', gap: '1rem' }}>
+                            {formData.postMediaList.length === 0 && !uploadingMedia && (
+                                <div style={{
+                                    gridColumn: '1 / -1',
+                                    padding: '2rem',
+                                    textAlign: 'center',
+                                    background: 'rgba(255,255,255,0.02)',
+                                    border: '1px dashed var(--glass-border)',
+                                    borderRadius: '0.5rem',
+                                    color: 'var(--text-muted)',
+                                    fontSize: '0.875rem'
+                                }}>
+                                    No media uploaded yet
+                                </div>
+                            )}
+
+                            {formData.postMediaList.map((media, index) => (
+                                <div key={index} style={{ position: 'relative', aspectRatio: '1/1', borderRadius: '0.5rem', overflow: 'hidden', background: '#000' }}>
+                                    {media.mediaType === 1 ? (
+                                        <div style={{ height: '100%', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                                            <Video size={32} color="white" />
+                                        </div>
+                                    ) : (
+                                        <img src={media.mediaUrl} alt="" style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
+                                    )}
+                                    <button
+                                        type="button"
+                                        onClick={() => removeMedia(index)}
+                                        style={{
+                                            position: 'absolute',
+                                            top: '4px',
+                                            right: '4px',
+                                            background: 'rgba(239, 68, 68, 0.8)',
+                                            border: 'none',
+                                            borderRadius: '50%',
+                                            width: '24px',
+                                            height: '24px',
+                                            color: 'white',
+                                            cursor: 'pointer',
+                                            display: 'flex',
+                                            alignItems: 'center',
+                                            justifyContent: 'center'
+                                        }}
+                                    >
+                                        <X size={14} />
+                                    </button>
+                                </div>
+                            ))}
+
+                            {uploadingMedia && (
+                                <div style={{ aspectRatio: '1/1', display: 'flex', alignItems: 'center', justifyContent: 'center', background: 'rgba(255,255,255,0.02)', borderRadius: '0.5rem', border: '1px dashed var(--glass-border)' }}>
+                                    <Loader2 className="animate-spin" color="var(--primary)" />
+                                </div>
+                            )}
+                        </div>
+                    </div>
+                </div>
+
+                <div style={{ display: 'flex', flexDirection: 'column', gap: '1.5rem' }}>
+                    <div className="glass-card" style={{ padding: '1.5rem' }}>
+                        <div className="input-group">
+                            <label style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
+                                <Globe size={16} /> {t('common.language') || 'Language'}
+                            </label>
+                            <select
+                                value={formData.languageId}
+                                onChange={(e) => setFormData({ ...formData, languageId: e.target.value })}
+                                style={{
+                                    width: '100%',
+                                    padding: '0.75rem',
+                                    background: 'rgba(255,255,255,0.03)',
+                                    border: '1px solid var(--glass-border)',
+                                    borderRadius: '0.5rem',
+                                    color: 'white'
+                                }}
+                            >
+                                <option value={LANGUAGE_IDS.en} style={{ background: 'var(--bg-darker)' }}>English</option>
+                                <option value={LANGUAGE_IDS.es} style={{ background: 'var(--bg-darker)' }}>Español</option>
+                            </select>
+                        </div>
+
+                        {isEditing && (
+                            <div className="input-group" style={{ marginBottom: 0 }}>
+                                <label style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
+                                    {t('common.status') || 'Status'}
+                                </label>
+                                <div
+                                    onClick={() => setFormData({ ...formData, active: !formData.active })}
+                                    style={{
+                                        display: 'flex',
+                                        alignItems: 'center',
+                                        gap: '0.75rem',
+                                        padding: '0.75rem',
+                                        background: 'rgba(255,255,255,0.03)',
+                                        border: '1px solid var(--glass-border)',
+                                        borderRadius: '0.5rem',
+                                        cursor: 'pointer'
+                                    }}
+                                >
+                                    <div style={{
+                                        width: '40px',
+                                        height: '20px',
+                                        borderRadius: '20px',
+                                        background: formData.active ? 'var(--primary)' : 'rgba(255,255,255,0.1)',
+                                        position: 'relative',
+                                        transition: 'all 0.3s'
+                                    }}>
+                                        <div style={{
+                                            width: '16px',
+                                            height: '16px',
+                                            borderRadius: '50%',
+                                            background: 'white',
+                                            position: 'absolute',
+                                            top: '2px',
+                                            left: formData.active ? '22px' : '2px',
+                                            transition: 'all 0.3s'
+                                        }} />
+                                    </div>
+                                    <span style={{ fontSize: '0.875rem' }}>{formData.active ? 'Active' : 'Inactive'}</span>
+                                </div>
+                            </div>
+                        )}
+                    </div>
+
+                    <div style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
+                        <button
+                            type="submit"
+                            className="btn btn-primary"
+                            disabled={saving || uploadingMedia}
+                            style={{ width: '100%', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '0.5rem' }}
+                        >
+                            {saving ? <Loader2 size={18} className="animate-spin" /> : <Save size={18} />}
+                            {isEditing ? t('common.update') || 'Update Post' : t('common.publish') || 'Publish Post'}
+                        </button>
+                        <button
+                            type="button"
+                            onClick={() => navigate('/posts')}
+                            className="btn"
+                            style={{ width: '100%', background: 'rgba(255,255,255,0.05)', color: 'white' }}
+                        >
+                            {t('common.cancel') || 'Cancel'}
+                        </button>
+                    </div>
+                </div>
+            </form>
+        </div>
+    );
+};
+
+export default PostForm;

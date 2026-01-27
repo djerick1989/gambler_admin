@@ -16,6 +16,8 @@ import NewsList from './pages/NewsList';
 import NewsForm from './pages/NewsForm';
 import GamblerList from './pages/GamblerList';
 import GamblerDetail from './pages/GamblerDetail';
+import PostList from './pages/PostList';
+import PostForm from './pages/PostForm';
 import MainLayout from './layouts/MainLayout';
 import { AuthProvider, useAuth } from './context/AuthContext';
 import { useTranslation } from 'react-i18next';
@@ -68,6 +70,10 @@ function App() {
 
             <Route path="gamblers" element={<GamblerList />} />
             <Route path="gamblers/:id" element={<GamblerDetail />} />
+
+            <Route path="posts" element={<PostList />} />
+            <Route path="posts/new" element={<PostForm />} />
+            <Route path="posts/edit/:id" element={<PostForm />} />
           </Route>
         </Routes>
       </Router>

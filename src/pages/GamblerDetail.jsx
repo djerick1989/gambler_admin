@@ -354,7 +354,7 @@ const GamblerDetail = () => {
                                     />
                                 </div>
                                 <div>
-                                    <h3 style={{ fontSize: '1.5rem', fontWeight: 'bold' }}>{gambler.user?.name || 'Incomplete Profile'}</h3>
+                                    <h3 style={{ fontSize: '1.5rem', fontWeight: 'bold' }}>{gambler.user?.nickName || 'Incomplete Profile'}</h3>
                                     <p style={{ color: 'var(--text-muted)' }}>{gambler.user?.email}</p>
                                 </div>
                             </div>

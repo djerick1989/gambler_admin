@@ -12,10 +12,36 @@
         "rows_per_page": "Rows per page:",
         "i18n": "Internationalization",
         "news": "News",
+        "add": "Add",
         "search": "Search...",
         "actions": "Actions",
         "date": "Date",
+        "posts": "Posts",
+        "status": "Status",
+        "update": "Update",
+        "publish": "Publish",
+        "cancel": "Cancel",
+        "edit": "Edit",
+        "delete": "Delete",
+        "see_more": "See more",
+        "see_less": "See less",
+        "load_more": "Load more",
+        "load_more_comments": "Load more comments",
         "delete_confirm": "Are you sure you want to delete this item?"
+    },
+    "posts": {
+        "title": "Community Posts",
+        "subtitle": "Manage and interact with community content",
+        "create": "Create Post",
+        "empty": "No posts found",
+        "edit": "Edit Post",
+        "add_new": "Add New Post",
+        "form_subtitle": "Create engaging content for the community",
+        "write_comment": "Write a comment...",
+        "form": {
+            "content": "Content",
+            "media": "Media Gallery"
+        }
     },
     "login": {
         "title": "Welcome",

@@ -264,4 +264,121 @@ export const gamblerService = {
   }
 };
 
+export const postService = {
+  createPost: async (data) => {
+    const response = await apiClient.post('/api/Post/createPost', data);
+    return response.data;
+  },
+  updatePost: async (data) => {
+    const response = await apiClient.put('/api/Post/updatePost', data);
+    return response.data;
+  },
+  getPostById: async (id, languageId = null) => {
+    const headers = languageId ? { languageId } : {};
+    const response = await apiClient.get(`/api/Post/getPostById/${id}`, { headers });
+    return response.data;
+  },
+  getAllPosts: async (userId, page = 1, pageSize = 100, languageId = null) => {
+    const headers = languageId ? { languageId } : {};
+    const response = await apiClient.get('/api/Post/getAllPosts', {
+      params: { userId, page, pageSize },
+      headers
+    });
+    return response.data;
+  },
+  getPostsByUserId: async (userId, page = 1, pageSize = 10, languageId = null) => {
+    const headers = languageId ? { languageId } : {};
+    const response = await apiClient.get('/api/Post/getPostsByUserId', {
+      params: { userId, page, pageSize },
+      headers
+    });
+    return response.data;
+  },
+  deletePost: async (id) => {
+    const response = await apiClient.delete(`/api/Post/deletePost/${id}`);
+    return response.data;
+  }
+};
+
+export const postCommentService = {
+  createPostComment: async (data) => {
+    const response = await apiClient.post('/api/PostComment/createPostComment', data);
+    return response.data;
+  },
+  updatePostComment: async (data) => {
+    const response = await apiClient.put('/api/PostComment/updatePostComment', data);
+    return response.data;
+  },
+  deletePostComment: async (id) => {
+    const response = await apiClient.delete(`/api/PostComment/deletePostComment/${id}`);
+    return response.data;
+  },
+  getPostCommentById: async (id) => {
+    const response = await apiClient.get(`/api/PostComment/getPostCommentById/${id}`);
+    return response.data;
+  },
+  getAllPostCommentByPostId: async (postId, page = 1, pageSize = 10) => {
+    const response = await apiClient.get('/api/PostComment/getAllPostCommentByPostId', {
+      params: { postId, page, pageSize }
+    });
+    return response.data;
+  },
+  getAllPostCommentByUserId: async (userId, page = 1, pageSize = 10) => {
+    const response = await apiClient.get('/api/PostComment/getAllPostCommentByUserId', {
+      params: { userId, page, pageSize }
+    });
+    return response.data;
+  }
+};
+
+export const postLikeService = {
+  createPostLike: async (data) => {
+    const response = await apiClient.post('/api/PostLike/createPostLike', data);
+    return response.data;
+  },
+  updatePostLike: async (data) => {
+    const response = await apiClient.put('/api/PostLike/updatePostLike', data);
+    return response.data;
+  },
+  deletePostLike: async (id) => {
+    const response = await apiClient.delete(`/api/PostLike/deletePostLike/${id}`);
+    return response.data;
+  },
+  getPostLikeById: async (id) => {
+    const response = await apiClient.get(`/api/PostLike/getPostLikeById/${id}`);
+    return response.data;
+  },
+  getAllPostLikeByPostId: async (postId, page = 1, pageSize = 10) => {
+    const response = await apiClient.get('/api/PostLike/getAllPostLikeByPostId', {
+      params: { postId, page, pageSize }
+    });
+    return response.data;
+  },
+  getAllPostLikeByUserId: async (userId, page = 1, pageSize = 10) => {
+    const response = await apiClient.get('/api/PostLike/getAllPostLikeByUserId', {
+      params: { userId, page, pageSize }
+    });
+    return response.data;
+  }
+};
+
+export const postViewedService = {
+  createPostViewed: async (data) => {
+    const response = await apiClient.post('/api/PostViewed/createPostViewed', data);
+    return response.data;
+  },
+  getAllPostViewedByUserId: async (userId, page = 1, pageSize = 10) => {
+    const response = await apiClient.get('/api/PostViewed/GetAllPostViewedByUserId', {
+      params: { userId, page, pageSize }
+    });
+    return response.data;
+  },
+  getAllPostViewedByPostId: async (postId, page = 1, pageSize = 10) => {
+    const response = await apiClient.get('/api/PostViewed/GetAllPostViewedByPostId', {
+      params: { postId, page, pageSize }
+    });
+    return response.data;
+  }
+};
+
 export default apiClient;

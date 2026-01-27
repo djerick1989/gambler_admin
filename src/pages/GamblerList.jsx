@@ -166,7 +166,6 @@ const GamblerList = () => {
                         <table style={{ width: '100%', borderCollapse: 'collapse', textAlign: 'left' }}>
                             <thead>
                                 <tr style={{ borderBottom: '1px solid var(--glass-border)', background: 'rgba(255,255,255,0.02)' }}>
-                                    <th style={{ padding: '1rem 1.5rem', color: 'var(--text-muted)', fontWeight: '600' }}>{t('gambler_mgmt.table.name')}</th>
                                     <th style={{ padding: '1rem 1.5rem', color: 'var(--text-muted)', fontWeight: '600' }}>{t('gambler_mgmt.table.nickname')}</th>
                                     <th style={{ padding: '1rem 1.5rem', color: 'var(--text-muted)', fontWeight: '600' }}>{t('gambler_mgmt.table.email')}</th>
                                     <th style={{ padding: '1rem 1.5rem', color: 'var(--text-muted)', fontWeight: '600' }}>{t('gambler_mgmt.table.balance')}</th>
@@ -191,16 +190,13 @@ const GamblerList = () => {
                                                 }}>
                                                     {!gambler.user?.avatar && <User size={20} color="var(--text-muted)" />}
                                                 </div>
-                                                <span style={{ fontWeight: '500' }}>{gambler.user?.name || 'N/A'}</span>
+                                                <span
+                                                    onClick={() => navigate(`/gamblers/${gambler.gamblerId}`)}
+                                                    style={{ color: 'var(--primary)', fontWeight: '600', cursor: 'pointer' }}
+                                                >
+                                                    @{gambler.user?.nickName}
+                                                </span>
                                             </div>
-                                        </td>
-                                        <td style={{ padding: '1rem 1.5rem' }}>
-                                            <span
-                                                onClick={() => navigate(`/gamblers/${gambler.gamblerId}`)}
-                                                style={{ color: 'var(--primary)', fontWeight: '600', cursor: 'pointer' }}
-                                            >
-                                                @{gambler.user?.nickName}
-                                            </span>
                                         </td>
                                         <td style={{ padding: '1rem 1.5rem' }}>
                                             <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', color: 'var(--text-muted)' }}>

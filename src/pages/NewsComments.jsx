@@ -75,7 +75,7 @@ const NewsComments = ({ newsId = null, onBack = null }) => {
     // but the API doesn't seem to have a search param for comments yet)
     const filteredComments = comments.filter(c =>
         c.comment.toLowerCase().includes(searchTerm.toLowerCase()) ||
-        c.userName.toLowerCase().includes(searchTerm.toLowerCase()) ||
+        (c.nickName || c.userName || "").toLowerCase().includes(searchTerm.toLowerCase()) ||
         c.newsTitle.toLowerCase().includes(searchTerm.toLowerCase())
     );
 
@@ -163,7 +163,7 @@ const NewsComments = ({ newsId = null, onBack = null }) => {
                                                 }}>
                                                     {!comment.avatar && <User size={16} color="var(--text-muted)" />}
                                                 </div>
-                                                <span style={{ fontWeight: '500', fontSize: '0.875rem' }}>{comment.userName}</span>
+                                                <span style={{ fontWeight: '500', fontSize: '0.875rem' }}>@{comment.nickName || comment.userName}</span>
                                             </div>
                                         </td>
                                         {!newsId && (
