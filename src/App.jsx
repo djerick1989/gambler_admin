@@ -14,6 +14,8 @@ import Keys from './pages/I18n/Keys';
 import KeyForm from './pages/I18n/KeyForm';
 import NewsList from './pages/NewsList';
 import NewsForm from './pages/NewsForm';
+import GamblerList from './pages/GamblerList';
+import GamblerDetail from './pages/GamblerDetail';
 import MainLayout from './layouts/MainLayout';
 import { AuthProvider, useAuth } from './context/AuthContext';
 import { useTranslation } from 'react-i18next';
@@ -63,6 +65,9 @@ function App() {
             <Route path="news" element={<NewsList />} />
             <Route path="news/new" element={<NewsForm />} />
             <Route path="news/edit/:id" element={<NewsForm />} />
+
+            <Route path="gamblers" element={<GamblerList />} />
+            <Route path="gamblers/:id" element={<GamblerDetail />} />
           </Route>
         </Routes>
       </Router>

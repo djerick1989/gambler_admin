@@ -188,4 +188,43 @@ export const newsService = {
   }
 };
 
+export const gamblerService = {
+  getAllGamblers: async (page = 1, pageSize = 10, nickname = '') => {
+    const response = await apiClient.get('/api/Gambler/getAllGamblers', {
+      params: { page, pageSize, nickname }
+    });
+    return response.data;
+  },
+  getInactiveGamblers: async (page = 1, pageSize = 10) => {
+    const response = await apiClient.get('/api/Gambler/getInactiveGamblers', {
+      params: { page, pageSize }
+    });
+    return response.data;
+  },
+  getGamblerById: async (id) => {
+    const response = await apiClient.get(`/api/Gambler/getGamblerById/${id}`);
+    return response.data;
+  },
+  getGamblerByUserId: async (userId) => {
+    const response = await apiClient.get(`/api/Gambler/getGamblerByUserId/${userId}`);
+    return response.data;
+  },
+  updateGambler: async (data) => {
+    const response = await apiClient.put('/api/Gambler/updateGambler', data);
+    return response.data;
+  },
+  deleteGambler: async (id) => {
+    const response = await apiClient.delete(`/api/Gambler/deleteGambler/${id}`);
+    return response.data;
+  },
+  updateGamblerConfiguration: async (data) => {
+    const response = await apiClient.put('/api/Gambler/updateGamblerConfiguration', data);
+    return response.data;
+  },
+  updateNotificationConfiguration: async (data) => {
+    const response = await apiClient.put('/api/Gambler/updateNotificationConfiguration', data);
+    return response.data;
+  }
+};
+
 export default apiClient;

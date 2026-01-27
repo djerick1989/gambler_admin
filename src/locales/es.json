@@ -130,5 +130,44 @@
         },
         "empty": "No se encontraron noticias.",
         "upload_image": "Subir imagen a la noticia"
+    },
+    "gambler_mgmt": {
+        "title": "Gestión de Gamblers",
+        "subtitle": "Visualiza y gestiona la información y configuraciones de los usuarios.",
+        "search_placeholder": "Buscar por nickname...",
+        "all_gamblers": "Todos los Gamblers",
+        "inactive_gamblers": "Gamblers Inactivos",
+        "empty": "No se encontraron gamblers.",
+        "table": {
+            "name": "Nombre",
+            "nickname": "Nickname",
+            "email": "Email",
+            "balance": "Balance",
+            "status": "Estado",
+            "active": "Activo",
+            "inactive": "Inactivo",
+            "actions": "Acciones"
+        },
+        "detail": {
+            "title": "Detalles del Gambler",
+            "profile_info": "Información de Perfil",
+            "configurations": "Configuraciones",
+            "notifications": "Ajustes de Notificaciones",
+            "phone": "Teléfono",
+            "country": "País",
+            "language": "Idioma",
+            "active": "Activo",
+            "betting": "Apostando",
+            "description": "Descripción",
+            "biography": "Biografía",
+            "visibility": "Visibilidad del Perfil",
+            "messages": "Recibir Mensajes",
+            "donations": "Recibir Donaciones",
+            "push_notifications": "Notificaciones Push",
+            "email_notifications": "Notificaciones por Correo",
+            "save_changes": "Guardar Cambios",
+            "delete_account": "Eliminar Gambler",
+            "delete_confirm": "¿Estás seguro de que deseas eliminar este gambler? Esta acción es irreversible."
+        }
     }
 }

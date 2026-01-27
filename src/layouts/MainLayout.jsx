@@ -53,6 +53,7 @@ const MainLayout = () => {
         { path: '/onboarding', label: t('common.onboarding'), icon: UserCheck },
         { path: '/i18n', label: t('common.i18n'), icon: Globe },
         { path: '/news', label: t('common.news'), icon: Newspaper },
+        { path: '/gamblers', label: t('gambler_mgmt.title'), icon: UserCheck },
     ];
 
     return (
