@@ -151,8 +151,17 @@ const NewsComments = ({ newsId = null, onBack = null }) => {
                                     <tr key={comment.newsCommentId} style={{ borderBottom: '1px solid var(--glass-border)', transition: 'background 0.2s' }}>
                                         <td style={{ padding: '1rem 1.5rem' }}>
                                             <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem' }}>
-                                                <div style={{ width: '32px', height: '32px', borderRadius: '50%', background: 'rgba(255,255,255,0.1)', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-                                                    <User size={16} color="var(--text-muted)" />
+                                                <div style={{
+                                                    width: '32px',
+                                                    height: '32px',
+                                                    borderRadius: '50%',
+                                                    background: comment.avatar ? `url(${comment.avatar}) center/cover` : 'rgba(255,255,255,0.1)',
+                                                    display: 'flex',
+                                                    alignItems: 'center',
+                                                    justifyContent: 'center',
+                                                    flexShrink: 0
+                                                }}>
+                                                    {!comment.avatar && <User size={16} color="var(--text-muted)" />}
                                                 </div>
                                                 <span style={{ fontWeight: '500', fontSize: '0.875rem' }}>{comment.userName}</span>
                                             </div>
