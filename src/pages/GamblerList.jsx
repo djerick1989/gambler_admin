@@ -31,7 +31,7 @@ const GamblerList = () => {
         try {
             let response;
             if (activeTab === 'inactive') {
-                response = await gamblerService.getInactiveGamblers(pagination.page, pagination.pageSize);
+                response = await gamblerService.getInactiveGamblers(pagination.page, pagination.pageSize, nickname);
             } else {
                 response = await gamblerService.getAllGamblers(pagination.page, pagination.pageSize, nickname);
             }

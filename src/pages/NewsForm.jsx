@@ -8,6 +8,7 @@ import {
 } from 'lucide-react';
 import { newsService, mediaService } from '../services/api';
 import { useTranslation } from 'react-i18next';
+import NewsComments from './NewsComments';
 
 const LANGUAGE_IDS = {
     en: '11e8ba3a-b290-4a2c-9dad-0f40e457f72c',
@@ -309,6 +310,12 @@ const NewsForm = () => {
                     </div>
                 </div>
             </form>
+
+            {isEditing && (
+                <div style={{ marginTop: '3rem', paddingTop: '3rem', borderTop: '1px solid var(--glass-border)' }}>
+                    <NewsComments newsId={id} />
+                </div>
+            )}
         </div>
     );
 };

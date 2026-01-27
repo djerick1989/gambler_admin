@@ -5,7 +5,8 @@ import 'react-quill-new/dist/quill.snow.css';
 import {
     ChevronLeft, Loader2, User, Phone, Globe, Mail,
     Save, Trash2, Shield, Bell, MessageSquare, Heart,
-    Activity, Calendar, Info, MapPin, Languages, Edit2
+    Activity, Calendar, Info, MapPin, Languages, Edit2,
+    Eye
 } from 'lucide-react';
 import { gamblerService, languageService, mediaService } from '../services/api';
 import { useTranslation } from 'react-i18next';
@@ -22,6 +23,7 @@ const GamblerDetail = () => {
     const [saving, setSaving] = useState(false);
     const [isUploadingAvatar, setIsUploadingAvatar] = useState(false);
     const [activeSection, setActiveSection] = useState('profile'); // profile, config, notifications
+    const [errors, setErrors] = useState({});
 
     useEffect(() => {
         fetchData();
@@ -72,8 +74,27 @@ const GamblerDetail = () => {
         }
     };
 
+    const validatePhone = (phone) => {
+        if (!phone) return true; // Optional field
+        const phoneRegex = /^\+?[\d\s-]{7,15}$/;
+        return phoneRegex.test(phone);
+    };
+
     const handleUpdateProfile = async (e) => {
         e.preventDefault();
+
+        // Validate phone
+        if (!validatePhone(gambler.phone)) {
+            setErrors(prev => ({ ...prev, phone: "Please enter a valid phone number" }));
+            return;
+        } else {
+            setErrors(prev => {
+                const newErrors = { ...prev };
+                delete newErrors.phone;
+                return newErrors;
+            });
+        }
+
         setSaving(true);
         try {
             const updateData = {
@@ -344,9 +365,20 @@ const GamblerDetail = () => {
                                     <input
                                         type="text"
                                         value={gambler.phone || ''}
-                                        onChange={(e) => setGambler({ ...gambler, phone: e.target.value })}
+                                        onChange={(e) => {
+                                            setGambler({ ...gambler, phone: e.target.value });
+                                            if (errors.phone) {
+                                                setErrors(prev => {
+                                                    const newErrors = { ...prev };
+                                                    delete newErrors.phone;
+                                                    return newErrors;
+                                                });
+                                            }
+                                        }}
                                         placeholder="+1234567890"
+                                        style={errors.phone ? { borderColor: '#ef4444' } : {}}
                                     />
+                                    {errors.phone && <span style={{ color: '#ef4444', fontSize: '0.75rem', marginTop: '0.25rem' }}>{errors.phone}</span>}
                                 </div>
                                 <div className="input-group">
                                     <label style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}><MapPin size={16} /> {t('gambler_mgmt.detail.country')}</label>

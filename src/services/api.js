@@ -188,6 +188,43 @@ export const newsService = {
   }
 };
 
+export const newsCommentService = {
+  createNewsComment: async (data) => {
+    const response = await apiClient.post('/api/NewsComment/createNewsComment', data);
+    return response.data;
+  },
+  updateNewsComment: async (data) => {
+    const response = await apiClient.put('/api/NewsComment/updateNewsComment', data);
+    return response.data;
+  },
+  deleteNewsComment: async (id) => {
+    const response = await apiClient.delete(`/api/NewsComment/deleteNewsComment/${id}`);
+    return response.data;
+  },
+  getCommentsByNewsId: async (newsId, page = 1, pageSize = 10) => {
+    const response = await apiClient.get('/api/NewsComment/getCommentsByNewsId', {
+      params: { newsId, page, pageSize }
+    });
+    return response.data;
+  },
+  getCommentsByUserId: async (userId, page = 1, pageSize = 10) => {
+    const response = await apiClient.get('/api/NewsComment/getCommentsByUserId', {
+      params: { userId, page, pageSize }
+    });
+    return response.data;
+  },
+  getNewsCommentById: async (id) => {
+    const response = await apiClient.get(`/api/NewsComment/getNewsCommentById/${id}`);
+    return response.data;
+  },
+  getAllNewsComments: async (page = 1, pageSize = 10) => {
+    const response = await apiClient.get('/api/NewsComment/getAllNewsComments', {
+      params: { page, pageSize }
+    });
+    return response.data;
+  }
+};
+
 export const gamblerService = {
   getAllGamblers: async (page = 1, pageSize = 10, nickname = '') => {
     const response = await apiClient.get('/api/Gambler/getAllGamblers', {
@@ -195,9 +232,9 @@ export const gamblerService = {
     });
     return response.data;
   },
-  getInactiveGamblers: async (page = 1, pageSize = 10) => {
+  getInactiveGamblers: async (page = 1, pageSize = 10, nickname = '') => {
     const response = await apiClient.get('/api/Gambler/getInactiveGamblers', {
-      params: { page, pageSize }
+      params: { page, pageSize, nickname }
     });
     return response.data;
   },

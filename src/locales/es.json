@@ -11,7 +11,11 @@
         "page_x_of_y": "Página {{current}} de {{total}}",
         "rows_per_page": "Registros por página:",
         "i18n": "Internacionalización",
-        "news": "Noticias"
+        "news": "Noticias",
+        "search": "Buscar...",
+        "actions": "Acciones",
+        "date": "Fecha",
+        "delete_confirm": "¿Estás seguro de que deseas eliminar este elemento?"
     },
     "login": {
         "title": "Bienvenido",
@@ -129,7 +133,15 @@
             "actions": "Acciones"
         },
         "empty": "No se encontraron noticias.",
-        "upload_image": "Subir imagen a la noticia"
+        "upload_image": "Subir imagen a la noticia",
+        "news_tab": "Artículos",
+        "comments_tab": "Comentarios",
+        "all_comments": "Comentarios de Noticias",
+        "comments_for_news": "Comentarios para: ",
+        "comment_user": "Usuario",
+        "news_title": "Artículo",
+        "comment_text": "Comentario",
+        "no_comments": "No hay comentarios para esta selección."
     },
     "gambler_mgmt": {
         "title": "Gestión de Gamblers",

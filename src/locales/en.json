@@ -11,7 +11,11 @@
         "page_x_of_y": "Page {{current}} of {{total}}",
         "rows_per_page": "Rows per page:",
         "i18n": "Internationalization",
-        "news": "News"
+        "news": "News",
+        "search": "Search...",
+        "actions": "Actions",
+        "date": "Date",
+        "delete_confirm": "Are you sure you want to delete this item?"
     },
     "login": {
         "title": "Welcome",
@@ -129,7 +133,15 @@
             "actions": "Actions"
         },
         "empty": "No news articles found.",
-        "upload_image": "Upload image to news"
+        "upload_image": "Upload image to news",
+        "news_tab": "Articles",
+        "comments_tab": "Comments",
+        "all_comments": "News Comments",
+        "comments_for_news": "Comments for: ",
+        "comment_user": "User",
+        "news_title": "Article",
+        "comment_text": "Comment",
+        "no_comments": "No comments found for this selection."
     },
     "gambler_mgmt": {
         "title": "Gambler Management",
