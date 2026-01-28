@@ -2,7 +2,7 @@ import React, { useState, useEffect, useRef } from 'react';
 import { Heart, MessageSquare, MoreVertical, Edit2, Trash2, Calendar, User, Share2 } from 'lucide-react';
 import PostMediaGrid from './PostMediaGrid';
 import PostComments from './PostComments';
-import PostViewersPopup from './PostViewersPopup';
+import PostViewersModal from './PostViewersModal';
 import { useAuth } from '../context/AuthContext';
 import { postViewedService, postLikeService } from '../services/api';
 import { useTranslation } from 'react-i18next';
@@ -16,9 +16,11 @@ const PostCard = ({ post, onEdit, onDelete }) => {
     const [isLiked, setIsLiked] = useState(Boolean(post.likePostByCurrentUser));
     const [likesCount, setLikesCount] = useState(post.totalLikes || 0);
     const [commentsCount, setCommentsCount] = useState(post.totalComments || 0);
-    const [showViewers, setShowViewers] = useState(false);
+    const [showViewersModal, setShowViewersModal] = useState(false);
+    const [showHoverTooltip, setShowHoverTooltip] = useState(false);
     const cardRef = useRef(null);
     const hasReportedView = useRef(false);
+    const tooltipTimeoutRef = useRef(null);
 
     const isAdmin = user?.role === 1 || user?.role === 2;
 
@@ -77,6 +79,19 @@ const PostCard = ({ post, onEdit, onDelete }) => {
                 console.error("Error copying link:", err);
             }
         }
+    };
+
+    const handleTooltipMouseEnter = () => {
+        if (tooltipTimeoutRef.current) {
+            clearTimeout(tooltipTimeoutRef.current);
+        }
+        setShowHoverTooltip(true);
+    };
+
+    const handleTooltipMouseLeave = () => {
+        tooltipTimeoutRef.current = setTimeout(() => {
+            setShowHoverTooltip(false);
+        }, 200); // 200ms delay before hiding
     };
 
     const handleLike = async () => {
@@ -292,51 +307,83 @@ const PostCard = ({ post, onEdit, onDelete }) => {
                 paddingTop: '1rem',
                 borderTop: '1px solid var(--glass-border)'
             }}>
-                <div style={{ position: 'relative', display: 'flex', flexDirection: 'column', alignItems: 'flex-start' }}>
-                    {showViewers && (
-                        <PostViewersPopup
-                            postId={post.postId}
-                            onClose={() => setShowViewers(false)}
-                        />
+                <div
+                    style={{ position: 'relative', display: 'flex', alignItems: 'center' }}
+                    onMouseEnter={handleTooltipMouseEnter}
+                    onMouseLeave={handleTooltipMouseLeave}
+                >
+                    {/* Hover Tooltip */}
+                    {showHoverTooltip && (
+                        <div
+                            style={{
+                                position: 'absolute',
+                                bottom: '100%',
+                                left: '0',
+                                marginBottom: '0px',
+                                paddingBottom: '8px',
+                                background: 'rgba(15, 23, 42, 0.98)',
+                                border: '1px solid var(--glass-border)',
+                                borderRadius: '0.5rem',
+                                padding: '0.5rem 0.75rem',
+                                paddingBottom: 'calc(0.5rem + 8px)',
+                                whiteSpace: 'nowrap',
+                                zIndex: 50,
+                                boxShadow: '0 10px 25px -5px rgba(0, 0, 0, 0.3)',
+                                backdropFilter: 'blur(8px)'
+                            }}
+                            onMouseEnter={handleTooltipMouseEnter}
+                            onMouseLeave={handleTooltipMouseLeave}
+                        >
+                            <button
+                                onClick={() => setShowViewersModal(true)}
+                                style={{
+                                    background: 'none',
+                                    border: 'none',
+                                    color: 'var(--primary)',
+                                    fontSize: '0.75rem',
+                                    fontWeight: '700',
+                                    cursor: 'pointer',
+                                    padding: 0,
+                                    transition: 'color 0.2s'
+                                }}
+                                onMouseEnter={(e) => e.currentTarget.style.color = 'var(--secondary)'}
+                                onMouseLeave={(e) => e.currentTarget.style.color = 'var(--primary)'}
+                            >
+                                {t('posts.show_users') || 'Show users'}
+                            </button>
+                            {/* Arrow */}
+                            <div style={{
+                                position: 'absolute',
+                                top: '100%',
+                                left: '1rem',
+                                marginTop: '-8px',
+                                borderLeft: '6px solid transparent',
+                                borderRight: '6px solid transparent',
+                                borderTop: '6px solid rgba(15, 23, 42, 0.98)',
+                                width: 0,
+                                height: 0
+                            }} />
+                        </div>
                     )}
-                    <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
-                        <button
-                            onClick={handleLike}
-                            disabled={isAdmin}
-                            style={{
-                                display: 'flex',
-                                alignItems: 'center',
-                                gap: '0.5rem',
-                                background: 'none',
-                                border: 'none',
-                                color: isLiked ? 'var(--danger)' : 'var(--text-muted)',
-                                cursor: isAdmin ? 'default' : 'pointer',
-                                transition: 'all 0.2s',
-                                padding: 0
-                            }}
-                        >
-                            <Heart size={20} fill={isLiked ? "currentColor" : "none"} />
-                            <span style={{ fontWeight: '600' }}>{likesCount}</span>
-                        </button>
 
-                        <button
-                            onClick={() => setShowViewers(!showViewers)}
-                            style={{
-                                background: 'none',
-                                border: 'none',
-                                color: 'var(--primary)',
-                                fontSize: '0.75rem',
-                                fontWeight: '700',
-                                cursor: 'pointer',
-                                padding: '4px 8px',
-                                borderRadius: '4px',
-                                transition: 'background 0.2s'
-                            }}
-                            className="show-users-btn"
-                        >
-                            {t('posts.show_users') || 'Show users'}
-                        </button>
-                    </div>
+                    <button
+                        onClick={handleLike}
+                        disabled={isAdmin}
+                        style={{
+                            display: 'flex',
+                            alignItems: 'center',
+                            gap: '0.5rem',
+                            background: 'none',
+                            border: 'none',
+                            color: isLiked ? 'var(--danger)' : 'var(--text-muted)',
+                            cursor: isAdmin ? 'default' : 'pointer',
+                            transition: 'all 0.2s',
+                            padding: 0
+                        }}
+                    >
+                        <Heart size={20} fill={isLiked ? "currentColor" : "none"} />
+                        <span style={{ fontWeight: '600' }}>{likesCount}</span>
+                    </button>
                 </div>
 
                 <button
@@ -384,6 +431,14 @@ const PostCard = ({ post, onEdit, onDelete }) => {
                         onCommentDeleted={() => setCommentsCount(prev => Math.max(0, prev - 1))}
                     />
                 </div>
+            )}
+
+            {/* Viewers Modal */}
+            {showViewersModal && (
+                <PostViewersModal
+                    postId={post.postId}
+                    onClose={() => setShowViewersModal(false)}
+                />
             )}
         </div>
     );

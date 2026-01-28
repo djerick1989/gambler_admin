@@ -38,6 +38,11 @@
         "add_new": "Nueva Publicación",
         "form_subtitle": "Crea contenido atractivo para la comunidad",
         "write_comment": "Escribe un comentario...",
+        "show_users": "Mostrar usuarios",
+        "viewed_by": "Visto por",
+        "no_views": "Sin visualizaciones aún",
+        "no_likes": "Sin likes aún",
+        "no_content": "Sin contenido disponible",
         "form": {
             "content": "Contenido",
             "media": "Galería de Medios"

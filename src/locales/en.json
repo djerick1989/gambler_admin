@@ -38,6 +38,11 @@
         "add_new": "Add New Post",
         "form_subtitle": "Create engaging content for the community",
         "write_comment": "Write a comment...",
+        "show_users": "Show users",
+        "viewed_by": "Viewed by",
+        "no_views": "No views yet",
+        "no_likes": "No likes yet",
+        "no_content": "No content available",
         "form": {
             "content": "Content",
             "media": "Media Gallery"
