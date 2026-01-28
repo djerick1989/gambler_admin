@@ -73,9 +73,11 @@ const MainLayout = () => {
                 zIndex: 50
             }}>
                 <div style={{ padding: '2rem 1.5rem', display: 'flex', alignItems: 'center', gap: '0.75rem' }}>
-                    <div style={{ background: 'var(--primary)', width: '32px', height: '32px', borderRadius: '8px', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-                        <span style={{ fontWeight: 'bold' }}>G</span>
-                    </div>
+                    <img
+                        src="https://s3.us-east-2.amazonaws.com/ludopata.org/logo_gambler.png"
+                        alt="Logo"
+                        style={{ width: '40px', height: '40px', objectFit: 'contain' }}
+                    />
                     <span style={{ fontSize: '1.25rem', fontWeight: '800' }}>{t('sidebar.title')}</span>
                 </div>
 

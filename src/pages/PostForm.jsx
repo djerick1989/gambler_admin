@@ -6,6 +6,22 @@ import {
     ChevronLeft, Loader2, Image as ImageIcon,
     Save, X, Type, Video, Plus, Globe
 } from 'lucide-react';
+import {
+    DndContext,
+    closestCenter,
+    KeyboardSensor,
+    PointerSensor,
+    useSensor,
+    useSensors
+} from '@dnd-kit/core';
+import {
+    arrayMove,
+    SortableContext,
+    sortableKeyboardCoordinates,
+    rectSortingStrategy,
+    useSortable
+} from '@dnd-kit/sortable';
+import { CSS } from '@dnd-kit/utilities';
 import { postService, mediaService } from '../services/api';
 import { useAuth } from '../context/AuthContext';
 import { useTranslation } from 'react-i18next';
@@ -15,6 +31,62 @@ const LANGUAGE_IDS = {
     es: '6892a523-0dc1-4e3b-9ddd-c9a558c7920b'
 };
 
+const SortableMediaItem = ({ media, index, onRemove }) => {
+    const {
+        attributes,
+        listeners,
+        setNodeRef,
+        transform,
+        transition,
+    } = useSortable({ id: media.tempId || media.postMediaId });
+
+    const style = {
+        transform: CSS.Transform.toString(transform),
+        transition,
+        position: 'relative',
+        aspectRatio: '1/1',
+        borderRadius: '0.5rem',
+        overflow: 'hidden',
+        background: '#000',
+        cursor: 'grab',
+        touchAction: 'none'
+    };
+
+    return (
+        <div ref={setNodeRef} style={style} {...attributes} {...listeners}>
+            {media.mediaType === 1 ? (
+                <div style={{ height: '100%', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                    <Video size={32} color="white" />
+                </div>
+            ) : (
+                <img src={media.mediaUrl} alt="" style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
+            )}
+            <button
+                type="button"
+                onPointerDown={(e) => e.stopPropagation()}
+                onClick={() => onRemove(index)}
+                style={{
+                    position: 'absolute',
+                    top: '4px',
+                    right: '4px',
+                    background: 'rgba(239, 68, 68, 0.8)',
+                    border: 'none',
+                    borderRadius: '50%',
+                    width: '24px',
+                    height: '24px',
+                    color: 'white',
+                    cursor: 'pointer',
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'center'
+                }}
+            >
+                <X size={14} />
+            </button>
+        </div>
+    );
+};
+
 const PostForm = () => {
     const { t, i18n } = useTranslation();
     const navigate = useNavigate();
@@ -22,6 +94,13 @@ const PostForm = () => {
     const { user } = useAuth();
     const quillRef = useRef(null);
     const isEditing = Boolean(id);
+
+    const sensors = useSensors(
+        useSensor(PointerSensor),
+        useSensor(KeyboardSensor, {
+            coordinateGetter: sortableKeyboardCoordinates,
+        })
+    );
 
     const [loading, setLoading] = useState(isEditing);
     const [saving, setSaving] = useState(false);
@@ -59,12 +138,13 @@ const PostForm = () => {
             const response = await postService.getPostById(postId, languageId);
             if (response.status && response.data) {
                 const item = response.data;
+                const sortedMedia = (item.postMedia || []).sort((a, b) => a.order - b.order);
                 setFormData({
                     idPost: item.postId, // Required for update
                     contentHtml: item.postTranslations?.[0]?.contentHtml || item.contentHtml || '',
                     languageId: item.languageId || LANGUAGE_IDS.en,
                     active: item.active !== undefined ? item.active : true,
-                    postMediaList: item.postMedia || []
+                    postMediaList: sortedMedia
                 });
             }
         } catch (err) {
@@ -73,6 +153,22 @@ const PostForm = () => {
             navigate('/posts');
         } finally {
             setLoading(false);
+        }
+    };
+
+    const handleDragEnd = (event) => {
+        const { active, over } = event;
+
+        if (active.id !== over.id) {
+            setFormData((prev) => {
+                const oldIndex = prev.postMediaList.findIndex((item) => (item.tempId || item.postMediaId) === active.id);
+                const newIndex = prev.postMediaList.findIndex((item) => (item.tempId || item.postMediaId) === over.id);
+
+                return {
+                    ...prev,
+                    postMediaList: arrayMove(prev.postMediaList, oldIndex, newIndex),
+                };
+            });
         }
     };
 
@@ -88,12 +184,14 @@ const PostForm = () => {
                 const response = await mediaService.upload(file);
                 if (response.status && response.data?.url) {
                     newMediaList.push({
+                        tempId: self.crypto.randomUUID(),
                         postMediaId: "",
                         postId: isEditing ? id : "",
                         mediaUrl: response.data.url,
                         height: 0,
                         width: 0,
-                        mediaType: file.type.startsWith('video') ? 1 : 0 // 0: Image, 1: Video
+                        mediaType: file.type.startsWith('video') ? 1 : 0, // 0: Image, 1: Video
+                        order: newMediaList.length
                     });
                 }
             }
@@ -165,8 +263,13 @@ const PostForm = () => {
 
         setSaving(true);
         try {
+            const mediaWithOrder = formData.postMediaList.map((m, index) => ({
+                ...m,
+                order: index
+            }));
+
             if (isEditing) {
-                const updatedMediaList = formData.postMediaList.map(m => ({
+                const updatedMediaList = mediaWithOrder.map(m => ({
                     ...m,
                     postMediaId: m.postMediaId || "",
                     postId: m.postId || formData.idPost
@@ -175,6 +278,7 @@ const PostForm = () => {
             } else {
                 await postService.createPost({
                     ...formData,
+                    postMediaList: mediaWithOrder,
                     userId: user?.userId
                 });
             }
@@ -292,38 +396,25 @@ const PostForm = () => {
                                 </div>
                             )}
 
-                            {formData.postMediaList.map((media, index) => (
-                                <div key={index} style={{ position: 'relative', aspectRatio: '1/1', borderRadius: '0.5rem', overflow: 'hidden', background: '#000' }}>
-                                    {media.mediaType === 1 ? (
-                                        <div style={{ height: '100%', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-                                            <Video size={32} color="white" />
-                                        </div>
-                                    ) : (
-                                        <img src={media.mediaUrl} alt="" style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
-                                    )}
-                                    <button
-                                        type="button"
-                                        onClick={() => removeMedia(index)}
-                                        style={{
-                                            position: 'absolute',
-                                            top: '4px',
-                                            right: '4px',
-                                            background: 'rgba(239, 68, 68, 0.8)',
-                                            border: 'none',
-                                            borderRadius: '50%',
-                                            width: '24px',
-                                            height: '24px',
-                                            color: 'white',
-                                            cursor: 'pointer',
-                                            display: 'flex',
-                                            alignItems: 'center',
-                                            justifyContent: 'center'
-                                        }}
-                                    >
-                                        <X size={14} />
-                                    </button>
-                                </div>
-                            ))}
+                            <DndContext
+                                sensors={sensors}
+                                collisionDetection={closestCenter}
+                                onDragEnd={handleDragEnd}
+                            >
+                                <SortableContext
+                                    items={formData.postMediaList.map(m => m.tempId || m.postMediaId)}
+                                    strategy={rectSortingStrategy}
+                                >
+                                    {formData.postMediaList.map((media, index) => (
+                                        <SortableMediaItem
+                                            key={media.tempId || media.postMediaId}
+                                            media={media}
+                                            index={index}
+                                            onRemove={removeMedia}
+                                        />
+                                    ))}
+                                </SortableContext>
+                            </DndContext>
 
                             {uploadingMedia && (
                                 <div style={{ aspectRatio: '1/1', display: 'flex', alignItems: 'center', justifyContent: 'center', background: 'rgba(255,255,255,0.02)', borderRadius: '0.5rem', border: '1px dashed var(--glass-border)' }}>

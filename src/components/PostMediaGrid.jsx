@@ -27,7 +27,7 @@ const PostMediaGrid = ({ mediaList = [] }) => {
         }
     };
 
-    const renderMediaItem = (media, index, style = {}, showOverlay = false) => {
+    const renderMediaItem = (media, index, style = {}, overlayCount = 0) => {
         const isVideo = media.mediaType === 1;
 
         return (
@@ -74,7 +74,7 @@ const PostMediaGrid = ({ mediaList = [] }) => {
                     />
                 )}
 
-                {showOverlay && (
+                {overlayCount > 0 && (
                     <div style={{
                         position: 'absolute',
                         top: 0, left: 0, right: 0, bottom: 0,
@@ -85,9 +85,11 @@ const PostMediaGrid = ({ mediaList = [] }) => {
                         color: 'white',
                         fontSize: '1.5rem',
                         fontWeight: 'bold',
-                        backdropFilter: 'blur(2px)'
+                        backdropFilter: 'blur(2px)',
+                        zIndex: 10,
+                        textShadow: '0 2px 4px rgba(0,0,0,0.5)'
                     }}>
-                        +{count - 5}
+                        +{overlayCount}
                     </div>
                 )}
 
@@ -136,12 +138,10 @@ const PostMediaGrid = ({ mediaList = [] }) => {
                 );
             default: // 5+
                 return (
-                    <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gridTemplateRows: '1fr 1fr 1fr', gap: '4px', height: '450px', borderRadius: '0.75rem', overflow: 'hidden', border: '1px solid var(--glass-border)' }}>
-                        <div style={{ gridRow: '1 / 3' }}>{renderMediaItem(mediaList[0], 0)}</div>
-                        <div style={{ gridRow: '1 / 2' }}>{renderMediaItem(mediaList[1], 1)}</div>
-                        <div style={{ gridRow: '2 / 3' }}>{renderMediaItem(mediaList[2], 2)}</div>
-                        <div>{renderMediaItem(mediaList[3], 3)}</div>
-                        <div>{renderMediaItem(mediaList[4], 4, {}, count > 5)}</div>
+                    <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gridTemplateRows: 'repeat(2, minmax(0, 1fr))', gap: '4px', height: '400px', borderRadius: '0.75rem', overflow: 'hidden', border: '1px solid var(--glass-border)' }}>
+                        <div style={{ gridColumn: '1 / 2', gridRow: '1 / 3' }}>{renderMediaItem(mediaList[0], 0)}</div>
+                        <div style={{ gridColumn: '2 / 3', gridRow: '1 / 2' }}>{renderMediaItem(mediaList[1], 1)}</div>
+                        <div style={{ gridColumn: '2 / 3', gridRow: '2 / 3', position: 'relative' }}>{renderMediaItem(mediaList[2], 2, { height: '100%' }, count - 3)}</div>
                     </div>
                 );
         }

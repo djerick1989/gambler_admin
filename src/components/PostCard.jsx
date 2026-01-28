@@ -2,6 +2,7 @@ import React, { useState, useEffect, useRef } from 'react';
 import { Heart, MessageSquare, MoreVertical, Edit2, Trash2, Calendar, User, Share2 } from 'lucide-react';
 import PostMediaGrid from './PostMediaGrid';
 import PostComments from './PostComments';
+import PostViewersPopup from './PostViewersPopup';
 import { useAuth } from '../context/AuthContext';
 import { postViewedService, postLikeService } from '../services/api';
 import { useTranslation } from 'react-i18next';
@@ -15,6 +16,7 @@ const PostCard = ({ post, onEdit, onDelete }) => {
     const [isLiked, setIsLiked] = useState(Boolean(post.likePostByCurrentUser));
     const [likesCount, setLikesCount] = useState(post.totalLikes || 0);
     const [commentsCount, setCommentsCount] = useState(post.totalComments || 0);
+    const [showViewers, setShowViewers] = useState(false);
     const cardRef = useRef(null);
     const hasReportedView = useRef(false);
 
@@ -210,19 +212,21 @@ const PostCard = ({ post, onEdit, onDelete }) => {
                 </div>
 
                 <div style={{ display: 'flex', gap: '0.5rem' }}>
-                    <button
-                        onClick={() => onEdit(post)}
-                        style={{ padding: '0.5rem', background: 'rgba(255,255,255,0.05)', border: 'none', borderRadius: '0.5rem', color: 'white', cursor: 'pointer' }}
-                    >
-                        <Edit2 size={16} />
-                    </button>
                     {(isAdmin || user?.userId === post.userId) && (
-                        <button
-                            onClick={() => onDelete(post.postId)}
-                            style={{ padding: '0.5rem', background: 'rgba(239, 68, 68, 0.1)', border: 'none', borderRadius: '0.5rem', color: '#ef4444', cursor: 'pointer' }}
-                        >
-                            <Trash2 size={16} />
-                        </button>
+                        <>
+                            <button
+                                onClick={() => onEdit(post)}
+                                style={{ padding: '0.5rem', background: 'rgba(255,255,255,0.05)', border: 'none', borderRadius: '0.5rem', color: 'white', cursor: 'pointer' }}
+                            >
+                                <Edit2 size={16} />
+                            </button>
+                            <button
+                                onClick={() => onDelete(post.postId)}
+                                style={{ padding: '0.5rem', background: 'rgba(239, 68, 68, 0.1)', border: 'none', borderRadius: '0.5rem', color: '#ef4444', cursor: 'pointer' }}
+                            >
+                                <Trash2 size={16} />
+                            </button>
+                        </>
                     )}
                 </div>
             </div>
@@ -288,24 +292,52 @@ const PostCard = ({ post, onEdit, onDelete }) => {
                 paddingTop: '1rem',
                 borderTop: '1px solid var(--glass-border)'
             }}>
-                <button
-                    onClick={handleLike}
-                    disabled={isAdmin}
-                    style={{
-                        display: 'flex',
-                        alignItems: 'center',
-                        gap: '0.5rem',
-                        background: 'none',
-                        border: 'none',
-                        color: isLiked ? 'var(--danger)' : 'var(--text-muted)',
-                        cursor: isAdmin ? 'default' : 'pointer',
-                        transition: 'all 0.2s',
-                        padding: 0
-                    }}
-                >
-                    <Heart size={20} fill={isLiked ? "currentColor" : "none"} />
-                    <span style={{ fontWeight: '600' }}>{likesCount}</span>
-                </button>
+                <div style={{ position: 'relative', display: 'flex', flexDirection: 'column', alignItems: 'flex-start' }}>
+                    {showViewers && (
+                        <PostViewersPopup
+                            postId={post.postId}
+                            onClose={() => setShowViewers(false)}
+                        />
+                    )}
+                    <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
+                        <button
+                            onClick={handleLike}
+                            disabled={isAdmin}
+                            style={{
+                                display: 'flex',
+                                alignItems: 'center',
+                                gap: '0.5rem',
+                                background: 'none',
+                                border: 'none',
+                                color: isLiked ? 'var(--danger)' : 'var(--text-muted)',
+                                cursor: isAdmin ? 'default' : 'pointer',
+                                transition: 'all 0.2s',
+                                padding: 0
+                            }}
+                        >
+                            <Heart size={20} fill={isLiked ? "currentColor" : "none"} />
+                            <span style={{ fontWeight: '600' }}>{likesCount}</span>
+                        </button>
+
+                        <button
+                            onClick={() => setShowViewers(!showViewers)}
+                            style={{
+                                background: 'none',
+                                border: 'none',
+                                color: 'var(--primary)',
+                                fontSize: '0.75rem',
+                                fontWeight: '700',
+                                cursor: 'pointer',
+                                padding: '4px 8px',
+                                borderRadius: '4px',
+                                transition: 'background 0.2s'
+                            }}
+                            className="show-users-btn"
+                        >
+                            {t('posts.show_users') || 'Show users'}
+                        </button>
+                    </div>
+                </div>
 
                 <button
                     onClick={() => setShowComments(!showComments)}

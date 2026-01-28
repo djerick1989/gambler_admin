@@ -32,9 +32,11 @@ const Login = () => {
         <div className="login-container" style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', minHeight: '100vh', padding: '1rem' }}>
             <div className="glass-card animate-fade-in" style={{ width: '100%', maxWidth: '400px', padding: '2.5rem' }}>
                 <div style={{ textAlign: 'center', marginBottom: '2rem' }}>
-                    <div style={{ background: 'var(--primary)', width: '60px', height: '60px', borderRadius: '12px', display: 'flex', alignItems: 'center', justifyContent: 'center', margin: '0 auto 1.5rem' }}>
-                        <LogIn size={32} color="white" />
-                    </div>
+                    <img
+                        src="https://s3.us-east-2.amazonaws.com/ludopata.org/logo_gambler.png"
+                        alt="Logo"
+                        style={{ width: '80px', height: '80px', objectFit: 'contain', margin: '0 auto 1.5rem', display: 'block' }}
+                    />
                     <h1 style={{ fontSize: '1.875rem', fontWeight: '800', marginBottom: '0.5rem' }}>{t('login.title')}</h1>
                     <p style={{ color: 'var(--text-muted)' }}>{t('login.subtitle')}</p>
                 </div>
