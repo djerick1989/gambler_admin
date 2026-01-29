@@ -41,8 +41,10 @@
         "write_comment": "Write a comment...",
         "show_users": "Show users",
         "viewed_by": "Viewed by",
+        "shared_by": "Shared by",
         "no_views": "No views yet",
         "no_likes": "No likes yet",
+        "no_shares": "No shares yet",
         "no_content": "No content available",
         "media": {
             "photos": "Photos/Videos"

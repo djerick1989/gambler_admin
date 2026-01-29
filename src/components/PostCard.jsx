@@ -4,7 +4,8 @@ import PostMediaGrid from './PostMediaGrid';
 import PostComments from './PostComments';
 import PostViewersModal from './PostViewersModal';
 import { useAuth } from '../context/AuthContext';
-import { postViewedService, postLikeService } from '../services/api';
+import { postViewedService, postLikeService, postSharedService } from '../services/api';
+import PostSharedViewersModal from './PostSharedViewersModal';
 import { useTranslation } from 'react-i18next';
 import 'react-quill-new/dist/quill.snow.css';
 
@@ -19,11 +20,26 @@ const PostCard = ({ post, onEdit, onDelete }) => {
     const [currentLikeId, setCurrentLikeId] = useState(post.likePostByCurrentUser?.postLikeId);
     const [showViewersModal, setShowViewersModal] = useState(false);
     const [showHoverTooltip, setShowHoverTooltip] = useState(false);
+    const [sharesCount, setSharesCount] = useState(post.totalShared || 0);
+    const [showShareModal, setShowShareModal] = useState(false);
+    const [showShareTooltip, setShowShareTooltip] = useState(false);
+    const [showActionsMenu, setShowActionsMenu] = useState(false);
     const cardRef = useRef(null);
     const hasReportedView = useRef(false);
     const tooltipTimeoutRef = useRef(null);
+    const shareTooltipTimeoutRef = useRef(null);
 
     const isAdmin = user?.role === 1 || user?.role === 2;
+
+    useEffect(() => {
+        const handleClickOutside = (event) => {
+            if (showActionsMenu && !event.target.closest('.post-actions-container')) {
+                setShowActionsMenu(false);
+            }
+        };
+        document.addEventListener('mousedown', handleClickOutside);
+        return () => document.removeEventListener('mousedown', handleClickOutside);
+    }, [showActionsMenu]);
 
     useEffect(() => {
         if (authLoading || !user) return;
@@ -63,12 +79,30 @@ const PostCard = ({ post, onEdit, onDelete }) => {
 
     const handleShare = async () => {
         const shareUrl = `${window.location.origin}/posts/${post.postId}`;
+
+        const performShareAction = async () => {
+            if (isAdmin) return;
+            try {
+                await postSharedService.sharePost({
+                    postId: post.postId,
+                    userId: user?.userId
+                });
+                setSharesCount(prev => prev + 1);
+            } catch (err) {
+                console.error("Error reporting share:", err);
+            }
+        };
+
         if (navigator.share) {
             try {
                 await navigator.share({
                     title: 'Gambler Community Post',
                     url: shareUrl
                 });
+
+                // The promise resolves when the user successfully chooses a share target.
+                // If they cancel, it usually throws an 'AbortError'.
+                await performShareAction();
             } catch (err) {
                 console.error("Error sharing:", err);
             }
@@ -76,10 +110,25 @@ const PostCard = ({ post, onEdit, onDelete }) => {
             try {
                 await navigator.clipboard.writeText(shareUrl);
                 alert(t('common.link_copied') || 'Link copied to clipboard!');
+                await performShareAction();
             } catch (err) {
                 console.error("Error copying link:", err);
             }
         }
+    };
+
+    const handleShareTooltipMouseEnter = () => {
+        if (sharesCount === 0) return;
+        if (shareTooltipTimeoutRef.current) {
+            clearTimeout(shareTooltipTimeoutRef.current);
+        }
+        setShowShareTooltip(true);
+    };
+
+    const handleShareTooltipMouseLeave = () => {
+        shareTooltipTimeoutRef.current = setTimeout(() => {
+            setShowShareTooltip(false);
+        }, 200);
     };
 
     const handleTooltipMouseEnter = () => {
@@ -234,21 +283,91 @@ const PostCard = ({ post, onEdit, onDelete }) => {
                     </div>
                 </div>
 
-                <div style={{ display: 'flex', gap: '0.5rem' }}>
+                <div className="post-actions-container" style={{ position: 'relative' }}>
                     {(isAdmin || user?.userId === post.userId) && (
                         <>
                             <button
-                                onClick={() => onEdit(post)}
-                                style={{ padding: '0.5rem', background: 'rgba(255,255,255,0.05)', border: 'none', borderRadius: '0.5rem', color: 'white', cursor: 'pointer' }}
+                                onClick={() => setShowActionsMenu(!showActionsMenu)}
+                                style={{
+                                    padding: '0.5rem',
+                                    background: showActionsMenu ? 'rgba(255,255,255,0.1)' : 'rgba(255,255,255,0.05)',
+                                    border: 'none',
+                                    borderRadius: '0.5rem',
+                                    color: 'white',
+                                    cursor: 'pointer',
+                                    transition: 'all 0.2s'
+                                }}
                             >
-                                <Edit2 size={16} />
+                                <MoreVertical size={20} />
                             </button>
-                            <button
-                                onClick={() => onDelete(post.postId)}
-                                style={{ padding: '0.5rem', background: 'rgba(239, 68, 68, 0.1)', border: 'none', borderRadius: '0.5rem', color: '#ef4444', cursor: 'pointer' }}
-                            >
-                                <Trash2 size={16} />
-                            </button>
+
+                            {showActionsMenu && (
+                                <div style={{
+                                    position: 'absolute',
+                                    top: '100%',
+                                    right: 0,
+                                    marginTop: '0.5rem',
+                                    background: 'rgba(15, 23, 42, 0.95)',
+                                    backdropFilter: 'blur(12px)',
+                                    border: '1px solid var(--glass-border)',
+                                    borderRadius: '0.75rem',
+                                    padding: '0.5rem',
+                                    zIndex: 100,
+                                    minWidth: '150px',
+                                    boxShadow: '0 10px 25px -5px rgba(0, 0, 0, 0.4)'
+                                }}>
+                                    <button
+                                        onClick={() => {
+                                            onEdit(post);
+                                            setShowActionsMenu(false);
+                                        }}
+                                        style={{
+                                            display: 'flex',
+                                            alignItems: 'center',
+                                            gap: '0.75rem',
+                                            width: '100%',
+                                            padding: '0.75rem',
+                                            background: 'none',
+                                            border: 'none',
+                                            borderRadius: '0.5rem',
+                                            color: 'white',
+                                            cursor: 'pointer',
+                                            textAlign: 'left',
+                                            transition: 'background 0.2s'
+                                        }}
+                                        onMouseEnter={(e) => e.target.style.background = 'rgba(255,255,255,0.05)'}
+                                        onMouseLeave={(e) => e.target.style.background = 'none'}
+                                    >
+                                        <Edit2 size={16} />
+                                        <span style={{ fontSize: '0.875rem', fontWeight: '500' }}>{t('common.edit')}</span>
+                                    </button>
+                                    <button
+                                        onClick={() => {
+                                            onDelete(post.postId);
+                                            setShowActionsMenu(false);
+                                        }}
+                                        style={{
+                                            display: 'flex',
+                                            alignItems: 'center',
+                                            gap: '0.75rem',
+                                            width: '100%',
+                                            padding: '0.75rem',
+                                            background: 'none',
+                                            border: 'none',
+                                            borderRadius: '0.5rem',
+                                            color: '#ef4444',
+                                            cursor: 'pointer',
+                                            textAlign: 'left',
+                                            transition: 'background 0.2s'
+                                        }}
+                                        onMouseEnter={(e) => e.target.style.background = 'rgba(239, 68, 68, 0.1)'}
+                                        onMouseLeave={(e) => e.target.style.background = 'none'}
+                                    >
+                                        <Trash2 size={16} />
+                                        <span style={{ fontSize: '0.875rem', fontWeight: '500' }}>{t('common.delete')}</span>
+                                    </button>
+                                </div>
+                            )}
                         </>
                     )}
                 </div>
@@ -414,23 +533,82 @@ const PostCard = ({ post, onEdit, onDelete }) => {
                     <span style={{ fontWeight: '600' }}>{commentsCount}</span>
                 </button>
 
-                <button
-                    onClick={handleShare}
-                    style={{
-                        display: 'flex',
-                        alignItems: 'center',
-                        gap: '0.5rem',
-                        background: 'none',
-                        border: 'none',
-                        color: 'var(--text-muted)',
-                        cursor: 'pointer',
-                        transition: 'all 0.2s',
-                        padding: 0
-                    }}
-                    title={t('common.share') || 'Share'}
+                <div
+                    style={{ position: 'relative', display: 'flex', alignItems: 'center' }}
+                    onMouseEnter={handleShareTooltipMouseEnter}
+                    onMouseLeave={handleShareTooltipMouseLeave}
                 >
-                    <Share2 size={20} />
-                </button>
+                    {showShareTooltip && (
+                        <div
+                            style={{
+                                position: 'absolute',
+                                bottom: '100%',
+                                left: '0',
+                                marginBottom: '0px',
+                                paddingBottom: '8px',
+                                background: 'rgba(15, 23, 42, 0.98)',
+                                border: '1px solid var(--glass-border)',
+                                borderRadius: '0.5rem',
+                                padding: '0.5rem 0.75rem',
+                                paddingBottom: 'calc(0.5rem + 8px)',
+                                whiteSpace: 'nowrap',
+                                zIndex: 50,
+                                boxShadow: '0 10px 25px -5px rgba(0, 0, 0, 0.3)',
+                                backdropFilter: 'blur(8px)'
+                            }}
+                            onMouseEnter={handleShareTooltipMouseEnter}
+                            onMouseLeave={handleShareTooltipMouseLeave}
+                        >
+                            <button
+                                onClick={() => setShowShareModal(true)}
+                                style={{
+                                    background: 'none',
+                                    border: 'none',
+                                    color: 'var(--primary)',
+                                    fontSize: '0.75rem',
+                                    fontWeight: '700',
+                                    cursor: 'pointer',
+                                    padding: 0,
+                                    transition: 'color 0.2s'
+                                }}
+                                onMouseEnter={(e) => e.currentTarget.style.color = 'var(--secondary)'}
+                                onMouseLeave={(e) => e.currentTarget.style.color = 'var(--primary)'}
+                            >
+                                {t('posts.show_users') || 'Show users'}
+                            </button>
+                            <div style={{
+                                position: 'absolute',
+                                top: '100%',
+                                left: '1rem',
+                                marginTop: '-8px',
+                                borderLeft: '6px solid transparent',
+                                borderRight: '6px solid transparent',
+                                borderTop: '6px solid rgba(15, 23, 42, 0.98)',
+                                width: 0,
+                                height: 0
+                            }} />
+                        </div>
+                    )}
+
+                    <button
+                        onClick={handleShare}
+                        style={{
+                            display: 'flex',
+                            alignItems: 'center',
+                            gap: '0.5rem',
+                            background: 'none',
+                            border: 'none',
+                            color: 'var(--text-muted)',
+                            cursor: 'pointer',
+                            transition: 'all 0.2s',
+                            padding: 0
+                        }}
+                        title={t('common.share') || 'Share'}
+                    >
+                        <Share2 size={20} />
+                        <span style={{ fontWeight: '600' }}>{sharesCount}</span>
+                    </button>
+                </div>
             </div>
 
             {showComments && (
@@ -448,6 +626,14 @@ const PostCard = ({ post, onEdit, onDelete }) => {
                 <PostViewersModal
                     postId={post.postId}
                     onClose={() => setShowViewersModal(false)}
+                />
+            )}
+
+            {/* Shares Modal */}
+            {showShareModal && (
+                <PostSharedViewersModal
+                    postId={post.postId}
+                    onClose={() => setShowShareModal(false)}
                 />
             )}
         </div>

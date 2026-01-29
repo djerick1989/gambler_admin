@@ -1,16 +1,16 @@
 import React, { useState, useEffect } from 'react';
-import { postLikeService } from '../services/api';
-import { Loader2, User as UserIcon, Calendar, X } from 'lucide-react';
+import { postSharedService } from '../services/api';
+import { Loader2, User as UserIcon, Calendar, X, Share2 } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
 
-const PostViewersModal = ({ postId, onClose }) => {
+const PostSharedViewersModal = ({ postId, onClose }) => {
     const { t } = useTranslation();
     const [viewers, setViewers] = useState([]);
     const [loading, setLoading] = useState(true);
     const [loadingMore, setLoadingMore] = useState(false);
     const [pagination, setPagination] = useState({
         page: 1,
-        pageSize: 20,
+        pageSize: 10,
         totalRecords: 0,
         lastPage: 1
     });
@@ -26,9 +26,9 @@ const PostViewersModal = ({ postId, onClose }) => {
         else setLoadingMore(true);
 
         try {
-            const response = await postLikeService.getAllPostLikeByPostId(postId, page, pagination.pageSize);
+            const response = await postSharedService.getAllPostSharedByPostId(postId, page, pagination.pageSize);
             if (response.status) {
-                const newData = response.data.postLike || [];
+                const newData = response.data.postShares || [];
                 if (reset) {
                     setViewers(newData);
                 } else {
@@ -43,7 +43,7 @@ const PostViewersModal = ({ postId, onClose }) => {
                 });
             }
         } catch (err) {
-            console.error("Error fetching viewers:", err);
+            console.error("Error fetching share viewers:", err);
         } finally {
             setLoading(false);
             setLoadingMore(false);
@@ -113,16 +113,20 @@ const PostViewersModal = ({ postId, onClose }) => {
                             margin: 0,
                             fontSize: '1.5rem',
                             fontWeight: '700',
-                            color: 'white'
+                            color: 'white',
+                            display: 'flex',
+                            alignItems: 'center',
+                            gap: '0.5rem'
                         }}>
-                            {t('posts.viewed_by') || 'Viewed by'}
+                            <Share2 size={24} color="var(--primary)" />
+                            {t('posts.shared_by') || 'Shared by'}
                         </h2>
                         <p style={{
                             margin: '0.25rem 0 0 0',
                             fontSize: '0.875rem',
                             color: 'var(--text-muted)'
                         }}>
-                            {pagination.totalRecords} {pagination.totalRecords === 1 ? 'like' : 'likes'}
+                            {pagination.totalRecords} {pagination.totalRecords === 1 ? 'share' : 'shares'}
                         </p>
                     </div>
                     <button
@@ -173,17 +177,17 @@ const PostViewersModal = ({ postId, onClose }) => {
                             padding: '3rem',
                             color: 'var(--text-muted)'
                         }}>
-                            <UserIcon size={48} style={{ margin: '0 auto 1rem', opacity: 0.3 }} />
-                            <p>{t('posts.no_likes') || 'No likes yet'}</p>
+                            <Share2 size={48} style={{ margin: '0 auto 1rem', opacity: 0.3 }} />
+                            <p>{t('posts.no_shares') || 'No shares yet'}</p>
                         </div>
                     ) : (
                         <div style={{
                             display: 'grid',
                             gap: '0.75rem'
                         }}>
-                            {viewers.map((view, idx) => (
+                            {viewers.map((share, idx) => (
                                 <div
-                                    key={view.postLikeId || idx}
+                                    key={share.postSharedId || idx}
                                     style={{
                                         display: 'flex',
                                         alignItems: 'center',
@@ -208,16 +212,16 @@ const PostViewersModal = ({ postId, onClose }) => {
                                         width: '48px',
                                         height: '48px',
                                         borderRadius: '50%',
-                                        background: view.user?.avatar
-                                            ? `url(${view.user.avatar}) center/cover`
-                                            : 'linear-gradient(135deg, rgba(99, 102, 241, 0.2) 0%, rgba(168, 85, 247, 0.2) 100%)',
+                                        background: share.user?.avatar
+                                            ? `url(${share.user.avatar}) center/cover`
+                                            : 'linear-gradient(135deg, rgba(14, 165, 233, 0.2) 0%, rgba(56, 189, 248, 0.2) 100%)',
                                         display: 'flex',
                                         alignItems: 'center',
                                         justifyContent: 'center',
                                         flexShrink: 0,
                                         border: '2px solid rgba(255, 255, 255, 0.1)'
                                     }}>
-                                        {!view.user?.avatar && <UserIcon size={24} color="var(--text-muted)" />}
+                                        {!share.user?.avatar && <UserIcon size={24} color="var(--text-muted)" />}
                                     </div>
 
                                     {/* User Info */}
@@ -230,7 +234,7 @@ const PostViewersModal = ({ postId, onClose }) => {
                                             textOverflow: 'ellipsis',
                                             marginBottom: '0.25rem'
                                         }}>
-                                            {view.user?.nickName || view.user?.name || view.userId?.substring(0, 8) || 'User'}
+                                            {share.user?.nickName || share.user?.name || share.userId?.substring(0, 8) || 'User'}
                                         </div>
                                         <div style={{
                                             fontSize: '0.875rem',
@@ -240,7 +244,7 @@ const PostViewersModal = ({ postId, onClose }) => {
                                             gap: '0.5rem'
                                         }}>
                                             <Calendar size={14} />
-                                            {formatDate(view.createdAt)}
+                                            {formatDate(share.sharedAt)}
                                         </div>
                                     </div>
                                 </div>
@@ -286,4 +290,4 @@ const PostViewersModal = ({ postId, onClose }) => {
     );
 };
 
-export default PostViewersModal;
+export default PostSharedViewersModal;

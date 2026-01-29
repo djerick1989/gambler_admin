@@ -381,4 +381,17 @@ export const postViewedService = {
   }
 };
 
+export const postSharedService = {
+  sharePost: async (data) => {
+    const response = await apiClient.post('/api/PostShared/sharePost', data);
+    return response.data;
+  },
+  getAllPostSharedByPostId: async (postId, page = 1, pageSize = 10) => {
+    const response = await apiClient.get('/api/PostShared/getAllPostSharedByPostId', {
+      params: { postId, page, pageSize }
+    });
+    return response.data;
+  }
+};
+
 export default apiClient;

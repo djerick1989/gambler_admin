@@ -41,8 +41,10 @@
         "write_comment": "Escribe un comentario...",
         "show_users": "Mostrar usuarios",
         "viewed_by": "Visto por",
+        "shared_by": "Compartido por",
         "no_views": "Sin visualizaciones aún",
         "no_likes": "Sin likes aún",
+        "no_shares": "Sin compartidos aún",
         "no_content": "Sin contenido disponible",
         "media": {
             "photos": "Fotos/Videos"
