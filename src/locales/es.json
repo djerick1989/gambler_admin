@@ -37,15 +37,20 @@
         "edit": "Editar Post",
         "add_new": "Nueva Publicación",
         "form_subtitle": "Crea contenido atractivo para la comunidad",
+        "placeholder": "¿Qué historia quieres contar hoy?",
         "write_comment": "Escribe un comentario...",
         "show_users": "Mostrar usuarios",
         "viewed_by": "Visto por",
         "no_views": "Sin visualizaciones aún",
         "no_likes": "Sin likes aún",
         "no_content": "Sin contenido disponible",
+        "media": {
+            "photos": "Fotos/Videos"
+        },
         "form": {
             "content": "Contenido",
-            "media": "Galería de Medios"
+            "media": "Galería de Medios",
+            "empty_error": "Por favor, agrega al menos algo de texto o una imagen/video"
         }
     },
     "login": {

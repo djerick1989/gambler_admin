@@ -87,13 +87,16 @@ const SortableMediaItem = ({ media, index, onRemove }) => {
     );
 };
 
-const PostForm = () => {
+const PostForm = ({ id: propId, onSuccess, autoOpenMedia }) => {
     const { t, i18n } = useTranslation();
     const navigate = useNavigate();
-    const { id } = useParams();
+    const { id: paramId } = useParams();
     const { user } = useAuth();
     const quillRef = useRef(null);
+
+    const id = propId || paramId;
     const isEditing = Boolean(id);
+    const isModal = Boolean(onSuccess);
 
     const sensors = useSensors(
         useSensor(PointerSensor),
@@ -116,8 +119,10 @@ const PostForm = () => {
 
     useEffect(() => {
         if (!isEditing && isAdmin) {
-            alert("Admins cannot create new posts");
-            navigate('/posts');
+            if (!isModal) {
+                alert("Admins cannot create new posts");
+                navigate('/posts');
+            }
             return;
         }
 
@@ -127,9 +132,24 @@ const PostForm = () => {
         if (isEditing) {
             fetchPostDetail(id);
         } else {
-            setFormData(prev => ({ ...prev, languageId: defaultLangId }));
+            setFormData(prev => ({
+                ...prev,
+                contentHtml: '', // Reset for new posts
+                postMediaList: [],
+                languageId: defaultLangId
+            }));
         }
-    }, [id, isEditing, isAdmin, i18n.language]);
+    }, [id, isEditing, isAdmin, i18n.language, isModal]);
+
+    useEffect(() => {
+        if (autoOpenMedia && !isEditing) {
+            const timer = setTimeout(() => {
+                const uploadInput = document.getElementById('media-upload');
+                if (uploadInput) uploadInput.click();
+            }, 100);
+            return () => clearTimeout(timer);
+        }
+    }, [autoOpenMedia, isEditing]);
 
     const fetchPostDetail = async (postId) => {
         try {
@@ -149,8 +169,10 @@ const PostForm = () => {
             }
         } catch (err) {
             console.error("Error fetching post detail:", err);
-            alert("Error loading post data");
-            navigate('/posts');
+            if (!isModal) {
+                alert("Error loading post data");
+                navigate('/posts');
+            }
         } finally {
             setLoading(false);
         }
@@ -212,31 +234,6 @@ const PostForm = () => {
         }));
     };
 
-    const imageHandler = () => {
-        const input = document.createElement('input');
-        input.setAttribute('type', 'file');
-        input.setAttribute('accept', 'image/*');
-        input.click();
-
-        input.onchange = async () => {
-            const file = input.files[0];
-            if (!file) return;
-
-            const quill = quillRef.current.getEditor();
-            const range = quill.getSelection(true);
-
-            try {
-                const response = await mediaService.upload(file);
-                if (response.status && response.data?.url) {
-                    quill.insertEmbed(range.index, 'image', response.data.url);
-                    quill.setSelection(range.index + 1);
-                }
-            } catch (err) {
-                console.error("Error uploading image to editor:", err);
-                alert("Error uploading image");
-            }
-        };
-    };
 
     const modules = useMemo(() => ({
         toolbar: {
@@ -245,19 +242,21 @@ const PostForm = () => {
                 ['bold', 'italic', 'underline', 'strike'],
                 [{ 'list': 'ordered' }, { 'list': 'bullet' }],
                 [{ 'color': [] }, { 'background': [] }],
-                ['link', 'image'],
+                ['link'],
                 ['clean']
-            ],
-            handlers: {
-                image: imageHandler
-            }
+            ]
         }
     }), []);
 
     const handleSubmit = async (e) => {
         e.preventDefault();
-        if (!formData.contentHtml) {
-            alert("Please fill in all required fields");
+
+        // Basic check for content presence (ignoring empty HTML tags)
+        const hasContent = formData.contentHtml && formData.contentHtml.replace(/<[^>]*>/g, '').trim().length > 0;
+        const hasMedia = formData.postMediaList.length > 0;
+
+        if (!hasContent && !hasMedia) {
+            alert(t('posts.form.empty_error') || "Please provide at least some text or an image/video");
             return;
         }
 
@@ -282,7 +281,12 @@ const PostForm = () => {
                     userId: user?.userId
                 });
             }
-            navigate('/posts');
+
+            if (onSuccess) {
+                onSuccess();
+            } else {
+                navigate('/posts');
+            }
         } catch (err) {
             console.error("Error saving post:", err);
             alert("Error saving post");
@@ -300,40 +304,46 @@ const PostForm = () => {
     }
 
     return (
-        <div style={{ maxWidth: '1000px', margin: '0 auto', padding: '1rem' }}>
-            <div style={{ display: 'flex', alignItems: 'center', gap: '1rem', marginBottom: '2rem' }}>
-                <button
-                    onClick={() => navigate('/posts')}
-                    style={{
-                        background: 'rgba(255,255,255,0.05)',
-                        border: 'none',
-                        color: 'white',
-                        padding: '0.5rem',
-                        borderRadius: '0.5rem',
-                        cursor: 'pointer',
-                        display: 'flex'
-                    }}
-                >
-                    <ChevronLeft size={24} />
-                </button>
-                <div>
-                    <h1 style={{ fontSize: '1.875rem', fontWeight: '800' }}>
-                        {isEditing ? t('posts.edit') || 'Edit Post' : t('posts.add_new') || 'Add New Post'}
-                    </h1>
-                    <p style={{ color: 'var(--text-muted)' }}>{t('posts.form_subtitle') || 'Create engaging content for the community'}</p>
+        <div style={{ maxWidth: isModal ? '100%' : '1000px', margin: '0 auto', padding: isModal ? '0' : '1rem' }}>
+            {!isModal && (
+                <div style={{ display: 'flex', alignItems: 'center', gap: '1rem', marginBottom: '2rem' }}>
+                    <button
+                        onClick={() => navigate('/posts')}
+                        style={{
+                            background: 'rgba(255,255,255,0.05)',
+                            border: 'none',
+                            color: 'white',
+                            padding: '0.5rem',
+                            borderRadius: '0.5rem',
+                            cursor: 'pointer',
+                            display: 'flex'
+                        }}
+                    >
+                        <ChevronLeft size={24} />
+                    </button>
+                    <div>
+                        <h1 style={{ fontSize: '1.875rem', fontWeight: '800' }}>
+                            {isEditing ? t('posts.edit') || 'Edit Post' : t('posts.add_new') || 'Add New Post'}
+                        </h1>
+                        <p style={{ color: 'var(--text-muted)' }}>{t('posts.form_subtitle') || 'Create engaging content for the community'}</p>
+                    </div>
                 </div>
-            </div>
+            )}
 
-            <form onSubmit={handleSubmit} style={{ display: 'grid', gridTemplateColumns: '1fr 350px', gap: '2rem' }}>
+            <form onSubmit={handleSubmit} style={{
+                display: 'grid',
+                gridTemplateColumns: isModal ? '1fr' : '1fr 350px',
+                gap: '2rem'
+            }}>
                 <div style={{ display: 'flex', flexDirection: 'column', gap: '1.5rem' }}>
-                    <div className="glass-card" style={{ padding: '1.5rem' }}>
+                    <div className={isModal ? "" : "glass-card"} style={{ padding: isModal ? '0' : '1.5rem' }}>
 
                         <div className="input-group" style={{ marginBottom: 0 }}>
                             <label>{t('posts.form.content') || 'Content'}</label>
                             <div style={{ background: 'rgba(255,255,255,0.02)', borderRadius: '0.5rem', border: '1px solid var(--glass-border)', overflow: 'hidden' }}>
                                 <style>{`
                                     .ql-toolbar.ql-snow { border: none; border-bottom: 1px solid var(--glass-border); background: rgba(255,255,255,0.05); }
-                                    .ql-container.ql-snow { border: none; min-height: 300px; font-size: 1rem; color: white; }
+                                    .ql-container.ql-snow { border: none; min-height: 200px; font-size: 1rem; color: white; }
                                     .ql-editor.ql-blank::before { color: var(--text-muted); }
                                 `}</style>
                                 <ReactQuill
@@ -347,7 +357,7 @@ const PostForm = () => {
                         </div>
                     </div>
 
-                    <div className="glass-card" style={{ padding: '1.5rem' }}>
+                    <div className={isModal ? "" : "glass-card"} style={{ padding: isModal ? '0' : '1.5rem' }}>
                         <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '1rem' }}>
                             <label style={{ margin: 0 }}>{t('posts.form.media') || 'Media Gallery'}</label>
                             <button
@@ -426,89 +436,104 @@ const PostForm = () => {
                 </div>
 
                 <div style={{ display: 'flex', flexDirection: 'column', gap: '1.5rem' }}>
-                    <div className="glass-card" style={{ padding: '1.5rem' }}>
-                        <div className="input-group">
-                            <label style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
-                                <Globe size={16} /> {t('common.language') || 'Language'}
-                            </label>
-                            <select
-                                value={formData.languageId}
-                                onChange={(e) => setFormData({ ...formData, languageId: e.target.value })}
-                                style={{
-                                    width: '100%',
-                                    padding: '0.75rem',
-                                    background: 'rgba(255,255,255,0.03)',
-                                    border: '1px solid var(--glass-border)',
-                                    borderRadius: '0.5rem',
-                                    color: 'white'
-                                }}
-                            >
-                                <option value={LANGUAGE_IDS.en} style={{ background: 'var(--bg-darker)' }}>English</option>
-                                <option value={LANGUAGE_IDS.es} style={{ background: 'var(--bg-darker)' }}>Español</option>
-                            </select>
-                        </div>
-
-                        {isEditing && (
-                            <div className="input-group" style={{ marginBottom: 0 }}>
+                    {!isModal && (
+                        <div className="glass-card" style={{ padding: '1.5rem' }}>
+                            <div className="input-group">
                                 <label style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
-                                    {t('common.status') || 'Status'}
+                                    <Globe size={16} /> {t('common.language') || 'Language'}
                                 </label>
-                                <div
-                                    onClick={() => setFormData({ ...formData, active: !formData.active })}
+                                <select
+                                    value={formData.languageId}
+                                    onChange={(e) => setFormData({ ...formData, languageId: e.target.value })}
                                     style={{
-                                        display: 'flex',
-                                        alignItems: 'center',
-                                        gap: '0.75rem',
+                                        width: '100%',
                                         padding: '0.75rem',
                                         background: 'rgba(255,255,255,0.03)',
                                         border: '1px solid var(--glass-border)',
                                         borderRadius: '0.5rem',
-                                        cursor: 'pointer'
+                                        color: 'white'
                                     }}
                                 >
-                                    <div style={{
-                                        width: '40px',
-                                        height: '20px',
-                                        borderRadius: '20px',
-                                        background: formData.active ? 'var(--primary)' : 'rgba(255,255,255,0.1)',
-                                        position: 'relative',
-                                        transition: 'all 0.3s'
-                                    }}>
-                                        <div style={{
-                                            width: '16px',
-                                            height: '16px',
-                                            borderRadius: '50%',
-                                            background: 'white',
-                                            position: 'absolute',
-                                            top: '2px',
-                                            left: formData.active ? '22px' : '2px',
-                                            transition: 'all 0.3s'
-                                        }} />
-                                    </div>
-                                    <span style={{ fontSize: '0.875rem' }}>{formData.active ? 'Active' : 'Inactive'}</span>
-                                </div>
+                                    <option value={LANGUAGE_IDS.en} style={{ background: 'var(--bg-darker)' }}>English</option>
+                                    <option value={LANGUAGE_IDS.es} style={{ background: 'var(--bg-darker)' }}>Español</option>
+                                </select>
                             </div>
-                        )}
-                    </div>
 
-                    <div style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
+                            {isEditing && (
+                                <div className="input-group" style={{ marginBottom: 0 }}>
+                                    <label style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
+                                        {t('common.status') || 'Status'}
+                                    </label>
+                                    <div
+                                        onClick={() => setFormData({ ...formData, active: !formData.active })}
+                                        style={{
+                                            display: 'flex',
+                                            alignItems: 'center',
+                                            gap: '0.75rem',
+                                            padding: '0.75rem',
+                                            background: 'rgba(255,255,255,0.03)',
+                                            border: '1px solid var(--glass-border)',
+                                            borderRadius: '0.5rem',
+                                            cursor: 'pointer'
+                                        }}
+                                    >
+                                        <div style={{
+                                            width: '40px',
+                                            height: '20px',
+                                            borderRadius: '20px',
+                                            background: formData.active ? 'var(--primary)' : 'rgba(255,255,255,0.1)',
+                                            position: 'relative',
+                                            transition: 'all 0.3s'
+                                        }}>
+                                            <div style={{
+                                                width: '16px',
+                                                height: '16px',
+                                                borderRadius: '50%',
+                                                background: 'white',
+                                                position: 'absolute',
+                                                top: '2px',
+                                                left: formData.active ? '22px' : '2px',
+                                                transition: 'all 0.3s'
+                                            }} />
+                                        </div>
+                                        <span style={{ fontSize: '0.875rem' }}>{formData.active ? 'Active' : 'Inactive'}</span>
+                                    </div>
+                                </div>
+                            )}
+                        </div>
+                    )}
+
+                    <div style={{
+                        display: 'flex',
+                        flexDirection: isModal ? 'row-reverse' : 'column',
+                        gap: '1rem',
+                        marginTop: isModal ? '1.5rem' : '0'
+                    }}>
                         <button
                             type="submit"
                             className="btn btn-primary"
                             disabled={saving || uploadingMedia}
-                            style={{ width: '100%', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '0.5rem' }}
+                            style={{
+                                width: '100%',
+                                display: 'flex',
+                                alignItems: 'center',
+                                justifyContent: 'center',
+                                gap: '0.5rem'
+                            }}
                         >
                             {saving ? <Loader2 size={18} className="animate-spin" /> : <Save size={18} />}
                             {isEditing ? t('common.update') || 'Update Post' : t('common.publish') || 'Publish Post'}
                         </button>
-                        <button
-                            type="button"
-                            onClick={() => navigate('/posts')}
-                            className="btn"
-                            style={{ width: '100%', background: 'rgba(255,255,255,0.05)', color: 'white' }}
-                        >
-                            {t('common.cancel') || 'Cancel'}
-                        </button>
+                        {!isModal && (
+                            <button
+                                type="button"
+                                onClick={() => navigate('/posts')}
+                                className="btn"
+                                style={{ width: '100%', background: 'rgba(255,255,255,0.05)', color: 'white' }}
+                            >
+                                {t('common.cancel') || 'Cancel'}
+                            </button>
+                        )}
                     </div>
                 </div>
             </form>

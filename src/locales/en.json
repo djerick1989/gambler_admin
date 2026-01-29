@@ -37,15 +37,20 @@
         "edit": "Edit Post",
         "add_new": "Add New Post",
         "form_subtitle": "Create engaging content for the community",
+        "placeholder": "What story do you want to tell today?",
         "write_comment": "Write a comment...",
         "show_users": "Show users",
         "viewed_by": "Viewed by",
         "no_views": "No views yet",
         "no_likes": "No likes yet",
         "no_content": "No content available",
+        "media": {
+            "photos": "Photos/Videos"
+        },
         "form": {
             "content": "Content",
-            "media": "Media Gallery"
+            "media": "Media Gallery",
+            "empty_error": "Please provide at least some text or an image/video"
         }
     },
     "login": {

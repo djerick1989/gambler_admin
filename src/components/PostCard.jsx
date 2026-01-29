@@ -16,6 +16,7 @@ const PostCard = ({ post, onEdit, onDelete }) => {
     const [isLiked, setIsLiked] = useState(Boolean(post.likePostByCurrentUser));
     const [likesCount, setLikesCount] = useState(post.totalLikes || 0);
     const [commentsCount, setCommentsCount] = useState(post.totalComments || 0);
+    const [currentLikeId, setCurrentLikeId] = useState(post.likePostByCurrentUser?.postLikeId);
     const [showViewersModal, setShowViewersModal] = useState(false);
     const [showHoverTooltip, setShowHoverTooltip] = useState(false);
     const cardRef = useRef(null);
@@ -82,6 +83,7 @@ const PostCard = ({ post, onEdit, onDelete }) => {
     };
 
     const handleTooltipMouseEnter = () => {
+        if (likesCount === 0) return;
         if (tooltipTimeoutRef.current) {
             clearTimeout(tooltipTimeoutRef.current);
         }
@@ -99,19 +101,25 @@ const PostCard = ({ post, onEdit, onDelete }) => {
 
         try {
             if (isLiked) {
-                const likeId = post.likePostByCurrentUser?.postLikeId;
+                const likeId = currentLikeId;
                 if (likeId) {
                     await postLikeService.deletePostLike(likeId);
                     setIsLiked(false);
+                    setCurrentLikeId(null);
                     setLikesCount(prev => Math.max(0, prev - 1));
                 }
             } else {
-                await postLikeService.createPostLike({
+                const response = await postLikeService.createPostLike({
                     postId: post.postId,
                     userId: user?.userId,
                     likeType: 0
                 });
+
+                // Extract ID from common response patterns
+                const newLikeId = response.data?.postLikeId || response.data?.id || response.data;
+
                 setIsLiked(true);
+                setCurrentLikeId(newLikeId);
                 setLikesCount(prev => prev + 1);
             }
         } catch (err) {
@@ -274,16 +282,18 @@ const PostCard = ({ post, onEdit, onDelete }) => {
                         max-height: 120px;
                     }
                 `}</style>
-                <div
-                    className={`rich-text-content ql-editor ${isExpanded ? '' : 'ql-truncated'}`}
-                    style={{
-                        fontSize: '1rem',
-                        lineHeight: '1.6',
-                        color: 'var(--text-main)',
-                        fontWeight: isExpanded ? '400' : '500'
-                    }}
-                    dangerouslySetInnerHTML={{ __html: displayedContent || '<i style="color:var(--text-muted)">' + (t('posts.no_content') || 'No content available') + '</i>' }}
-                />
+                {displayedContent && (
+                    <div
+                        className={`rich-text-content ql-editor ${isExpanded ? '' : 'ql-truncated'}`}
+                        style={{
+                            fontSize: '1rem',
+                            lineHeight: '1.6',
+                            color: 'var(--text-main)',
+                            fontWeight: isExpanded ? '400' : '500'
+                        }}
+                        dangerouslySetInnerHTML={{ __html: displayedContent }}
+                    />
+                )}
 
                 {shouldTruncate && (
                     <button

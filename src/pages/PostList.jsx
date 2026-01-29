@@ -1,9 +1,12 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { Plus, Loader2, MessageSquare, Search, AlertCircle } from 'lucide-react';
+import { Plus, Loader2, MessageSquare, Search, AlertCircle, Image as ImageIcon } from 'lucide-react';
 import { postService } from '../services/api';
 import { useAuth } from '../context/AuthContext';
 import PostCard from '../components/PostCard';
+import CreatePostSection from '../components/CreatePostSection';
+import Modal from '../components/Modal';
+import PostForm from './PostForm';
 import { useTranslation } from 'react-i18next';
 
 const LANGUAGE_IDS = {
@@ -26,6 +29,8 @@ const PostList = () => {
         totalRecords: 0,
         lastPage: 1
     });
+    const [isCreateModalOpen, setIsCreateModalOpen] = useState(false);
+    const [shouldAutoOpenMedia, setShouldAutoOpenMedia] = useState(false);
 
     const isAdmin = user?.role === 1 || user?.role === 2;
 
@@ -101,22 +106,37 @@ const PostList = () => {
 
     return (
         <div style={{ maxWidth: '800px', margin: '0 auto' }}>
-            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '2rem' }}>
-                <div>
-                    <h1 style={{ fontSize: '2rem', fontWeight: '800' }}>{t('posts.title') || 'Posts'}</h1>
-                    <p style={{ color: 'var(--text-muted)' }}>{t('posts.subtitle') || 'Manage and interact with community content'}</p>
-                </div>
-                {!isAdmin && (
-                    <button
-                        onClick={() => navigate('/posts/new')}
-                        className="btn btn-primary"
-                        style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}
-                    >
-                        <Plus size={20} />
-                        {t('posts.create') || 'Create Post'}
-                    </button>
-                )}
-            </div>
+            {!isAdmin && (
+                <CreatePostSection
+                    onClick={() => {
+                        setShouldAutoOpenMedia(false);
+                        setIsCreateModalOpen(true);
+                    }}
+                    onMediaClick={() => {
+                        setShouldAutoOpenMedia(true);
+                        setIsCreateModalOpen(true);
+                    }}
+                />
+            )}
+
+            <Modal
+                isOpen={isCreateModalOpen}
+                onClose={() => {
+                    setIsCreateModalOpen(false);
+                    setShouldAutoOpenMedia(false);
+                }}
+                title={t('posts.add_new') || 'Add New Post'}
+                maxWidth="800px"
+            >
+                <PostForm
+                    autoOpenMedia={shouldAutoOpenMedia}
+                    onSuccess={() => {
+                        setIsCreateModalOpen(false);
+                        setShouldAutoOpenMedia(false);
+                        fetchPosts(1, true);
+                    }}
+                />
+            </Modal>
 
             {error && (
                 <div className="glass-card" style={{ padding: '1.5rem', marginBottom: '2rem', display: 'flex', alignItems: 'center', gap: '1rem', borderColor: 'var(--danger)' }}>
