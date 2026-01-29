@@ -45,7 +45,7 @@ const PostCard = ({ post, onEdit, onDelete }) => {
         if (authLoading || !user) return;
         if (isAdmin) return;
 
-        if (post.postId && !hasReportedView.current) {
+        if (post.postId && !hasReportedView.current && !post.isViewed) {
             const observer = new IntersectionObserver(
                 ([entry]) => {
                     if (entry.isIntersecting) {

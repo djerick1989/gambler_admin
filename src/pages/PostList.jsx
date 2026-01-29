@@ -25,7 +25,7 @@ const PostList = () => {
     const [error, setError] = useState(null);
     const [pagination, setPagination] = useState({
         page: 1,
-        pageSize: 10,
+        pageSize: 25,
         totalRecords: 0,
         lastPage: 1
     });
