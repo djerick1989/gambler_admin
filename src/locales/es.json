@@ -49,7 +49,7 @@
         },
         "form": {
             "content": "Contenido",
-            "media": "Galería de Medios",
+            "media": "Galería",
             "empty_error": "Por favor, agrega al menos algo de texto o una imagen/video"
         }
     },

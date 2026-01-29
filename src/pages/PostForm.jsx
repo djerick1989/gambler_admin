@@ -139,7 +139,14 @@ const PostForm = ({ id: propId, onSuccess, autoOpenMedia }) => {
                 languageId: defaultLangId
             }));
         }
-    }, [id, isEditing, isAdmin, i18n.language, isModal]);
+    }, [id, isEditing, isAdmin, isModal]); // Removed i18n.language to avoid resetting form data on language switch
+
+    // Separate effect to keep languageId in sync with global language
+    useEffect(() => {
+        const lang = i18n.language.substring(0, 2).toLowerCase();
+        const currentLangId = LANGUAGE_IDS[lang] || LANGUAGE_IDS.en;
+        setFormData(prev => ({ ...prev, languageId: currentLangId }));
+    }, [i18n.language]);
 
     useEffect(() => {
         if (autoOpenMedia && !isEditing) {
@@ -304,7 +311,11 @@ const PostForm = ({ id: propId, onSuccess, autoOpenMedia }) => {
     }
 
     return (
-        <div style={{ maxWidth: isModal ? '100%' : '1000px', margin: '0 auto', padding: isModal ? '0' : '1rem' }}>
+        <div style={{
+            maxWidth: '800px',
+            margin: '0 auto',
+            padding: isModal ? '0' : '2rem'
+        }}>
             {!isModal && (
                 <div style={{ display: 'flex', alignItems: 'center', gap: '1rem', marginBottom: '2rem' }}>
                     <button
@@ -325,26 +336,24 @@ const PostForm = ({ id: propId, onSuccess, autoOpenMedia }) => {
                         <h1 style={{ fontSize: '1.875rem', fontWeight: '800' }}>
                             {isEditing ? t('posts.edit') || 'Edit Post' : t('posts.add_new') || 'Add New Post'}
                         </h1>
-                        <p style={{ color: 'var(--text-muted)' }}>{t('posts.form_subtitle') || 'Create engaging content for the community'}</p>
                     </div>
                 </div>
             )}
 
             <form onSubmit={handleSubmit} style={{
-                display: 'grid',
-                gridTemplateColumns: isModal ? '1fr' : '1fr 350px',
+                display: 'flex',
+                flexDirection: 'column',
                 gap: '2rem'
             }}>
                 <div style={{ display: 'flex', flexDirection: 'column', gap: '1.5rem' }}>
                     <div className={isModal ? "" : "glass-card"} style={{ padding: isModal ? '0' : '1.5rem' }}>
 
                         <div className="input-group" style={{ marginBottom: 0 }}>
-                            <label>{t('posts.form.content') || 'Content'}</label>
                             <div style={{ background: 'rgba(255,255,255,0.02)', borderRadius: '0.5rem', border: '1px solid var(--glass-border)', overflow: 'hidden' }}>
                                 <style>{`
                                     .ql-toolbar.ql-snow { border: none; border-bottom: 1px solid var(--glass-border); background: rgba(255,255,255,0.05); }
                                     .ql-container.ql-snow { border: none; min-height: 200px; font-size: 1rem; color: white; }
-                                    .ql-editor.ql-blank::before { color: var(--text-muted); }
+                                    .ql-editor.ql-blank::before { color: var(--text-muted); font-style: normal; }
                                 `}</style>
                                 <ReactQuill
                                     ref={quillRef}
@@ -352,6 +361,7 @@ const PostForm = ({ id: propId, onSuccess, autoOpenMedia }) => {
                                     value={formData.contentHtml}
                                     onChange={(content) => setFormData({ ...formData, contentHtml: content })}
                                     modules={modules}
+                                    placeholder={t('posts.placeholder') || 'What story do you want to tell today?'}
                                 />
                             </div>
                         </div>
@@ -359,7 +369,7 @@ const PostForm = ({ id: propId, onSuccess, autoOpenMedia }) => {
 
                     <div className={isModal ? "" : "glass-card"} style={{ padding: isModal ? '0' : '1.5rem' }}>
                         <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '1rem' }}>
-                            <label style={{ margin: 0 }}>{t('posts.form.media') || 'Media Gallery'}</label>
+                            <label style={{ margin: 0 }}>{t('posts.form.media') || 'Gallery'}</label>
                             <button
                                 type="button"
                                 onClick={() => document.getElementById('media-upload').click()}
@@ -435,106 +445,39 @@ const PostForm = ({ id: propId, onSuccess, autoOpenMedia }) => {
                     </div>
                 </div>
 
-                <div style={{ display: 'flex', flexDirection: 'column', gap: '1.5rem' }}>
-                    {!isModal && (
-                        <div className="glass-card" style={{ padding: '1.5rem' }}>
-                            <div className="input-group">
-                                <label style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
-                                    <Globe size={16} /> {t('common.language') || 'Language'}
-                                </label>
-                                <select
-                                    value={formData.languageId}
-                                    onChange={(e) => setFormData({ ...formData, languageId: e.target.value })}
-                                    style={{
-                                        width: '100%',
-                                        padding: '0.75rem',
-                                        background: 'rgba(255,255,255,0.03)',
-                                        border: '1px solid var(--glass-border)',
-                                        borderRadius: '0.5rem',
-                                        color: 'white'
-                                    }}
-                                >
-                                    <option value={LANGUAGE_IDS.en} style={{ background: 'var(--bg-darker)' }}>English</option>
-                                    <option value={LANGUAGE_IDS.es} style={{ background: 'var(--bg-darker)' }}>Español</option>
-                                </select>
-                            </div>
-
-                            {isEditing && (
-                                <div className="input-group" style={{ marginBottom: 0 }}>
-                                    <label style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
-                                        {t('common.status') || 'Status'}
-                                    </label>
-                                    <div
-                                        onClick={() => setFormData({ ...formData, active: !formData.active })}
-                                        style={{
-                                            display: 'flex',
-                                            alignItems: 'center',
-                                            gap: '0.75rem',
-                                            padding: '0.75rem',
-                                            background: 'rgba(255,255,255,0.03)',
-                                            border: '1px solid var(--glass-border)',
-                                            borderRadius: '0.5rem',
-                                            cursor: 'pointer'
-                                        }}
-                                    >
-                                        <div style={{
-                                            width: '40px',
-                                            height: '20px',
-                                            borderRadius: '20px',
-                                            background: formData.active ? 'var(--primary)' : 'rgba(255,255,255,0.1)',
-                                            position: 'relative',
-                                            transition: 'all 0.3s'
-                                        }}>
-                                            <div style={{
-                                                width: '16px',
-                                                height: '16px',
-                                                borderRadius: '50%',
-                                                background: 'white',
-                                                position: 'absolute',
-                                                top: '2px',
-                                                left: formData.active ? '22px' : '2px',
-                                                transition: 'all 0.3s'
-                                            }} />
-                                        </div>
-                                        <span style={{ fontSize: '0.875rem' }}>{formData.active ? 'Active' : 'Inactive'}</span>
-                                    </div>
-                                </div>
-                            )}
-                        </div>
-                    )}
-
-                    <div style={{
-                        display: 'flex',
-                        flexDirection: isModal ? 'row-reverse' : 'column',
-                        gap: '1rem',
-                        marginTop: isModal ? '1.5rem' : '0'
-                    }}>
-                        <button
-                            type="submit"
-                            className="btn btn-primary"
-                            disabled={saving || uploadingMedia}
-                            style={{
-                                width: '100%',
-                                display: 'flex',
-                                alignItems: 'center',
-                                justifyContent: 'center',
-                                gap: '0.5rem'
-                            }}
-                        >
-                            {saving ? <Loader2 size={18} className="animate-spin" /> : <Save size={18} />}
-                            {isEditing ? t('common.update') || 'Update Post' : t('common.publish') || 'Publish Post'}
-                        </button>
-                        {!isModal && (
-                            <button
-                                type="button"
-                                onClick={() => navigate('/posts')}
-                                className="btn"
-                                style={{ width: '100%', background: 'rgba(255,255,255,0.05)', color: 'white' }}
-                            >
-                                {t('common.cancel') || 'Cancel'}
-                            </button>
-                        )}
-                    </div>
+                <div style={{
+                    display: 'flex',
+                    flexDirection: 'row-reverse',
+                    gap: '1rem',
+                    marginTop: '1rem'
+                }}>
+                    <button
+                        type="submit"
+                        className="btn btn-primary"
+                        disabled={saving || uploadingMedia}
+                        style={{
+                            flex: 1,
+                            display: 'flex',
+                            alignItems: 'center',
+                            justifyContent: 'center',
+                            gap: '0.5rem'
+                        }}
+                    >
+                        {saving ? <Loader2 size={18} className="animate-spin" /> : <Save size={18} />}
+                        {isEditing ? t('common.update') || 'Update Post' : t('common.publish') || 'Publish Post'}
+                    </button>
+                    <button
+                        type="button"
+                        onClick={() => isModal ? onSuccess() : navigate('/posts')}
+                        className="btn"
+                        style={{
+                            flex: 1,
+                            background: 'rgba(255,255,255,0.05)',
+                            color: 'white'
+                        }}
+                    >
+                        {t('common.cancel') || 'Cancel'}
+                    </button>
                 </div>
             </form>
         </div>

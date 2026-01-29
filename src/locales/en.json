@@ -49,7 +49,7 @@
         },
         "form": {
             "content": "Content",
-            "media": "Media Gallery",
+            "media": "Gallery",
             "empty_error": "Please provide at least some text or an image/video"
         }
     },
