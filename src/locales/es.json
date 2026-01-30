@@ -236,5 +236,19 @@
         "delete_confirm": "¿Estás seguro de que quieres borrar esta historia?",
         "viewed": "Visto",
         "add_story": "Crear historia"
+    },
+    "media_mgmt": {
+        "title": "Gestión de Media (AWS)",
+        "subtitle": "Administra archivos multimedia almacenados en AWS S3.",
+        "table": {
+            "key": "Clave",
+            "url": "URL",
+            "size": "Tamaño",
+            "lastModified": "Última Modificación",
+            "actions": "Acciones"
+        },
+        "load_more": "Cargar más",
+        "delete_confirm": "¿Estás seguro de que deseas eliminar este archivo de AWS S3? Esta acción no se puede deshacer.",
+        "empty": "No hay archivos multimedia."
     }
 }

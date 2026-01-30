@@ -236,5 +236,19 @@
         "delete_confirm": "Are you sure you want to delete this story?",
         "viewed": "Viewed",
         "add_story": "Create story"
+    },
+    "media_mgmt": {
+        "title": "Media Management (AWS)",
+        "subtitle": "Manage multimedia files stored in AWS S3.",
+        "table": {
+            "key": "Key",
+            "url": "URL",
+            "size": "Size",
+            "lastModified": "Last Modified",
+            "actions": "Actions"
+        },
+        "load_more": "Load More",
+        "delete_confirm": "Are you sure you want to delete this file from AWS S3? This action cannot be undone.",
+        "empty": "No media files found."
     }
 }

@@ -73,6 +73,18 @@ export const mediaService = {
       },
     });
     return response.data;
+  },
+  listAWSMedia: async (pageSize = 10, continuationToken = null) => {
+    const response = await apiClient.get('/api/Media/list', {
+      params: { pageSize, continuationToken }
+    });
+    return response.data;
+  },
+  deleteAWSMedia: async (key) => {
+    const response = await apiClient.delete('/api/Media/delete', {
+      params: { key }
+    });
+    return response.data;
   }
 };
 

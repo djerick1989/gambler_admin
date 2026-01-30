@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { Outlet, Link, useLocation, useNavigate } from 'react-router-dom';
-import { LayoutDashboard, Languages, UserCheck, LogOut, Menu, X, ChevronRight, Globe, Newspaper, MessageSquare } from 'lucide-react';
+import { LayoutDashboard, Languages, UserCheck, LogOut, Menu, X, ChevronRight, Globe, Newspaper, MessageSquare, Image } from 'lucide-react';
 import { useAuth } from '../context/AuthContext';
 import { useTranslation } from 'react-i18next';
 
@@ -54,6 +54,7 @@ const MainLayout = () => {
         { path: '/i18n', label: t('common.i18n'), icon: Globe },
         { path: '/news', label: t('common.news'), icon: Newspaper },
         { path: '/posts', label: t('common.posts') || 'Posts', icon: MessageSquare },
+        { path: '/media', label: t('media_mgmt.title') || 'Media', icon: Image },
         { path: '/gamblers', label: t('gambler_mgmt.title'), icon: UserCheck },
     ];
 
