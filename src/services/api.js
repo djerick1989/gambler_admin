@@ -394,4 +394,29 @@ export const postSharedService = {
   }
 };
 
+export const statusService = {
+  getLatestStatuses: async (page = 1, pageSize = 10) => {
+    const response = await apiClient.get('/api/Status/latest', {
+      params: { page, pageSize }
+    });
+    return response.data;
+  },
+  createStatus: async (data) => {
+    const response = await apiClient.post('/api/Status', data);
+    return response.data;
+  },
+  deleteStatus: async (id) => {
+    const response = await apiClient.delete(`/api/Status/${id}`);
+    return response.data;
+  },
+  reactToStatus: async (id, type) => {
+    const response = await apiClient.post(`/api/Status/${id}/react`, { type });
+    return response.data;
+  },
+  getStatusReactions: async (id) => {
+    const response = await apiClient.get(`/api/Status/${id}/reactions`);
+    return response.data;
+  }
+};
+
 export default apiClient;

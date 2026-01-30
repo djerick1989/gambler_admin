@@ -219,5 +219,22 @@
             "delete_account": "Delete Gambler",
             "delete_confirm": "Are you sure you want to delete this gambler? This action is irreversible."
         }
+    },
+    "stories": {
+        "title": "Stories",
+        "create_title": "Create story",
+        "type_media": "Photo/Video",
+        "type_text": "Text",
+        "select_file": "Select file",
+        "write_placeholder": "Write something...",
+        "share_button": "Share story",
+        "share_success": "Story shared successfully",
+        "error_upload": "Upload failed",
+        "error_create": "Error creating story",
+        "reactions_title": "Reactions",
+        "no_reactions": "No reactions yet",
+        "delete_confirm": "Are you sure you want to delete this story?",
+        "viewed": "Viewed",
+        "add_story": "Create story"
     }
 }

@@ -1,13 +1,16 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Plus, Loader2, MessageSquare, Search, AlertCircle, Image as ImageIcon } from 'lucide-react';
-import { postService } from '../services/api';
+import { postService, statusService } from '../services/api';
 import { useAuth } from '../context/AuthContext';
 import PostCard from '../components/PostCard';
 import CreatePostSection from '../components/CreatePostSection';
 import Modal from '../components/Modal';
 import PostForm from './PostForm';
 import { useTranslation } from 'react-i18next';
+import StoryCarousel from '../components/StoryCarousel';
+import CreateStoryModal from '../components/CreateStoryModal';
+import StoryViewer from '../components/StoryViewer';
 
 const LANGUAGE_IDS = {
     en: '11e8ba3a-b290-4a2c-9dad-0f40e457f72c',
@@ -31,14 +34,34 @@ const PostList = () => {
     });
     const [isCreateModalOpen, setIsCreateModalOpen] = useState(false);
     const [shouldAutoOpenMedia, setShouldAutoOpenMedia] = useState(false);
+    const [isCreateStoryModalOpen, setIsCreateStoryModalOpen] = useState(false);
+    const [selectedStory, setSelectedStory] = useState(null);
+    const [allStories, setAllStories] = useState([]);
+    const [isStoryViewerOpen, setIsStoryViewerOpen] = useState(false);
+    const [loadingStories, setLoadingStories] = useState(true);
 
     const isAdmin = user?.role === 1 || user?.role === 2;
 
     useEffect(() => {
         if (user?.userId) {
             fetchPosts(1, true);
+            fetchStories();
         }
     }, [user?.userId, i18n.language]);
+
+    const fetchStories = async () => {
+        setLoadingStories(true);
+        try {
+            const response = await statusService.getLatestStatuses(1, 20);
+            if (response.status) {
+                setAllStories(response.data.statusList);
+            }
+        } catch (error) {
+            console.error("Error fetching statuses:", error);
+        } finally {
+            setLoadingStories(false);
+        }
+    };
 
     const fetchPosts = async (page, reset = false) => {
         if (reset) setLoading(true);
@@ -118,6 +141,35 @@ const PostList = () => {
                     }}
                 />
             )}
+
+            <StoryCarousel
+                statuses={allStories}
+                loading={loadingStories}
+                onAddStory={() => setIsCreateStoryModalOpen(true)}
+                onSelectStory={(story) => {
+                    setSelectedStory(story);
+                    setIsStoryViewerOpen(true);
+                }}
+            />
+
+            <CreateStoryModal
+                isOpen={isCreateStoryModalOpen}
+                onClose={() => setIsCreateStoryModalOpen(false)}
+                onSuccess={() => {
+                    setIsCreateStoryModalOpen(false);
+                    fetchStories();
+                }}
+            />
+
+            <StoryViewer
+                isOpen={isStoryViewerOpen}
+                onClose={() => setIsStoryViewerOpen(false)}
+                initialStatus={selectedStory}
+                allStatuses={allStories}
+                onDeleteSuccess={(id) => {
+                    setAllStories(prev => prev.filter(s => s.statusId !== id));
+                }}
+            />
 
             <Modal
                 isOpen={isCreateModalOpen}

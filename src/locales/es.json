@@ -219,5 +219,22 @@
             "delete_account": "Eliminar Gambler",
             "delete_confirm": "¿Estás seguro de que deseas eliminar este gambler? Esta acción es irreversible."
         }
+    },
+    "stories": {
+        "title": "Historias",
+        "create_title": "Crear historia",
+        "type_media": "Foto/Video",
+        "type_text": "Texto",
+        "select_file": "Seleccionar archivo",
+        "write_placeholder": "Escribe algo...",
+        "share_button": "Compartir historia",
+        "share_success": "Historia compartida con éxito",
+        "error_upload": "Error al subir el archivo",
+        "error_create": "Error al crear la historia",
+        "reactions_title": "Reacciones",
+        "no_reactions": "No hay reacciones aún",
+        "delete_confirm": "¿Estás seguro de que quieres borrar esta historia?",
+        "viewed": "Visto",
+        "add_story": "Crear historia"
     }
 }
