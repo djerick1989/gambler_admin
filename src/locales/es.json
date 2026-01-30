@@ -27,7 +27,8 @@
         "see_less": "Ver menos",
         "load_more": "Cargar más",
         "load_more_comments": "Cargar más comentarios",
-        "delete_confirm": "¿Estás seguro de que deseas eliminar este elemento?"
+        "delete_confirm": "¿Estás seguro de que deseas eliminar este elemento?",
+        "profile": "Mi Perfil"
     },
     "posts": {
         "title": "Publicaciones de la Comunidad",
@@ -238,7 +239,7 @@
         "add_story": "Crear historia"
     },
     "media_mgmt": {
-        "title": "Gestión de Media (AWS)",
+        "title": "Media",
         "subtitle": "Administra archivos multimedia almacenados en AWS S3.",
         "table": {
             "key": "Clave",
@@ -250,5 +251,10 @@
         "load_more": "Cargar más",
         "delete_confirm": "¿Estás seguro de que deseas eliminar este archivo de AWS S3? Esta acción no se puede deshacer.",
         "empty": "No hay archivos multimedia."
+    },
+    "profile": {
+        "title": "Configuración de Perfil",
+        "subtitle": "Gestiona tu información personal y preferencias.",
+        "success_update": "Perfil actualizado con éxito"
     }
 }
