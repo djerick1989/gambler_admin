@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, Link } from 'react-router-dom';
 import {
     Search, User, Mail, DollarSign, ChevronLeft, ChevronRight, Loader2,
     Filter, Trash2, Eye, UserX, Users
@@ -190,12 +190,15 @@ const GamblerList = () => {
                                                 }}>
                                                     {!gambler.user?.avatar && <User size={20} color="var(--text-muted)" />}
                                                 </div>
-                                                <span
-                                                    onClick={() => navigate(`/gamblers/${gambler.gamblerId}`)}
-                                                    style={{ color: 'var(--primary)', fontWeight: '600', cursor: 'pointer' }}
-                                                >
-                                                    @{gambler.user?.nickName}
-                                                </span>
+                                                <Link to={`/user/${gambler.userId}`} style={{ textDecoration: 'none' }}>
+                                                    <span
+                                                        style={{ color: 'var(--primary)', fontWeight: '600', cursor: 'pointer', transition: 'opacity 0.2s' }}
+                                                        onMouseEnter={(e) => e.currentTarget.style.opacity = '0.8'}
+                                                        onMouseLeave={(e) => e.currentTarget.style.opacity = '1'}
+                                                    >
+                                                        @{gambler.user?.nickName}
+                                                    </span>
+                                                </Link>
                                             </div>
                                         </td>
                                         <td style={{ padding: '1rem 1.5rem' }}>
@@ -224,6 +227,14 @@ const GamblerList = () => {
                                         </td>
                                         <td style={{ padding: '1rem 1.5rem', textAlign: 'right' }}>
                                             <div style={{ display: 'flex', justifyContent: 'flex-end', gap: '0.5rem' }}>
+                                                <Link
+                                                    to={`/user/${gambler.userId}`}
+                                                    className="btn"
+                                                    style={{ padding: '0.5rem', background: 'rgba(59, 130, 246, 0.1)', color: 'rgb(59, 130, 246)', display: 'flex', alignItems: 'center', justifyContent: 'center' }}
+                                                    title={t('user_profile.view_profile')}
+                                                >
+                                                    <User size={16} />
+                                                </Link>
                                                 <button
                                                     onClick={() => navigate(`/gamblers/${gambler.gamblerId}`)}
                                                     className="btn"

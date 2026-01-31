@@ -1,4 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react';
+import { Link } from 'react-router-dom';
 import { Heart, MessageSquare, MoreVertical, Edit2, Trash2, Calendar, User, Share2 } from 'lucide-react';
 import PostMediaGrid from './PostMediaGrid';
 import PostComments from './PostComments';
@@ -263,19 +264,33 @@ const PostCard = ({ post, onEdit, onDelete }) => {
             {/* Header */}
             <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: '1rem' }}>
                 <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem' }}>
-                    <div style={{
-                        width: '48px',
-                        height: '48px',
-                        borderRadius: '50%',
-                        background: post.user?.avatar ? `url(${post.user.avatar}) center/cover` : 'rgba(255,255,255,0.1)',
-                        display: 'flex',
-                        alignItems: 'center',
-                        justifyContent: 'center'
-                    }}>
-                        {!post.user?.avatar && <User color="var(--text-muted)" />}
-                    </div>
+                    <Link to={`/user/${post.userId}`} style={{ textDecoration: 'none' }}>
+                        <div style={{
+                            width: '48px',
+                            height: '48px',
+                            borderRadius: '50%',
+                            background: post.user?.avatar ? `url(${post.user.avatar}) center/cover` : 'rgba(255,255,255,0.1)',
+                            display: 'flex',
+                            alignItems: 'center',
+                            justifyContent: 'center',
+                            transition: 'opacity 0.2s',
+                            cursor: 'pointer'
+                        }}
+                            onMouseEnter={(e) => e.currentTarget.style.opacity = '0.8'}
+                            onMouseLeave={(e) => e.currentTarget.style.opacity = '1'}
+                        >
+                            {!post.user?.avatar && <User color="var(--text-muted)" />}
+                        </div>
+                    </Link>
                     <div>
-                        <div style={{ fontWeight: '700', fontSize: '1rem' }}>{post.user?.nickName || 'User'}</div>
+                        <Link to={`/user/${post.userId}`} style={{ textDecoration: 'none', color: 'inherit' }}>
+                            <div style={{ fontWeight: '700', fontSize: '1rem', cursor: 'pointer', transition: 'color 0.2s' }}
+                                onMouseEnter={(e) => e.currentTarget.style.color = 'var(--primary)'}
+                                onMouseLeave={(e) => e.currentTarget.style.color = 'inherit'}
+                            >
+                                {post.user?.nickName || 'User'}
+                            </div>
+                        </Link>
                         <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', color: 'var(--text-muted)', fontSize: '0.75rem' }}>
                             <Calendar size={12} />
                             {formatDate(post.createdAt)}

@@ -256,5 +256,11 @@
         "title": "Configuración de Perfil",
         "subtitle": "Gestiona tu información personal y preferencias.",
         "success_update": "Perfil actualizado con éxito"
+    },
+    "user_profile": {
+        "title": "Perfil de Usuario",
+        "posts_by": "Publicaciones de {{name}}",
+        "no_bio": "Este usuario no tiene biografía aún.",
+        "view_profile": "Ver Perfil"
     }
 }

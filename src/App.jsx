@@ -20,6 +20,7 @@ import PostList from './pages/PostList';
 import PostForm from './pages/PostForm';
 import MediaList from './pages/MediaList';
 import Profile from './pages/Profile';
+import UserProfileView from './pages/UserProfileView';
 import MainLayout from './layouts/MainLayout';
 import { AuthProvider, useAuth } from './context/AuthContext';
 import { useTranslation } from 'react-i18next';
@@ -79,6 +80,7 @@ function App() {
 
             <Route path="media" element={<MediaList />} />
             <Route path="profile" element={<Profile />} />
+            <Route path="user/:userId" element={<UserProfileView />} />
           </Route>
         </Routes>
       </Router>
