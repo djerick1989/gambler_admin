@@ -28,7 +28,8 @@
         "load_more": "Load more",
         "load_more_comments": "Load more comments",
         "delete_confirm": "Are you sure you want to delete this item?",
-        "profile": "My Profile"
+        "profile": "My Profile",
+        "chat": "Chat"
     },
     "posts": {
         "title": "Community Posts",
@@ -262,5 +263,23 @@
         "posts_by": "Posts by {{name}}",
         "no_bio": "This user hasn't added a biography yet.",
         "view_profile": "View Profile"
+    },
+    "chat": {
+        "title": "Chat",
+        "messages": "Messages",
+        "unknown_user": "Unknown User",
+        "no_messages": "No messages",
+        "start_conversation": "Start a conversation",
+        "type_message": "Type a message...",
+        "is_typing": "is typing",
+        "are_typing": "are typing",
+        "welcome": "Welcome to Chat",
+        "select_to_start": "Select a conversation to start chatting",
+        "direct_message": "Direct Message",
+        "create_group": "Create Group",
+        "group_name": "Group Name",
+        "group_name_placeholder": "Ex. Project X",
+        "select_participants": "Select Participants",
+        "selected": "selected"
     }
 }

@@ -28,7 +28,8 @@
         "load_more": "Cargar más",
         "load_more_comments": "Cargar más comentarios",
         "delete_confirm": "¿Estás seguro de que deseas eliminar este elemento?",
-        "profile": "Mi Perfil"
+        "profile": "Mi Perfil",
+        "chat": "Chat"
     },
     "posts": {
         "title": "Publicaciones de la Comunidad",
@@ -262,5 +263,23 @@
         "posts_by": "Publicaciones de {{name}}",
         "no_bio": "Este usuario no tiene biografía aún.",
         "view_profile": "Ver Perfil"
+    },
+    "chat": {
+        "title": "Chat",
+        "messages": "Mensajes",
+        "unknown_user": "Usuario Desconocido",
+        "no_messages": "No hay mensajes",
+        "start_conversation": "Comienza una conversación",
+        "type_message": "Escribe un mensaje...",
+        "is_typing": "está escribiendo",
+        "are_typing": "están escribiendo",
+        "welcome": "Bienvenido al Chat",
+        "select_to_start": "Selecciona una conversación para empezar a chatear",
+        "direct_message": "Mensaje Directo",
+        "create_group": "Crear Grupo",
+        "group_name": "Nombre del Grupo",
+        "group_name_placeholder": "Ej. Proyecto X",
+        "select_participants": "Seleccionar Participantes",
+        "selected": "seleccionado(s)"
     }
 }

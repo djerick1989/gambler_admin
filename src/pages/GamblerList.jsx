@@ -2,9 +2,9 @@ import React, { useState, useEffect } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import {
     Search, User, Mail, DollarSign, ChevronLeft, ChevronRight, Loader2,
-    Filter, Trash2, Eye, UserX, Users
+    Filter, Trash2, Eye, UserX, Users, MessageSquare
 } from 'lucide-react';
-import { gamblerService } from '../services/api';
+import { gamblerService, chatService } from '../services/api';
 import { useTranslation } from 'react-i18next';
 
 const GamblerList = () => {
@@ -235,6 +235,23 @@ const GamblerList = () => {
                                                 >
                                                     <User size={16} />
                                                 </Link>
+                                                <button
+                                                    onClick={async () => {
+                                                        try {
+                                                            const response = await chatService.createDirectChat(gambler.userId);
+                                                            if (response.status) {
+                                                                navigate(`/chat/${response.data}`);
+                                                            }
+                                                        } catch (err) {
+                                                            console.error("Error creating chat:", err);
+                                                        }
+                                                    }}
+                                                    className="btn"
+                                                    style={{ padding: '0.5rem', background: 'rgba(16, 185, 129, 0.1)', color: '#10b981', display: 'flex', alignItems: 'center', justifyContent: 'center' }}
+                                                    title={t('common.chat')}
+                                                >
+                                                    <MessageSquare size={16} />
+                                                </button>
                                                 <button
                                                     onClick={() => navigate(`/gamblers/${gambler.gamblerId}`)}
                                                     className="btn"

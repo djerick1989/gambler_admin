@@ -1,6 +1,6 @@
 import axios from 'axios';
 
-const API_BASE_URL = '';
+const API_BASE_URL = 'https://2evbm9ctw5.us-east-2.awsapprunner.com';
 
 const apiClient = axios.create({
   baseURL: API_BASE_URL,
@@ -12,8 +12,12 @@ const apiClient = axios.create({
 // Add a request interceptor to include the Bearer token
 apiClient.interceptors.request.use((config) => {
   const token = localStorage.getItem('token');
-  if (token) {
+  // Only add the token if it looks like a real token and NOT HTML content
+  if (token && !token.trim().startsWith('<!doctype') && !token.trim().startsWith('<html')) {
     config.headers.Authorization = `Bearer ${token}`;
+  } else if (token) {
+    // If it's garbage (HTML), remove it to prevent further errors
+    localStorage.removeItem('token');
   }
   return config;
 }, (error) => {
@@ -23,10 +27,10 @@ apiClient.interceptors.request.use((config) => {
 export const authService = {
   signin: async (data) => {
     const response = await apiClient.post('/api/Auth/signin', data);
-    // Be more flexible with token property name (token, accessToken, data.token, etc.)
-    const token = response.data?.token || response.data?.accessToken || response.data?.data?.token || (typeof response.data === 'string' ? response.data : null);
+    const token = response.data?.token || response.data?.accessToken || response.data?.data?.token;
 
-    if (token) {
+    // Only store the token if it's found and is NOT HTML content
+    if (token && typeof token === 'string' && !token.trim().startsWith('<!doctype') && !token.trim().startsWith('<html')) {
       localStorage.setItem('token', token);
     }
     return response.data;
@@ -427,6 +431,29 @@ export const statusService = {
   },
   getStatusReactions: async (id) => {
     const response = await apiClient.get(`/api/Status/${id}/reactions`);
+    return response.data;
+  }
+};
+
+export const chatService = {
+  getChats: async () => {
+    const response = await apiClient.get('/api/Chat');
+    return response.data;
+  },
+  getMessages: async (chatId) => {
+    const response = await apiClient.get(`/api/Chat/${chatId}/messages`);
+    return response.data;
+  },
+  createDirectChat: async (otherUserId) => {
+    const response = await apiClient.post(`/api/Chat/direct/${otherUserId}`);
+    return response.data;
+  },
+  createGroupChat: async (data) => {
+    const response = await apiClient.post('/api/Chat', data);
+    return response.data;
+  },
+  sendMessage: async (chatId, content) => {
+    const response = await apiClient.post(`/api/Chat/${chatId}/messages`, { content });
     return response.data;
   }
 };

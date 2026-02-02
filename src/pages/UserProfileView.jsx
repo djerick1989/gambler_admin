@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
-import { Loader2, User, ChevronLeft, MessageSquare, AlertCircle } from 'lucide-react';
-import { gamblerService, postService } from '../services/api';
+import { Loader2, User, ChevronLeft, MessageSquare, AlertCircle, MessageCircle } from 'lucide-react';
+import { gamblerService, postService, chatService } from '../services/api';
 import PostCard from '../components/PostCard';
 import { useTranslation } from 'react-i18next';
 
@@ -145,6 +145,31 @@ const UserProfileView = () => {
                             style={{ color: 'var(--text-muted)', lineHeight: '1.6' }}
                             dangerouslySetInnerHTML={{ __html: gambler.biography || `<p>${t('user_profile.no_bio')}</p>` }}
                         />
+                        <button
+                            onClick={async () => {
+                                try {
+                                    const response = await chatService.createDirectChat(userId);
+                                    if (response.status) {
+                                        navigate(`/chat/${response.data}`);
+                                    }
+                                } catch (err) {
+                                    console.error("Error creating chat:", err);
+                                }
+                            }}
+                            className="btn btn-primary"
+                            style={{
+                                marginTop: '1rem',
+                                display: 'flex',
+                                alignItems: 'center',
+                                gap: '0.5rem',
+                                padding: '0.75rem 1.5rem',
+                                background: '#10b981',
+                                border: 'none'
+                            }}
+                        >
+                            <MessageCircle size={20} />
+                            {t('common.chat')}
+                        </button>
                     </div>
                 </div>
             </div>
