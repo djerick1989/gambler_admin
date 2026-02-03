@@ -71,6 +71,55 @@
         "signup": "Sign Up",
         "error_default": "Error signing in"
     },
+    "signup": {
+        "title": "Create Account",
+        "subtitle": "Join the admin panel",
+        "name": "First Name",
+        "lastName": "Last Name",
+        "userName": "Username",
+        "email": "Email",
+        "password": "Password",
+        "confirm": "Confirm Password",
+        "button": "Sign Up",
+        "button_loading": "Signing Up...",
+        "has_account": "Already have an account?",
+        "login": "Sign In",
+        "password_mismatch": "Passwords do not match",
+        "error_default": "Error signing up"
+    },
+    "reset_password": {
+        "title": "New Password",
+        "email_sent": "Email Sent",
+        "code": "Verification Code",
+        "new_password": "New Password",
+        "confirm_password": "Confirm Password",
+        "button": "Reset Password",
+        "button_loading": "Updating...",
+        "code_placeholder": "Enter numbers only",
+        "success": "Password updated",
+        "error_mismatch": "Passwords do not match"
+    },
+    "recovery": {
+        "title": "Recover Password",
+        "subtitle": "Enter your email to receive a recovery code.",
+        "sent_subtitle": "We sent a code to your email.",
+        "email_placeholder": "your@email.com",
+        "button": "Send Code",
+        "button_loading": "Sending...",
+        "back_login": "Back to Login",
+        "error_default": "Could not send email"
+    },
+    "verify": {
+        "title": "Verify Email",
+        "subtitle": "We have sent a code to {{email}}",
+        "placeholder": "6-digit code",
+        "button": "Verify",
+        "resend": "Resend code",
+        "resend_success": "Code resent",
+        "resend_error": "Error resending",
+        "success_message": "Email verified successfully",
+        "error_default": "Invalid code"
+    },
     "dashboard": {
         "overview": "Dashboard Overview",
         "welcome_message": "Welcome back, {{name}}.",

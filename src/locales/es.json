@@ -71,6 +71,55 @@
         "signup": "Regístrate",
         "error_default": "Error al iniciar sesión"
     },
+    "signup": {
+        "title": "Crear Cuenta",
+        "subtitle": "Únete al panel de administración",
+        "name": "Nombre",
+        "lastName": "Apellido",
+        "userName": "Usuario",
+        "email": "Email",
+        "password": "Contraseña",
+        "confirm": "Confirmar",
+        "button": "Registrarse",
+        "button_loading": "Registrando...",
+        "has_account": "¿Ya tienes cuenta?",
+        "login": "Inicia Sesión",
+        "password_mismatch": "Las contraseñas no coinciden",
+        "error_default": "Error al registrarse"
+    },
+    "reset_password": {
+        "title": "Nueva Contraseña",
+        "email_sent": "Correo Enviado",
+        "code": "Código de Verificación",
+        "new_password": "Nueva Contraseña",
+        "confirm_password": "Confirmar Contraseña",
+        "button": "Restablecer Contraseña",
+        "button_loading": "Actualizando...",
+        "code_placeholder": "Ingrese solo números",
+        "success": "Contraseña actualizada",
+        "error_mismatch": "Las contraseñas no coinciden"
+    },
+    "recovery": {
+        "title": "Recuperar Clave",
+        "subtitle": "Ingresa tu email para recibir un código de recuperación.",
+        "sent_subtitle": "Enviamos un código a tu correo.",
+        "email_placeholder": "tu@email.com",
+        "button": "Enviar Código",
+        "button_loading": "Enviando...",
+        "back_login": "Volver al Login",
+        "error_default": "No se pudo enviar el correo"
+    },
+    "verify": {
+        "title": "Verificar Email",
+        "subtitle": "Hemos enviado un código a {{email}}",
+        "placeholder": "Código de 6 dígitos",
+        "button": "Verificar",
+        "resend": "Reenviar código",
+        "resend_success": "Código reenviado",
+        "resend_error": "Error al reenviar",
+        "success_message": "Email verificado correctamente",
+        "error_default": "Código inválido"
+    },
     "dashboard": {
         "overview": "Vista General del Dashboard",
         "welcome_message": "Bienvenido de nuevo, {{name}}.",
