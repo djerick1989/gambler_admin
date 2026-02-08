@@ -1,9 +1,10 @@
 import React, { useEffect, useRef } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useChat } from '../../context/ChatContext';
+import { formatChatTimestamp } from '../../utils/dateUtils';
 
 const ChatWindow = ({ messages, currentUser, chatId }) => {
-    const { t } = useTranslation();
+    const { t, i18n } = useTranslation();
     const { typingUsers } = useChat();
     const messagesEndRef = useRef(null);
 
@@ -40,7 +41,7 @@ const ChatWindow = ({ messages, currentUser, chatId }) => {
                                     <div className="message-bubble">
                                         <p className="message-text">{msg.content}</p>
                                         <span className="message-time">
-                                            {new Date(msg.createdAt).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
+                                            {formatChatTimestamp(msg.createdAt, t, i18n.language)}
                                         </span>
                                     </div>
                                 </div>

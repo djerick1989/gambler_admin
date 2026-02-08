@@ -181,7 +181,7 @@ const CreateGroupModal = ({ onClose, onGroupCreated }) => {
                         className="btn btn-primary"
                         style={{ padding: '0.6rem 1.5rem', opacity: (creating || !groupName.trim() || selectedUsers.length === 0) ? 0.5 : 1 }}
                     >
-                        {creating ? t('common.loading') : t('posts.create')}
+                        {creating ? t('common.loading') : t('common.create')}
                     </button>
                 </div>
             </div>

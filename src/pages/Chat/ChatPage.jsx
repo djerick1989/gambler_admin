@@ -40,29 +40,39 @@ const ChatPage = () => {
         fetchData();
     }, []);
 
-    // Sync active chat when chatId param changes
+    // Sync active chat metadata when chats list or chatId changes
     useEffect(() => {
-        if (chatId) {
-            const chat = chats.find(c => c.chatsId === chatId);
+        if (chatId && chats.length > 0) {
+            const chat = chats.find(c => String(c.chatsId) === String(chatId));
             if (chat) {
                 setActiveChat(chat);
-                fetchMessages(chatId);
-                joinChat(chatId);
             }
+        }
+    }, [chatId, chats]);
+
+    // Fetch messages and manage SignalR room join/leave only when chatId changes
+    useEffect(() => {
+        if (chatId) {
+            fetchMessages(chatId);
+            joinChat(chatId);
+            return () => {
+                leaveChat(chatId);
+            };
         } else {
             setActiveChat(null);
             setMessages([]);
         }
-
-        return () => {
-            if (chatId) leaveChat(chatId);
-        };
-    }, [chatId, chats, joinChat, leaveChat]);
+    }, [chatId, joinChat, leaveChat]); // Removed chats from dependencies to prevent re-fetching on list updates
 
     const fetchMessages = async (id) => {
         try {
             const response = await chatService.getMessages(id);
-            setMessages(response.data || []);
+            const rawMessages = response.data || [];
+            // Ensure messages are sorted chronologically ascending (oldest first, newest bottom)
+            const sortedMessages = [...rawMessages].sort((a, b) =>
+                new Date(a.createdAt) - new Date(b.createdAt)
+            );
+            setMessages(sortedMessages);
         } catch (err) {
             console.error('Error fetching messages:', err);
         }
@@ -73,17 +83,24 @@ const ChatPage = () => {
         try {
             const response = await chatService.sendMessage(chatId, content);
             // Locally add the message for immediate feedback
-            // The message will also be sent via SignalR to others
-            if (response.status) {
-                const newMessage = response.data;
-                setMessages(prev => [...prev, newMessage]);
+            if (response) {
+                const newMessage = response.data || response;
+                // Avoid duplicates if SignalR is very fast
+                setMessages(prev => {
+                    const exists = prev.some(m => (m.messageId && m.messageId === newMessage.messageId));
+                    if (exists) return prev;
+                    return [...prev, newMessage];
+                });
 
                 // Update last message in the list
-                setChats(prev => prev.map(c =>
-                    c.chatsId === chatId
-                        ? { ...c, lastMessage: newMessage, lastMessageAt: newMessage.createdAt }
-                        : c
-                ));
+                setChats(prev => {
+                    const newChats = prev.map(c =>
+                        String(c.chatsId) === String(chatId)
+                            ? { ...c, lastMessage: newMessage, lastMessageAt: newMessage.createdAt || new Date().toISOString() }
+                            : c
+                    );
+                    return newChats;
+                });
             }
         } catch (err) {
             console.error('Error sending message:', err);
@@ -94,20 +111,44 @@ const ChatPage = () => {
         navigate(`/chat/${id}`);
     };
 
+    // Sort chats by lastMessageAt (newest last)
+    const sortChatsByLastMessage = (chatList) => {
+        return [...chatList].sort((a, b) => {
+            const dateA = a.lastMessageAt ? new Date(a.lastMessageAt) : new Date(0);
+            const dateB = b.lastMessageAt ? new Date(b.lastMessageAt) : new Date(0);
+            return dateB - dateA; // Descending order (newest first)
+        });
+    };
+
     // Listen for real-time messages
     useEffect(() => {
         const handleNewMessage = (event) => {
             const newMessage = event.detail;
-            if (newMessage.chatId === chatId) {
-                setMessages(prev => [...prev, newMessage]);
+
+            // If the message is for the current active chat, add it to the messages list
+            if (String(newMessage.chatId || newMessage.chatsId) === String(chatId)) {
+                setMessages(prev => {
+                    // Prevent duplicate messages (especially if sent by current user)
+                    const isDuplicate = prev.some(m =>
+                        (m.messageId && m.messageId === newMessage.messageId) ||
+                        (m.content === newMessage.content &&
+                            Math.abs(new Date(m.createdAt) - new Date(newMessage.createdAt)) < 5000 &&
+                            m.sender?.userId === newMessage.sender?.userId)
+                    );
+                    if (isDuplicate) return prev;
+                    return [...prev, newMessage];
+                });
             }
 
-            // Update the chat list regardless of which chat got the message
-            setChats(prev => prev.map(c =>
-                c.chatsId === newMessage.chatId
-                    ? { ...c, lastMessage: newMessage, lastMessageAt: newMessage.createdAt }
-                    : c
-            ));
+            // Update the last message preview in the sidebar for ALL chats
+            setChats(prev => {
+                const targetChatId = String(newMessage.chatId || newMessage.chatsId);
+                return prev.map(c =>
+                    String(c.chatsId) === targetChatId
+                        ? { ...c, lastMessage: newMessage, lastMessageAt: newMessage.createdAt || new Date().toISOString() }
+                        : c
+                );
+            });
         };
 
         window.addEventListener('new_chat_message', handleNewMessage);
@@ -126,7 +167,7 @@ const ChatPage = () => {
         <div className="chat-container">
             <div className={`chat-sidebar ${chatId ? 'hidden-mobile' : ''}`}>
                 <ChatList
-                    chats={chats}
+                    chats={sortChatsByLastMessage(chats)}
                     activeChatId={chatId}
                     onSelectChat={handleSelectChat}
                     currentUser={currentUser}

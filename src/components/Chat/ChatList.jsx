@@ -1,10 +1,11 @@
 import React, { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { PlusCircle } from 'lucide-react';
+import { formatChatTimestamp } from '../../utils/dateUtils';
 import CreateGroupModal from './CreateGroupModal';
 
 const ChatList = ({ chats, activeChatId, onSelectChat, currentUser }) => {
-    const { t } = useTranslation();
+    const { t, i18n } = useTranslation();
     const [showCreateGroup, setShowCreateGroup] = useState(false);
 
     const getChatName = (chat) => {
@@ -17,6 +18,10 @@ const ChatList = ({ chats, activeChatId, onSelectChat, currentUser }) => {
         if (chat.isGroup) return null; // Or a group icon
         const otherParticipant = chat.chatParticipants.find(p => p.userId !== currentUser?.userId);
         return otherParticipant?.avatar;
+    };
+
+    const formatChatDate = (dateString) => {
+        return formatChatTimestamp(dateString, t, i18n.language);
     };
 
     return (
@@ -50,7 +55,7 @@ const ChatList = ({ chats, activeChatId, onSelectChat, currentUser }) => {
                                 <span className="chat-item-name">{getChatName(chat)}</span>
                                 {chat.lastMessageAt && (
                                     <span className="chat-item-time">
-                                        {new Date(chat.lastMessageAt).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
+                                        {formatChatDate(chat.lastMessageAt)}
                                     </span>
                                 )}
                             </div>

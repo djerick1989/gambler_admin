@@ -29,7 +29,8 @@
         "load_more_comments": "Cargar más comentarios",
         "delete_confirm": "¿Estás seguro de que deseas eliminar este elemento?",
         "profile": "Mi Perfil",
-        "chat": "Chat"
+        "chat": "Chat",
+        "create": "Crear"
     },
     "posts": {
         "title": "Publicaciones de la Comunidad",
@@ -331,6 +332,7 @@
         "group_name": "Nombre del Grupo",
         "group_name_placeholder": "Ej. Proyecto X",
         "select_participants": "Seleccionar Participantes",
-        "selected": "seleccionado(s)"
+        "selected": "seleccionado(s)",
+        "yesterday": "Ayer"
     }
 }
