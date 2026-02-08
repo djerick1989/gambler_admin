@@ -24,65 +24,62 @@ export const ChatProvider = ({ children }) => {
 
     useEffect(() => {
         const token = localStorage.getItem('token');
+        if (!token) return;
 
-        if (!token || connectingRef.current || connection) return;
-
+        // Evitamos múltiples intentos simultáneos
+        if (connectingRef.current || isConnected) return;
         connectingRef.current = true;
 
-        const newConnection = new signalR.HubConnectionBuilder()
-            .withUrl(HUB_URL, {
-                accessTokenFactory: () => token,
-                skipNegotiation: true,
-                transport: signalR.HttpTransportType.WebSockets
-            })
-            .withAutomaticReconnect()
-            .configureLogging(signalR.LogLevel.Information)
-            .build();
-
-        setConnection(newConnection);
-
         const startConnection = async () => {
+            console.log('--- SIGNALR CONNECTION STARTING ---');
+
+            const hubConnection = new signalR.HubConnectionBuilder()
+                .withUrl(HUB_URL, {
+                    accessTokenFactory: () => localStorage.getItem('token'),
+                    skipNegotiation: true, // Crucial para AWS App Runner
+                    transport: signalR.HttpTransportType.WebSockets
+                })
+                .withAutomaticReconnect()
+                .configureLogging(signalR.LogLevel.Information)
+                .build();
+
+            hubConnection.on('UserTyping', ({ chatId, userId, isTyping }) => {
+                setTypingUsers(prev => ({
+                    ...prev,
+                    [chatId]: {
+                        ...(prev[chatId] || {}),
+                        [userId]: isTyping
+                    }
+                }));
+            });
+
+            hubConnection.on('ReceiveMessage', (message) => {
+                window.dispatchEvent(new CustomEvent('new_chat_message', { detail: message }));
+            });
+
             try {
-                await newConnection.start();
-                console.log('SignalR Connected');
+                await hubConnection.start();
+                console.log('--- SIGNALR CONNECTED !!! ---');
+                setConnection(hubConnection);
                 setIsConnected(true);
                 setError(null);
             } catch (err) {
-                console.error('SignalR Connection Error: ', err);
+                console.error('--- SIGNALR FAILED ---', err);
                 setError(err.message);
-                setTimeout(startConnection, 5000); // Retry after 5 seconds
-            } finally {
-                connectingRef.current = false;
+                // Reintento tras 5 segundos
+                setTimeout(() => {
+                    connectingRef.current = false;
+                    startConnection();
+                }, 5000);
             }
         };
 
         startConnection();
 
-        newConnection.on('UserTyping', ({ chatId, userId, isTyping }) => {
-            setTypingUsers(prev => ({
-                ...prev,
-                [chatId]: {
-                    ...(prev[chatId] || {}),
-                    [userId]: isTyping
-                }
-            }));
-        });
-
-        // We can also listen for new messages here if the Hub sends them via SignalR
-        // but the request only mentioned REST for sending messages. 
-        // Usually, Hubs have a "ReceiveMessage" event.
-        newConnection.on('ReceiveMessage', (message) => {
-            // This would be handled by triggering a state update in the UI if we had a global message store
-            // or using a custom event/callback system.
-            window.dispatchEvent(new CustomEvent('new_chat_message', { detail: message }));
-        });
-
         return () => {
-            if (newConnection) {
-                newConnection.stop();
-            }
+            // No detenemos la conexión aquí en desarrollo para evitar cortes por re-renders
         };
-    }, []);
+    }, []); // Array vacío: Solo se ejecuta al montar el componente globalmente
 
     const joinChat = useCallback(async (chatId) => {
         if (connection && isConnected) {

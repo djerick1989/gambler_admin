@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import { authService } from '../services/api';
-import { UserPlus, Mail, Lock, User as UserIcon, Facebook, Twitter, Chrome, Smartphone } from 'lucide-react';
+import { UserPlus, Mail, Lock, User as UserIcon, Facebook, Twitter, Chrome, Smartphone, Asterisk } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
 import LanguageSwitcher from '../components/LanguageSwitcher';
 
@@ -55,23 +55,31 @@ const Signup = () => {
 
                 <form onSubmit={handleSubmit} style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1rem' }}>
                     <div className="input-group" style={{ gridColumn: 'span 2' }}>
-                        <label>{t('signup.name')}</label>
-                        <input type="text" required value={formData.name} onChange={(e) => setFormData({ ...formData, name: e.target.value })} />
-                    </div>
-                    <div className="input-group" style={{ gridColumn: 'span 2' }}>
-                        <label>{t('signup.nickName')}</label>
+                        <label style={{ display: 'flex', alignItems: 'center', gap: '4px' }}>
+                            {t('signup.nickName')} <Asterisk size={12} color="var(--danger)" />
+                        </label>
                         <input type="text" required value={formData.nickName} onChange={(e) => setFormData({ ...formData, nickName: e.target.value })} />
                     </div>
                     <div className="input-group" style={{ gridColumn: 'span 2' }}>
-                        <label>{t('signup.email')}</label>
+                        <label>{t('signup.name')}</label>
+                        <input type="text" value={formData.name} onChange={(e) => setFormData({ ...formData, name: e.target.value })} />
+                    </div>
+                    <div className="input-group" style={{ gridColumn: 'span 2' }}>
+                        <label style={{ display: 'flex', alignItems: 'center', gap: '4px' }}>
+                            {t('signup.email')} <Asterisk size={12} color="var(--danger)" />
+                        </label>
                         <input type="email" required value={formData.email} onChange={(e) => setFormData({ ...formData, email: e.target.value })} />
                     </div>
                     <div className="input-group">
-                        <label>{t('signup.password')}</label>
+                        <label style={{ display: 'flex', alignItems: 'center', gap: '4px' }}>
+                            {t('signup.password')} <Asterisk size={12} color="var(--danger)" />
+                        </label>
                         <input type="password" required value={formData.password} onChange={(e) => setFormData({ ...formData, password: e.target.value })} />
                     </div>
                     <div className="input-group">
-                        <label>{t('signup.confirm')}</label>
+                        <label style={{ display: 'flex', alignItems: 'center', gap: '4px' }}>
+                            {t('signup.confirm')} <Asterisk size={12} color="var(--danger)" />
+                        </label>
                         <input type="password" required value={formData.confirmPassword} onChange={(e) => setFormData({ ...formData, confirmPassword: e.target.value })} />
                     </div>
                     <button type="submit" className="btn btn-primary" style={{ gridColumn: 'span 2', marginTop: '1rem' }} disabled={loading}>
