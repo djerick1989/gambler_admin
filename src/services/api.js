@@ -275,7 +275,7 @@ export const gamblerService = {
     return response.data;
   },
   updateGamblerConfiguration: async (data) => {
-    const response = await apiClient.put('/api/Gambler/updateGamblerConfiguration', data);
+    const response = await apiClient.put('/api/Gambler/updateConfiguration', data);
     return response.data;
   },
   updateNotificationConfiguration: async (data) => {

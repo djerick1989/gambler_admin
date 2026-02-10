@@ -8,6 +8,7 @@ const ChatInput = ({ onSendMessage, chatId }) => {
     const { t } = useTranslation();
     const { sendTypingStatus } = useChat();
     const typingTimeoutRef = useRef(null);
+    const lastTypingSignalRef = useRef(0);
 
     const handleSend = (e) => {
         if (e) e.preventDefault();
@@ -30,17 +31,25 @@ const ChatInput = ({ onSendMessage, chatId }) => {
         const val = e.target.value;
         setMessage(val);
 
-        // Typing status logic
+        const now = Date.now();
+
+        // Typing status logic with throttling
         if (val.length > 0) {
-            sendTypingStatus(chatId, true);
+            // Only send 'true' if it has been more than 2 seconds since the last 'true' signal
+            if (now - lastTypingSignalRef.current > 2000) {
+                sendTypingStatus(chatId, true);
+                lastTypingSignalRef.current = now;
+            }
 
             if (typingTimeoutRef.current) clearTimeout(typingTimeoutRef.current);
 
             typingTimeoutRef.current = setTimeout(() => {
                 sendTypingStatus(chatId, false);
+                lastTypingSignalRef.current = 0; // Reset so next typing sends 'true' immediately
             }, 3000);
         } else {
             sendTypingStatus(chatId, false);
+            lastTypingSignalRef.current = 0;
             if (typingTimeoutRef.current) clearTimeout(typingTimeoutRef.current);
         }
     };

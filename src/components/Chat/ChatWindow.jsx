@@ -17,7 +17,10 @@ const ChatWindow = ({ messages, currentUser, chatId }) => {
     }, [messages]);
 
     const activeTypingUsers = typingUsers[chatId] || {};
-    const typingUserIds = Object.keys(activeTypingUsers).filter(uid => activeTypingUsers[uid] && uid !== currentUser?.userId);
+    // Ensure ID comparison is robust (using String conversion)
+    const typingUserIds = Object.keys(activeTypingUsers).filter(uid =>
+        activeTypingUsers[uid] && String(uid) !== String(currentUser?.userId)
+    );
 
     return (
         <div className="chat-window">
@@ -33,7 +36,13 @@ const ChatWindow = ({ messages, currentUser, chatId }) => {
                             <div key={msg.messageId || index} className={`message-bubble-container ${isOwnMessage ? 'own' : 'other'}`}>
                                 {!isOwnMessage && (
                                     <div className="message-sender-avatar">
-                                        <img src={msg.sender?.avatar} alt="avatar" />
+                                        {msg.sender?.avatar ? (
+                                            <img src={msg.sender?.avatar} alt="avatar" />
+                                        ) : (
+                                            <div className="avatar-placeholder small">
+                                                {(msg.sender?.nickName || msg.sender?.name || '?').charAt(0)}
+                                            </div>
+                                        )}
                                     </div>
                                 )}
                                 <div className="message-content-wrapper">

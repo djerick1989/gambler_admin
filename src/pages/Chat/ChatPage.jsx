@@ -13,7 +13,7 @@ const ChatPage = () => {
     const { chatId } = useParams();
     const navigate = useNavigate();
     const { t } = useTranslation();
-    const { joinChat, leaveChat } = useChat();
+    const { joinChat, leaveChat, setActiveChatId } = useChat();
 
     const [chats, setChats] = useState([]);
     const [messages, setMessages] = useState([]);
@@ -55,14 +55,17 @@ const ChatPage = () => {
         if (chatId) {
             fetchMessages(chatId);
             joinChat(chatId);
+            setActiveChatId(chatId);
             return () => {
                 leaveChat(chatId);
+                setActiveChatId(null);
             };
         } else {
+            setActiveChatId(null);
             setActiveChat(null);
             setMessages([]);
         }
-    }, [chatId, joinChat, leaveChat]); // Removed chats from dependencies to prevent re-fetching on list updates
+    }, [chatId, joinChat, leaveChat, setActiveChatId]); // Removed chats from dependencies to prevent re-fetching on list updates
 
     const fetchMessages = async (id) => {
         try {

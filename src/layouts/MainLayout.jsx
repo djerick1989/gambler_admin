@@ -2,6 +2,8 @@ import React, { useState } from 'react';
 import { Outlet, Link, useLocation, useNavigate } from 'react-router-dom';
 import { LayoutDashboard, Languages, UserCheck, LogOut, Menu, X, ChevronRight, Globe, Newspaper, MessageSquare, Image, User, FileText } from 'lucide-react';
 import { useAuth } from '../context/AuthContext';
+import { useNotification } from '../context/NotificationContext';
+import { ToastContainer } from '../components/Common/Toast';
 import { useTranslation } from 'react-i18next';
 
 const SidebarLink = ({ to, icon: Icon, label, active, onClick }) => (
@@ -30,6 +32,7 @@ const MainLayout = () => {
     const { t, i18n } = useTranslation();
     const [sidebarOpen, setSidebarOpen] = useState(true);
     const { user, logout } = useAuth();
+    const { notifications, removeToast } = useNotification();
     const location = useLocation();
     const navigate = useNavigate();
 
@@ -195,6 +198,15 @@ const MainLayout = () => {
                         <Outlet />
                     </div>
                 </main>
+                <ToastContainer notifications={notifications} onRemove={removeToast} />
+                <style>
+                    {`
+                        @keyframes toastSlideIn {
+                            from { transform: translateX(100%); opacity: 0; }
+                            to { transform: translateX(0); opacity: 1; }
+                        }
+                    `}
+                </style>
             </div>
         </div>
     );

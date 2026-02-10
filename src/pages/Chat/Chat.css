@@ -82,6 +82,12 @@
   font-weight: bold;
 }
 
+.avatar-placeholder.small {
+  width: 32px;
+  height: 32px;
+  font-size: 0.8rem;
+}
+
 .chat-item-info {
   flex: 1;
   min-width: 0;

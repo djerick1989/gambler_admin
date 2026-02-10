@@ -25,6 +25,7 @@ import ChatPage from './pages/Chat/ChatPage';
 import MainLayout from './layouts/MainLayout';
 import { AuthProvider, useAuth } from './context/AuthContext';
 import { ChatProvider } from './context/ChatContext';
+import { NotificationProvider } from './context/NotificationContext';
 import { useTranslation } from 'react-i18next';
 
 const ProtectedRoute = ({ children }) => {
@@ -45,51 +46,53 @@ const ProtectedRoute = ({ children }) => {
 function App() {
   return (
     <AuthProvider>
-      <ChatProvider>
-        <Router>
-          <Routes>
-            <Route path="/login" element={<Login />} />
-            <Route path="/signup" element={<Signup />} />
-            <Route path="/verify-email" element={<VerifyEmail />} />
-            <Route path="/recovery-password" element={<RecoveryPassword />} />
-            <Route path="/reset-password" element={<ResetPassword />} />
+      <NotificationProvider>
+        <ChatProvider>
+          <Router>
+            <Routes>
+              <Route path="/login" element={<Login />} />
+              <Route path="/signup" element={<Signup />} />
+              <Route path="/verify-email" element={<VerifyEmail />} />
+              <Route path="/recovery-password" element={<RecoveryPassword />} />
+              <Route path="/reset-password" element={<ResetPassword />} />
 
-            <Route path="/" element={
-              <ProtectedRoute>
-                <MainLayout />
-              </ProtectedRoute>
-            }>
-              <Route index element={<Dashboard />} />
-              <Route path="language" element={<Language />} />
-              <Route path="onboarding" element={<OnBoarding />} />
-              <Route path="onboarding/new" element={<OnBoardingForm />} />
-              <Route path="onboarding/edit/:id" element={<OnBoardingForm />} />
+              <Route path="/" element={
+                <ProtectedRoute>
+                  <MainLayout />
+                </ProtectedRoute>
+              }>
+                <Route index element={<Dashboard />} />
+                <Route path="language" element={<Language />} />
+                <Route path="onboarding" element={<OnBoarding />} />
+                <Route path="onboarding/new" element={<OnBoardingForm />} />
+                <Route path="onboarding/edit/:id" element={<OnBoardingForm />} />
 
-              <Route path="i18n" element={<Namespaces />} />
-              <Route path="i18n/namespace/:id" element={<Keys />} />
-              <Route path="i18n/namespace/:namespaceId/key/new" element={<KeyForm />} />
-              <Route path="i18n/namespace/:namespaceId/key/edit/:id" element={<KeyForm />} />
+                <Route path="i18n" element={<Namespaces />} />
+                <Route path="i18n/namespace/:id" element={<Keys />} />
+                <Route path="i18n/namespace/:namespaceId/key/new" element={<KeyForm />} />
+                <Route path="i18n/namespace/:namespaceId/key/edit/:id" element={<KeyForm />} />
 
-              <Route path="news" element={<NewsList />} />
-              <Route path="news/new" element={<NewsForm />} />
-              <Route path="news/edit/:id" element={<NewsForm />} />
+                <Route path="news" element={<NewsList />} />
+                <Route path="news/new" element={<NewsForm />} />
+                <Route path="news/edit/:id" element={<NewsForm />} />
 
-              <Route path="gamblers" element={<GamblerList />} />
-              <Route path="gamblers/:id" element={<GamblerDetail />} />
+                <Route path="gamblers" element={<GamblerList />} />
+                <Route path="gamblers/:id" element={<GamblerDetail />} />
 
-              <Route path="posts" element={<PostList />} />
-              <Route path="posts/new" element={<PostForm />} />
-              <Route path="posts/edit/:id" element={<PostForm />} />
+                <Route path="posts" element={<PostList />} />
+                <Route path="posts/new" element={<PostForm />} />
+                <Route path="posts/edit/:id" element={<PostForm />} />
 
-              <Route path="media" element={<MediaList />} />
-              <Route path="profile" element={<Profile />} />
-              <Route path="user/:userId" element={<UserProfileView />} />
-              <Route path="chat" element={<ChatPage />} />
-              <Route path="chat/:chatId" element={<ChatPage />} />
-            </Route>
-          </Routes>
-        </Router>
-      </ChatProvider>
+                <Route path="media" element={<MediaList />} />
+                <Route path="profile" element={<Profile />} />
+                <Route path="user/:userId" element={<UserProfileView />} />
+                <Route path="chat" element={<ChatPage />} />
+                <Route path="chat/:chatId" element={<ChatPage />} />
+              </Route>
+            </Routes>
+          </Router>
+        </ChatProvider>
+      </NotificationProvider>
     </AuthProvider>
   );
 }
