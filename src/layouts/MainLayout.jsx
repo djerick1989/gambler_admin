@@ -1,12 +1,13 @@
 import React, { useState } from 'react';
 import { Outlet, Link, useLocation, useNavigate } from 'react-router-dom';
-import { LayoutDashboard, Languages, UserCheck, LogOut, Menu, X, ChevronRight, Globe, Newspaper, MessageSquare, Image, User, FileText } from 'lucide-react';
+import { LayoutDashboard, Languages, UserCheck, LogOut, Menu, X, ChevronRight, Globe, Newspaper, MessageSquare, Image, User, FileText, Bell } from 'lucide-react';
 import { useAuth } from '../context/AuthContext';
+import { useChat } from '../context/ChatContext';
 import { useNotification } from '../context/NotificationContext';
 import { ToastContainer } from '../components/Common/Toast';
 import { useTranslation } from 'react-i18next';
 
-const SidebarLink = ({ to, icon: Icon, label, active, onClick }) => (
+const SidebarLink = ({ to, icon: Icon, label, active, onClick, badge }) => (
     <Link
         to={to}
         onClick={onClick}
@@ -19,11 +20,27 @@ const SidebarLink = ({ to, icon: Icon, label, active, onClick }) => (
             borderRadius: '0.5rem',
             backgroundColor: active ? 'var(--primary)' : 'transparent',
             transition: 'all 0.2s',
-            marginBottom: '0.5rem'
+            marginBottom: '0.5rem',
+            position: 'relative'
         }}
     >
         <Icon size={20} style={{ marginRight: '0.75rem' }} />
         <span style={{ flex: 1 }}>{label}</span>
+        {badge > 0 && (
+            <span style={{
+                background: 'var(--danger)',
+                color: 'white',
+                fontSize: '0.7rem',
+                padding: '2px 6px',
+                borderRadius: '10px',
+                minWidth: '18px',
+                textAlign: 'center',
+                marginRight: '8px',
+                fontWeight: 'bold'
+            }}>
+                {badge}
+            </span>
+        )}
         {active && <ChevronRight size={16} />}
     </Link>
 );
@@ -33,8 +50,18 @@ const MainLayout = () => {
     const [sidebarOpen, setSidebarOpen] = useState(true);
     const { user, logout } = useAuth();
     const { notifications, removeToast } = useNotification();
+    const { setActiveChatId, totalUnreadCount } = useChat();
     const location = useLocation();
     const navigate = useNavigate();
+
+    // Safety effect: Clear activeChatId if we navigate away from the chat module
+    React.useEffect(() => {
+        console.log('--- LAYOUT: Path changed ---', location.pathname);
+        if (!location.pathname.startsWith('/chat')) {
+            console.log('--- LAYOUT: Not a chat path, resetting activeChatId ---');
+            setActiveChatId(null);
+        }
+    }, [location.pathname, setActiveChatId]);
 
     const handleLogout = () => {
         logout();
@@ -94,6 +121,7 @@ const MainLayout = () => {
                             {...item}
                             to={item.path}
                             active={location.pathname === item.path}
+                            badge={item.path === '/chat' ? totalUnreadCount : null}
                         />
                     ))}
                 </nav>
@@ -179,7 +207,31 @@ const MainLayout = () => {
                         </div>
                     </div>
 
-                    <div style={{ display: 'flex', alignItems: 'center', gap: '1rem' }}>
+                    <div style={{ display: 'flex', alignItems: 'center', gap: '1.5rem' }}>
+                        <Link
+                            to="/notifications"
+                            style={{
+                                color: 'white',
+                                position: 'relative',
+                                display: 'flex',
+                                alignItems: 'center'
+                            }}
+                        >
+                            <Bell size={22} color={totalUnreadCount > 0 ? '#ef4444' : 'white'} />
+                            {totalUnreadCount > 0 && (
+                                <span style={{
+                                    position: 'absolute',
+                                    top: '-4px',
+                                    right: '-4px',
+                                    background: '#ef4444',
+                                    width: '10px',
+                                    height: '10px',
+                                    borderRadius: '50%',
+                                    border: '2px solid var(--bg-darker)'
+                                }}></span>
+                            )}
+                        </Link>
+
                         <div style={{ textAlign: 'right' }}>
                             <div style={{ fontSize: '0.875rem', fontWeight: '600' }}>{user?.nickName || user?.name || t('common.admin')}</div>
                             <div style={{ fontSize: '0.75rem', color: 'var(--text-muted)' }}>{getRoleName(user?.role)}</div>

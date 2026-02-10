@@ -1,6 +1,7 @@
 import React, { createContext, useContext, useEffect, useState, useCallback, useRef } from 'react';
 import * as signalR from '@microsoft/signalr';
 import { useNotification } from './NotificationContext';
+import { useAuth } from './AuthContext';
 
 const ChatContext = createContext();
 
@@ -19,11 +20,44 @@ export const ChatProvider = ({ children }) => {
     const [typingUsers, setTypingUsers] = useState({}); // { [chatId]: { [userId]: boolean } }
     const [activeChatId, setActiveChatId] = useState(null);
     const [isConnected, setIsConnected] = useState(false);
+    const [unreadCounts, setUnreadCounts] = useState({}); // { [chatId]: number }
     const [error, setError] = useState(null);
     const { showToast } = useNotification();
 
+    // Calculate total unread count
+    const totalUnreadCount = Object.values(unreadCounts).reduce((acc, count) => acc + count, 0);
+
+    // Mark chat as read
+    const markAsRead = useCallback((chatId) => {
+        setUnreadCounts(prev => {
+            if (!prev[chatId]) return prev;
+            const newCounts = { ...prev };
+            delete newCounts[chatId];
+            return newCounts;
+        });
+    }, []);
+
+    // Internal setter with logging
+    const handleSetActiveChatId = (id) => {
+        console.log('--- CONTEXT: setActiveChatId called ---', { old: activeChatId, new: id });
+        setActiveChatId(id);
+    };
+
     // Ref to keep track of connection status to avoid multiple starts
     const connectingRef = useRef(false);
+    const connectionRef = useRef(null);
+    const activeChatIdRef = useRef(activeChatId);
+    const { user } = useAuth();
+    const userRef = useRef(user);
+
+    // Keep refs in sync with state
+    useEffect(() => {
+        activeChatIdRef.current = activeChatId;
+    }, [activeChatId]);
+
+    useEffect(() => {
+        userRef.current = user;
+    }, [user]);
 
     useEffect(() => {
         const token = localStorage.getItem('token');
@@ -67,10 +101,28 @@ export const ChatProvider = ({ children }) => {
             });
 
             hubConnection.on('ReceiveMessage', (message) => {
-                const messageChatId = String(message.chatId || message.chatsId);
+                const messageChatId = String(message.chatId || message.chatsId || message.ChatId || '');
+                const senderId = String(message.sender?.userId || message.sender?.UserId || '');
+                const currentUserId = String(userRef.current?.userId || '');
 
-                // If it's NOT the active chat, show a notification
-                if (String(activeChatId) !== messageChatId) {
+                console.log('--- SIGNALR MESSAGE RECEIVED ---', {
+                    messageChatId,
+                    activeChatId: activeChatIdRef.current,
+                    senderId,
+                    currentUserId,
+                    shouldNotify: senderId !== currentUserId && String(activeChatIdRef.current) !== messageChatId
+                });
+
+                // Only show notification if:
+                // 1. Message is NOT from the current user
+                // 2. The chat is NOT the one currently being viewed
+                if (senderId !== currentUserId && String(activeChatIdRef.current) !== messageChatId) {
+                    // Update unread count
+                    setUnreadCounts(prev => ({
+                        ...prev,
+                        [messageChatId]: (prev[messageChatId] || 0) + 1
+                    }));
+
                     showToast({
                         title: message.sender?.nickName || message.sender?.name || 'Nuevo Mensaje',
                         message: message.content,
@@ -85,6 +137,7 @@ export const ChatProvider = ({ children }) => {
             try {
                 await hubConnection.start();
                 console.log('--- SIGNALR CONNECTED !!! ---');
+                connectionRef.current = hubConnection;
                 setConnection(hubConnection);
                 setIsConnected(true);
                 setError(null);
@@ -113,47 +166,62 @@ export const ChatProvider = ({ children }) => {
     }, []); // Array vacío: Solo se ejecuta al montar el componente globalmente
 
     const joinChat = useCallback(async (chatId) => {
-        console.log('--- SIGNALR INVOKE: JoinChat ---', { chatId, ready: connection && isConnected });
-        if (connection && isConnected) {
+        const hub = connectionRef.current;
+        const isReady = hub && hub.state === signalR.HubConnectionState.Connected;
+
+        console.log('--- SIGNALR INVOKE: JoinChat ---', { chatId, ready: isReady });
+
+        if (isReady) {
             try {
-                await connection.invoke('JoinChat', String(chatId));
+                await hub.invoke('JoinChat', String(chatId));
                 console.log('--- SIGNALR SUCCESS: JoinChat ---', chatId);
             } catch (err) {
                 console.error('Error joining chat:', err);
             }
         }
-    }, [connection, isConnected]);
+    }, []);
 
     const leaveChat = useCallback(async (chatId) => {
-        console.log('--- SIGNALR INVOKE: LeaveChat ---', { chatId, ready: connection && isConnected });
-        if (connection && isConnected) {
+        const hub = connectionRef.current;
+        const isReady = hub && hub.state === signalR.HubConnectionState.Connected;
+
+        console.log('--- SIGNALR INVOKE: LeaveChat ---', { chatId, ready: isReady });
+
+        if (isReady) {
             try {
-                await connection.invoke('LeaveChat', String(chatId));
+                await hub.invoke('LeaveChat', String(chatId));
                 console.log('--- SIGNALR SUCCESS: LeaveChat ---', chatId);
             } catch (err) {
                 console.error('Error leaving chat:', err);
             }
         }
-    }, [connection, isConnected]);
+    }, []);
 
     const sendTypingStatus = useCallback(async (chatId, isTyping) => {
-        console.log('--- SIGNALR INVOKE: SendTypingStatus ---', { chatId, isTyping, ready: connection && isConnected });
-        if (connection && isConnected) {
+        const hub = connectionRef.current;
+        const isReady = hub && hub.state === signalR.HubConnectionState.Connected;
+
+        console.log('--- SIGNALR INVOKE: SendTypingStatus ---', { chatId, isTyping, ready: isReady });
+
+        if (isReady) {
             try {
-                await connection.invoke('SendTypingStatus', String(chatId), isTyping);
+                await hub.invoke('SendTypingStatus', String(chatId), isTyping);
                 console.log('--- SIGNALR SUCCESS: SendTypingStatus ---', { chatId, isTyping });
             } catch (err) {
                 console.error('Error sending typing status:', err);
             }
         }
-    }, [connection, isConnected]);
+    }, []);
 
     const value = {
         isConnected,
         error,
         typingUsers,
+        unreadCounts,
+        totalUnreadCount,
         activeChatId,
-        setActiveChatId,
+        setActiveChatId: handleSetActiveChatId,
+        markAsRead,
         joinChat,
         leaveChat,
         sendTypingStatus

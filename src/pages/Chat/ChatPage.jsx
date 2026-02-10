@@ -13,7 +13,7 @@ const ChatPage = () => {
     const { chatId } = useParams();
     const navigate = useNavigate();
     const { t } = useTranslation();
-    const { joinChat, leaveChat, setActiveChatId } = useChat();
+    const { joinChat, leaveChat, setActiveChatId, isConnected, unreadCounts, markAsRead } = useChat();
 
     const [chats, setChats] = useState([]);
     const [messages, setMessages] = useState([]);
@@ -50,22 +50,39 @@ const ChatPage = () => {
         }
     }, [chatId, chats]);
 
-    // Fetch messages and manage SignalR room join/leave only when chatId changes
+    // 1. Manage Global Active Chat State (UI level, independent of connection)
     useEffect(() => {
         if (chatId) {
-            fetchMessages(chatId);
-            joinChat(chatId);
+            console.log('--- UI: Setting activeChatId ---', chatId);
             setActiveChatId(chatId);
+            markAsRead(chatId); // Clear unread messages for this chat
             return () => {
-                leaveChat(chatId);
+                console.log('--- UI: Clearing activeChatId ---');
                 setActiveChatId(null);
             };
         } else {
             setActiveChatId(null);
+        }
+    }, [chatId, setActiveChatId, markAsRead]);
+
+    // 2. Fetch messages and manage SignalR room join/leave (Network level)
+    useEffect(() => {
+        if (chatId) {
+            fetchMessages(chatId);
+
+            if (isConnected) {
+                joinChat(chatId);
+                return () => {
+                    if (isConnected) {
+                        leaveChat(chatId);
+                    }
+                };
+            }
+        } else {
             setActiveChat(null);
             setMessages([]);
         }
-    }, [chatId, joinChat, leaveChat, setActiveChatId]); // Removed chats from dependencies to prevent re-fetching on list updates
+    }, [chatId, joinChat, leaveChat, isConnected]);
 
     const fetchMessages = async (id) => {
         try {
@@ -166,11 +183,17 @@ const ChatPage = () => {
         );
     }
 
+    // Merge unread counts into the chats list
+    const chatsWithUnread = chats.map(c => ({
+        ...c,
+        unreadCount: unreadCounts[String(c.chatsId)] || 0
+    }));
+
     return (
         <div className="chat-container">
             <div className={`chat-sidebar ${chatId ? 'hidden-mobile' : ''}`}>
                 <ChatList
-                    chats={sortChatsByLastMessage(chats)}
+                    chats={sortChatsByLastMessage(chatsWithUnread)}
                     activeChatId={chatId}
                     onSelectChat={handleSelectChat}
                     currentUser={currentUser}

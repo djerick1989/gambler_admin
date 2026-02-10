@@ -30,6 +30,8 @@
         "delete_confirm": "Are you sure you want to delete this item?",
         "profile": "My Profile",
         "chat": "Chat",
+        "notifications": "Notifications",
+        "not_read": "Unread Messages",
         "create": "Create"
     },
     "posts": {
@@ -334,5 +336,15 @@
         "select_participants": "Select Participants",
         "selected": "selected",
         "yesterday": "Yesterday"
+    },
+    "notifications": {
+        "title": "Notification Center",
+        "all_clear": "You are all caught up with your chats.",
+        "no_unread": "No new messages",
+        "empty_state": "You don't have any pending messages in any of your conversations.",
+        "go_to_chat": "Go to chats",
+        "pending_one": "1 pending message",
+        "pending_many": "{{count}} pending messages",
+        "new_message": "New message received."
     }
 }

@@ -30,6 +30,8 @@
         "delete_confirm": "¿Estás seguro de que deseas eliminar este elemento?",
         "profile": "Mi Perfil",
         "chat": "Chat",
+        "notifications": "Notificaciones",
+        "not_read": "Mensajes No Leídos",
         "create": "Crear"
     },
     "posts": {
@@ -334,5 +336,15 @@
         "select_participants": "Seleccionar Participantes",
         "selected": "seleccionado(s)",
         "yesterday": "Ayer"
+    },
+    "notifications": {
+        "title": "Centro de Notificaciones",
+        "all_clear": "Estás al día con todos tus chats.",
+        "no_unread": "Sin mensajes nuevos",
+        "empty_state": "No tienes mensajes pendientes en ninguna de tus conversaciones.",
+        "go_to_chat": "Ir a los chats",
+        "pending_one": "1 mensaje pendiente",
+        "pending_many": "{{count}} mensajes pendientes",
+        "new_message": "Nuevo mensaje recibido."
     }
 }

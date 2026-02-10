@@ -19,6 +19,7 @@ import GamblerDetail from './pages/GamblerDetail';
 import PostList from './pages/PostList';
 import PostForm from './pages/PostForm';
 import MediaList from './pages/MediaList';
+import NotificationsPage from './pages/Notifications/NotificationsPage';
 import Profile from './pages/Profile';
 import UserProfileView from './pages/UserProfileView';
 import ChatPage from './pages/Chat/ChatPage';
@@ -64,6 +65,7 @@ function App() {
                 <Route index element={<Dashboard />} />
                 <Route path="language" element={<Language />} />
                 <Route path="onboarding" element={<OnBoarding />} />
+                <Route path="notifications" element={<NotificationsPage />} />
                 <Route path="onboarding/new" element={<OnBoardingForm />} />
                 <Route path="onboarding/edit/:id" element={<OnBoardingForm />} />
 
