@@ -501,4 +501,29 @@ export const achievementService = {
   }
 };
 
+export const paymentPlatformService = {
+  create: async (data) => {
+    const response = await apiClient.post('/api/PaymentPlatform/create', data);
+    return response.data;
+  },
+  update: async (id, data) => {
+    const response = await apiClient.put(`/api/PaymentPlatform/update/${id}`, data);
+    return response.data;
+  },
+  delete: async (id) => {
+    const response = await apiClient.delete(`/api/PaymentPlatform/${id}`);
+    return response.data;
+  },
+  getAll: async (page = 1, pageSize = 10) => {
+    const response = await apiClient.get('/api/PaymentPlatform', {
+      params: { page, pageSize }
+    });
+    return response.data;
+  },
+  getById: async (id) => {
+    const response = await apiClient.get(`/api/PaymentPlatform/${id}`);
+    return response.data;
+  }
+};
+
 export default apiClient;

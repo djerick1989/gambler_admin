@@ -374,5 +374,29 @@
         "edit": "Editar Logro",
         "new": "Nuevo Logro",
         "order": "Orden"
+    },
+    "payment_platforms": {
+        "title": "Plataformas de Pago",
+        "subtitle": "Gestiona los métodos de pago disponibles en la plataforma.",
+        "add_new": "Nueva Plataforma",
+        "edit": "Editar Plataforma",
+        "delete_confirm": "¿Estás seguro de que deseas eliminar esta plataforma de pago?",
+        "form": {
+            "name": "Nombre",
+            "code": "Código",
+            "description": "Descripción",
+            "isActive": "Activo",
+            "name_placeholder": "ej. Paypal",
+            "code_placeholder": "ej. PAYPAL",
+            "description_placeholder": "Descripción de la plataforma...",
+            "save": "Guardar Plataforma"
+        },
+        "table": {
+            "name": "Nombre",
+            "code": "Código",
+            "status": "Estado",
+            "actions": "Acciones"
+        },
+        "empty": "No se encontraron plataformas de pago."
     }
 }

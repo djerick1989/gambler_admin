@@ -26,6 +26,8 @@ import UserAchievements from './pages/Achievement/UserAchievements';
 import Profile from './pages/Profile';
 import UserProfileView from './pages/UserProfileView';
 import ChatPage from './pages/Chat/ChatPage';
+import PaymentPlatformList from './pages/PaymentPlatformList';
+import PaymentPlatformForm from './pages/PaymentPlatformForm';
 import MainLayout from './layouts/MainLayout';
 import { AuthProvider, useAuth } from './context/AuthContext';
 import { ChatProvider } from './context/ChatContext';
@@ -101,6 +103,10 @@ function App() {
                 } />
                 <Route path="achievements/new" element={<AchievementForm />} />
                 <Route path="achievements/edit/:id" element={<AchievementForm />} />
+
+                <Route path="payment-platforms" element={<PaymentPlatformList />} />
+                <Route path="payment-platforms/new" element={<PaymentPlatformForm />} />
+                <Route path="payment-platforms/edit/:id" element={<PaymentPlatformForm />} />
               </Route>
             </Routes>
           </Router>

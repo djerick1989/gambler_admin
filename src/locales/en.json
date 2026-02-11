@@ -374,5 +374,29 @@
         "edit": "Edit Achievement",
         "new": "New Achievement",
         "order": "Order"
+    },
+    "payment_platforms": {
+        "title": "Payment Platforms",
+        "subtitle": "Manage payment methods available on the platform.",
+        "add_new": "Add New Platform",
+        "edit": "Edit Platform",
+        "delete_confirm": "Are you sure you want to delete this payment platform?",
+        "form": {
+            "name": "Name",
+            "code": "Code",
+            "description": "Description",
+            "isActive": "Is Active",
+            "name_placeholder": "e.g. Paypal",
+            "code_placeholder": "e.g. PAYPAL",
+            "description_placeholder": "Platform description...",
+            "save": "Save Platform"
+        },
+        "table": {
+            "name": "Name",
+            "code": "Code",
+            "status": "Status",
+            "actions": "Actions"
+        },
+        "empty": "No payment platforms found."
     }
 }
