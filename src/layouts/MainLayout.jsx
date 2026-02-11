@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { Outlet, Link, useLocation, useNavigate } from 'react-router-dom';
-import { LayoutDashboard, Languages, UserCheck, LogOut, Menu, X, ChevronRight, Globe, Newspaper, MessageSquare, Image, User, FileText, Bell } from 'lucide-react';
+import { LayoutDashboard, Languages, UserCheck, LogOut, Menu, X, ChevronRight, Globe, Newspaper, MessageSquare, Image, User, FileText, Bell, Award } from 'lucide-react';
 import { useAuth } from '../context/AuthContext';
 import { useChat } from '../context/ChatContext';
 import { useNotification } from '../context/NotificationContext';
@@ -86,6 +86,7 @@ const MainLayout = () => {
         { path: '/posts', label: t('common.posts') || 'Posts', icon: FileText },
         { path: '/chat', label: t('common.chat') || 'Chat', icon: MessageSquare },
         { path: '/media', label: t('media_mgmt.title') || 'Media', icon: Image },
+        { path: '/achievements', label: t('achievements.title') || 'Achievements', icon: Award },
         { path: '/gamblers', label: t('gambler_mgmt.title'), icon: UserCheck },
         { path: '/profile', label: t('common.profile'), icon: User },
     ];

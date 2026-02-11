@@ -6,9 +6,10 @@ import {
     ChevronLeft, Loader2, User, Phone, Globe, Mail,
     Save, Trash2, Shield, Bell, MessageSquare, Heart,
     Activity, Calendar, Info, MapPin, Languages, Edit2,
-    Eye
+    Eye, Award
 } from 'lucide-react';
 import { gamblerService, languageService, mediaService } from '../services/api';
+import GamblerAchievementManager from '../components/Achievement/GamblerAchievementManager';
 import { useTranslation } from 'react-i18next';
 import { countries } from '../utils/countries';
 
@@ -280,6 +281,26 @@ const GamblerDetail = () => {
                         >
                             <Bell size={20} />
                             {t('gambler_mgmt.detail.notifications')}
+                        </button>
+                        <button
+                            onClick={() => setActiveSection('achievements')}
+                            style={{
+                                width: '100%',
+                                padding: '1rem',
+                                border: 'none',
+                                borderRadius: '0.5rem',
+                                background: activeSection === 'achievements' ? 'var(--primary)' : 'transparent',
+                                color: 'white',
+                                textAlign: 'left',
+                                display: 'flex',
+                                alignItems: 'center',
+                                gap: '0.75rem',
+                                cursor: 'pointer',
+                                transition: 'all 0.2s'
+                            }}
+                        >
+                            <Award size={20} />
+                            {t('achievements.title') || 'Achievements'}
                         </button>
                     </div>
 
@@ -615,6 +636,10 @@ const GamblerDetail = () => {
                                 {t('gambler_mgmt.detail.save_changes')}
                             </button>
                         </div>
+                    )}
+
+                    {activeSection === 'achievements' && (
+                        <GamblerAchievementManager gamblerId={id} />
                     )}
                 </div>
             </div>

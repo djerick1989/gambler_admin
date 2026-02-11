@@ -462,4 +462,43 @@ export const chatService = {
   }
 };
 
+export const achievementService = {
+  createAchievement: async (data) => {
+    const response = await apiClient.post('/api/Achievement/createAchievement', data);
+    return response.data;
+  },
+  getAllAchievements: async () => {
+    const response = await apiClient.get('/api/Achievement/getAllAchievements');
+    return response.data;
+  },
+  getAchievementById: async (id) => {
+    const response = await apiClient.get(`/api/Achievement/getAchievementById/${id}`);
+    return response.data;
+  },
+  updateAchievement: async (data) => {
+    const response = await apiClient.put('/api/Achievement/updateAchievement', data);
+    return response.data;
+  },
+  deleteAchievement: async (id) => {
+    const response = await apiClient.delete(`/api/Achievement/deleteAchievement/${id}`);
+    return response.data;
+  },
+  assignAchievementToGambler: async (gamblerId, achievementId, isCompleted = false) => {
+    const response = await apiClient.post('/api/Achievement/assignAchievementToGambler', null, {
+      params: { gamblerId, achievementId, isCompleted }
+    });
+    return response.data;
+  },
+  updateGamblerAchievementProgress: async (gamblerId, achievementId, isCompleted) => {
+    const response = await apiClient.put('/api/Achievement/updateGamblerAchievementProgress', null, {
+      params: { gamblerId, achievementId, isCompleted }
+    });
+    return response.data;
+  },
+  getGamblerAchievements: async (gamblerId) => {
+    const response = await apiClient.get(`/api/Achievement/getGamblerAchievements/${gamblerId}`);
+    return response.data;
+  }
+};
+
 export default apiClient;

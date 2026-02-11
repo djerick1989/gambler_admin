@@ -32,7 +32,12 @@
         "chat": "Chat",
         "notifications": "Notificaciones",
         "not_read": "Mensajes No Leídos",
-        "create": "Crear"
+        "create": "Crear",
+        "active": "Activo",
+        "inactive": "Inactivo",
+        "upload": "Subir",
+        "save": "Guardar",
+        "save_changes": "Guardar Cambios"
     },
     "posts": {
         "title": "Publicaciones de la Comunidad",
@@ -287,7 +292,7 @@
         "share_success": "Historia compartida con éxito",
         "error_upload": "Error al subir el archivo",
         "error_create": "Error al crear la historia",
-        "reactions_title": "Reacciones",
+        "reactions_title": "Reactions",
         "no_reactions": "No hay reacciones aún",
         "delete_confirm": "¿Estás seguro de que quieres borrar esta historia?",
         "viewed": "Visto",
@@ -346,5 +351,28 @@
         "pending_one": "1 mensaje pendiente",
         "pending_many": "{{count}} mensajes pendientes",
         "new_message": "Nuevo mensaje recibido."
+    },
+    "achievements": {
+        "title": "Mis Logros",
+        "subtitle": "Crea y gestiona logros globales para todos los usuarios",
+        "add_new": "Añadir Nuevo Logro",
+        "empty": "No se encontraron logros",
+        "pending_img": "Imagen Pendiente",
+        "date": "Fecha del Logro",
+        "img_completed": "URL Imagen Completada",
+        "img_pending": "URL Imagen Pendiente",
+        "translations": "Traducciones",
+        "enter_title": "Ingresa el título en este idioma",
+        "user_title": "Mis Logros",
+        "user_subtitle": "Gana recompensas y sigue tu progreso en la comunidad",
+        "user_empty": "Aún no has ganado ningún logro. ¡Sigue participando!",
+        "earned": "Ganado",
+        "locked": "Bloqueado",
+        "gambler_management": "Logros del Gambler",
+        "assign": "Asignar Logro",
+        "user_no_achievements": "Este gambler no tiene logros aún.",
+        "edit": "Editar Logro",
+        "new": "Nuevo Logro",
+        "order": "Orden"
     }
 }

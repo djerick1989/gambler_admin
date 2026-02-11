@@ -20,6 +20,9 @@ import PostList from './pages/PostList';
 import PostForm from './pages/PostForm';
 import MediaList from './pages/MediaList';
 import NotificationsPage from './pages/Notifications/NotificationsPage';
+import AchievementList from './pages/Achievement/AchievementList';
+import AchievementForm from './pages/Achievement/AchievementForm';
+import UserAchievements from './pages/Achievement/UserAchievements';
 import Profile from './pages/Profile';
 import UserProfileView from './pages/UserProfileView';
 import ChatPage from './pages/Chat/ChatPage';
@@ -90,6 +93,14 @@ function App() {
                 <Route path="user/:userId" element={<UserProfileView />} />
                 <Route path="chat" element={<ChatPage />} />
                 <Route path="chat/:chatId" element={<ChatPage />} />
+
+                <Route path="achievements" element={
+                  <ProtectedRoute>
+                    <AchievementSwitch />
+                  </ProtectedRoute>
+                } />
+                <Route path="achievements/new" element={<AchievementForm />} />
+                <Route path="achievements/edit/:id" element={<AchievementForm />} />
               </Route>
             </Routes>
           </Router>
@@ -98,5 +109,12 @@ function App() {
     </AuthProvider>
   );
 }
+
+const AchievementSwitch = () => {
+  const { user } = useAuth();
+  // ADMIN = 1, SUPER_ADMIN = 2
+  const isAdmin = user?.role === 1 || user?.role === 2;
+  return isAdmin ? <AchievementList /> : <UserAchievements />;
+};
 
 export default App;

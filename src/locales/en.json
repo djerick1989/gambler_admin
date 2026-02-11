@@ -32,7 +32,12 @@
         "chat": "Chat",
         "notifications": "Notifications",
         "not_read": "Unread Messages",
-        "create": "Create"
+        "create": "Create",
+        "active": "Active",
+        "inactive": "Inactive",
+        "upload": "Upload",
+        "save": "Save",
+        "save_changes": "Save Changes"
     },
     "posts": {
         "title": "Community Posts",
@@ -346,5 +351,28 @@
         "pending_one": "1 pending message",
         "pending_many": "{{count}} pending messages",
         "new_message": "New message received."
+    },
+    "achievements": {
+        "title": "My Achievements",
+        "subtitle": "Create and manage global achievements for all users",
+        "add_new": "Add New Achievement",
+        "empty": "No achievements found",
+        "pending_img": "Pending Image",
+        "date": "Achievement Date",
+        "img_completed": "Completed Image URL",
+        "img_pending": "Pending Image URL",
+        "translations": "Translations",
+        "enter_title": "Enter title in this language",
+        "user_title": "My Achievements",
+        "user_subtitle": "Earn rewards and track your progress in the community",
+        "user_empty": "You haven't earned any achievements yet. Keep participating!",
+        "earned": "Earned",
+        "locked": "Locked",
+        "gambler_management": "Gambler Achievements",
+        "assign": "Assign Achievement",
+        "user_no_achievements": "This gambler has no achievements yet.",
+        "edit": "Edit Achievement",
+        "new": "New Achievement",
+        "order": "Order"
     }
 }
