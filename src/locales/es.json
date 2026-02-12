@@ -2,7 +2,7 @@
     "common": {
         "dashboard": "Panel de Control",
         "language": "Idioma",
-        "onboarding": "Bienvenida (OnBoarding)",
+        "onboarding": "Bienvenida",
         "logout": "Cerrar Sesión",
         "loading": "Cargando...",
         "welcome": "Bienvenido",
@@ -243,7 +243,7 @@
         "no_comments": "No hay comentarios para esta selección."
     },
     "gambler_mgmt": {
-        "title": "Gestión de Gamblers",
+        "title": "Gamblers",
         "subtitle": "Visualiza y gestiona la información y configuraciones de los usuarios.",
         "search_placeholder": "Buscar por nickname...",
         "all_gamblers": "Todos los Gamblers",
@@ -398,5 +398,65 @@
             "actions": "Acciones"
         },
         "empty": "No se encontraron plataformas de pago."
+    },
+    "donations": {
+        "title": "Donaciones",
+        "subtitle": "Selecciona el tipo de donación que deseas realizar.",
+        "community": {
+            "title": "A la Comunidad",
+            "subtitle": "Ayuda a financiar los premios de los sorteos.",
+            "description": "La donación a la comunidad funciona de la forma siguiente: los usuarios que se encuentren navegando de forma aleatoria podrán optar para ganar un porcentaje de esta donación. Recibiendo una notificación de que tienen la posibilidad de ganar un premio.\n\nLa fórmula será simple: (monto donado / precio de mes de suscripción = cantidad de meses de suscripción a premiar) Por ejemplo, si tu donación es de 100 dólares y el costo de suscripción es de 5 dólares al mes, la cantidad de meses de suscripción a premiar será de 20 meses.\n\nSpin para usuarios que no tienen suscripción.\n\n1 mes gratis de suscripción. (Probabilidad 40%)\n2 meses gratis de suscripción. (Probabilidad 30%)\n3 meses gratis de suscripción. (Probabilidad 15%)\n5 meses gratis de suscripción. (Probabilidad 10%)\n12 meses gratis de suscripción. (Probabilidad 5%)\n\nEl monto que decidas donar sera repartido entre la comunidad y dependera de la aletoriedad de la maquina que decidira que usuarios podran ganar la cantidad de meses de suscripción.\n\nEl Spin que les aparecera sera el siguiente:"
+        },
+        "person": {
+            "title": "A Personas",
+            "subtitle": "Apoya directamente a otros usuarios de la plataforma.",
+            "description": "Selecciona a uno o más beneficiarios y decide qué porcentaje de tu donación recibirá cada uno. Es una forma directa de agradecer o apoyar a tus miembros favoritos de la comunidad."
+        },
+        "organization": {
+            "title": "A la Organización",
+            "subtitle": "Apoya el mantenimiento y crecimiento de Gambler.",
+            "description": "Estas donaciones nos ayudan a mantener los servidores, desarrollar nuevas funcionalidades y asegurar que Gambler siga siendo la mejor plataforma para nuestra comunidad."
+        },
+        "form": {
+            "select_amount": "Selecciona el monto",
+            "enter_amount": "O ingresa un monto personalizado",
+            "anonymous": "Realizar donación anónima",
+            "beneficiaries": "Beneficiarios",
+            "search_user": "Buscar usuario por nickname...",
+            "payment_button": "Realizar Pago",
+            "success": "¡Gracias por tu donación!",
+            "error": "Hubo un error al procesar tu donación."
+        },
+        "admin": {
+            "title": "Gestión de Donaciones",
+            "subtitle": "Gestiona y supervisa todas las donaciones de la plataforma.",
+            "status_update_success": "Donación {{status}} con éxito",
+            "status_update_error": "Error al actualizar el estado",
+            "fetch_error": "Error al cargar las donaciones",
+            "status": {
+                "pending": "Pendiente",
+                "approved": "Aprobada",
+                "denied": "Denegada"
+            },
+            "table": {
+                "donor": "Donante",
+                "amount": "Monto",
+                "type": "Tipo",
+                "status": "Estado",
+                "date": "Fecha",
+                "actions": "Acciones",
+                "beneficiaries": "Beneficiarios"
+            },
+            "beneficiaries_modal": {
+                "title": "Beneficiarios de la Donación",
+                "user": "Usuario",
+                "percentage": "Porcentaje",
+                "amount": "Monto",
+                "close": "Cerrar",
+                "no_beneficiaries": "No hay beneficiarios específicos para esta donación."
+            },
+            "approve_confirm": "¿Estás seguro de que deseas aprobar esta donación?",
+            "deny_confirm": "¿Estás seguro de que deseas denegar esta donación?"
+        }
     }
 }

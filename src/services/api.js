@@ -526,4 +526,35 @@ export const paymentPlatformService = {
   }
 };
 
+export const donationService = {
+  createDonation: async (data) => {
+    const response = await apiClient.post('/api/Donation/createDonation', data);
+    return response.data;
+  },
+  updateStatus: async (data) => {
+    const response = await apiClient.put('/api/Donation/updateStatus', data);
+    return response.data;
+  },
+  getDonationById: async (id) => {
+    const response = await apiClient.get(`/api/Donation/getDonationById/${id}`);
+    return response.data;
+  },
+  getDonationsByUserId: async (userId) => {
+    const response = await apiClient.get(`/api/Donation/getDonationsByUserId/${userId}`);
+    return response.data;
+  },
+  getAllDonations: async (page = 1, pageSize = 10, sortBy = 'createdAt_desc') => {
+    const response = await apiClient.get('/api/Donation/getAllDonations', {
+      params: { page, pageSize, sortBy }
+    });
+    return response.data;
+  },
+  getDonationsSummary: async (page = 1, pageSize = 10, sortBy = 'amount_desc') => {
+    const response = await apiClient.get('/api/Donation/getDonationsSummary', {
+      params: { page, pageSize, sortBy }
+    });
+    return response.data;
+  }
+};
+
 export default apiClient;

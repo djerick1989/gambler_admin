@@ -28,6 +28,8 @@ import UserProfileView from './pages/UserProfileView';
 import ChatPage from './pages/Chat/ChatPage';
 import PaymentPlatformList from './pages/PaymentPlatformList';
 import PaymentPlatformForm from './pages/PaymentPlatformForm';
+import DonationList from './pages/Donation/DonationList';
+import DonationForm from './pages/Donation/DonationForm';
 import MainLayout from './layouts/MainLayout';
 import { AuthProvider, useAuth } from './context/AuthContext';
 import { ChatProvider } from './context/ChatContext';
@@ -107,6 +109,9 @@ function App() {
                 <Route path="payment-platforms" element={<PaymentPlatformList />} />
                 <Route path="payment-platforms/new" element={<PaymentPlatformForm />} />
                 <Route path="payment-platforms/edit/:id" element={<PaymentPlatformForm />} />
+
+                <Route path="donations" element={<DonationList />} />
+                <Route path="donations/new/:type" element={<DonationForm />} />
               </Route>
             </Routes>
           </Router>

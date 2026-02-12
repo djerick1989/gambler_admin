@@ -243,7 +243,7 @@
         "no_comments": "No comments found for this selection."
     },
     "gambler_mgmt": {
-        "title": "Gambler Management",
+        "title": "Gamblers",
         "subtitle": "Visualize and manage user information and configurations.",
         "search_placeholder": "Search by nickname...",
         "all_gamblers": "All Gamblers",
@@ -398,5 +398,65 @@
             "actions": "Actions"
         },
         "empty": "No payment platforms found."
+    },
+    "donations": {
+        "title": "Donations",
+        "subtitle": "Select the type of donation you want to make.",
+        "community": {
+            "title": "To the Community",
+            "subtitle": "Help fund the giveaway prizes.",
+            "description": "Community donations work as follows: randomly selected users browsing the site will be eligible to win a percentage of your donation. They will receive a notification that they have a chance to win a prize.\n\nThe formula is simple: (donated amount / monthly subscription price = number of subscription months to be awarded). For example, if your donation is $100 and the subscription cost is $5 per month, the number of subscription months to be awarded will be 20.\n\nSpin for users without a subscription:\n\n1 free month of subscription (40% probability)\n2 free months of subscription (30% probability)\n3 free months of subscription (15% probability)\n5 free months of subscription (10% probability)\n12 free months of subscription (5% probability)\n\nThe amount you choose to donate will be distributed among the community and will depend on the randomness of the machine that will decide which users can win the subscription months.\n\nThe Spin that will appear will be the following:"
+        },
+        "person": {
+            "title": "To People",
+            "subtitle": "Directly support other platform users.",
+            "description": "Select one or more beneficiaries and decide what percentage of your donation each one will receive. It's a direct way to thank or support your favorite community members."
+        },
+        "organization": {
+            "title": "To the Organization",
+            "subtitle": "Support Gambler's maintenance and growth.",
+            "description": "These donations help us maintain servers, develop new features, and ensure Gambler remains the best platform for our community."
+        },
+        "form": {
+            "select_amount": "Select amount",
+            "enter_amount": "Or enter a custom amount",
+            "anonymous": "Make an anonymous donation",
+            "beneficiaries": "Beneficiaries",
+            "search_user": "Search user by nickname...",
+            "payment_button": "Make Payment",
+            "success": "Thank you for your donation!",
+            "error": "There was an error processing your donation."
+        },
+        "admin": {
+            "title": "Donation Management",
+            "subtitle": "Manage and oversee all platform donations.",
+            "status_update_success": "Donation {{status}} successfully",
+            "status_update_error": "Error updating status",
+            "fetch_error": "Error loading donations",
+            "status": {
+                "pending": "Pending",
+                "approved": "Approved",
+                "denied": "Denied"
+            },
+            "table": {
+                "donor": "Donor",
+                "amount": "Amount",
+                "type": "Type",
+                "status": "Status",
+                "date": "Date",
+                "actions": "Actions",
+                "beneficiaries": "Beneficiaries"
+            },
+            "beneficiaries_modal": {
+                "title": "Donation Beneficiaries",
+                "user": "User",
+                "percentage": "Percentage",
+                "amount": "Amount",
+                "close": "Close",
+                "no_beneficiaries": "No specific beneficiaries for this donation."
+            },
+            "approve_confirm": "Are you sure you want to approve this donation?",
+            "deny_confirm": "Are you sure you want to deny this donation?"
+        }
     }
 }

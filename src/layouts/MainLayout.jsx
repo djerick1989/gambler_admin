@@ -87,6 +87,7 @@ const MainLayout = () => {
         { path: '/chat', label: t('common.chat') || 'Chat', icon: MessageSquare },
         { path: '/media', label: t('media_mgmt.title') || 'Media', icon: Image },
         { path: '/achievements', label: t('achievements.title') || 'Achievements', icon: Award },
+        { path: '/donations', label: t('donations.title') || 'Donations', icon: CreditCard },
         { path: '/payment-platforms', label: t('payment_platforms.title') || 'Payment Platforms', icon: CreditCard },
         { path: '/gamblers', label: t('gambler_mgmt.title'), icon: UserCheck },
         { path: '/profile', label: t('common.profile'), icon: User },
