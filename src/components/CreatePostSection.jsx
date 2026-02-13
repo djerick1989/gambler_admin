@@ -25,30 +25,31 @@ const CreatePostSection = ({ onClick, onMediaClick }) => {
                     borderRadius: '50%',
                     background: user?.avatar
                         ? `url(${user.avatar}) center/cover`
-                        : 'linear-gradient(135deg, var(--primary) 0%, #a855f7 100%)',
+                        : '#f1f5f9',
                     display: 'flex',
                     alignItems: 'center',
                     justifyContent: 'center',
                     flexShrink: 0,
-                    border: '2px solid var(--glass-border)'
+                    border: '1px solid var(--stroke)'
                 }}>
-                    {!user?.avatar && <UserIcon size={20} color="white" />}
+                    {!user?.avatar && <UserIcon size={20} color="var(--text-muted)" />}
                 </div>
 
                 <div
                     onClick={onClick}
                     style={{
                         flex: 1,
-                        background: 'rgba(255, 255, 255, 0.05)',
+                        background: '#f1f5f9',
                         borderRadius: '2rem',
                         padding: '0.75rem 1.25rem',
                         color: 'var(--text-muted)',
                         cursor: 'pointer',
                         transition: 'background 0.2s',
-                        fontSize: '0.95rem'
+                        fontSize: '0.95rem',
+                        border: '1px solid var(--stroke)'
                     }}
-                    onMouseEnter={(e) => e.currentTarget.style.background = 'rgba(255, 255, 255, 0.08)'}
-                    onMouseLeave={(e) => e.currentTarget.style.background = 'rgba(255, 255, 255, 0.05)'}
+                    onMouseEnter={(e) => e.currentTarget.style.background = '#e2e8f0'}
+                    onMouseLeave={(e) => e.currentTarget.style.background = '#f1f5f9'}
                 >
                     {t('posts.placeholder') || '¿Qué historia quieres contar hoy?'}
                 </div>

@@ -321,9 +321,9 @@ const PostForm = ({ id: propId, onSuccess, autoOpenMedia }) => {
                     <button
                         onClick={() => navigate('/posts')}
                         style={{
-                            background: 'rgba(255,255,255,0.05)',
-                            border: 'none',
-                            color: 'white',
+                            background: '#f1f5f9',
+                            border: '1px solid var(--stroke)',
+                            color: 'var(--text-main)',
                             padding: '0.5rem',
                             borderRadius: '0.5rem',
                             cursor: 'pointer',
@@ -349,11 +349,14 @@ const PostForm = ({ id: propId, onSuccess, autoOpenMedia }) => {
                     <div className={isModal ? "" : "glass-card"} style={{ padding: isModal ? '0' : '1.5rem' }}>
 
                         <div className="input-group" style={{ marginBottom: 0 }}>
-                            <div style={{ background: 'rgba(255,255,255,0.02)', borderRadius: '0.5rem', border: '1px solid var(--glass-border)', overflow: 'hidden' }}>
+                            <div style={{ background: '#FFFFFF', borderRadius: '0.5rem', border: '1px solid var(--stroke)', overflow: 'hidden' }}>
                                 <style>{`
-                                    .ql-toolbar.ql-snow { border: none; border-bottom: 1px solid var(--glass-border); background: rgba(255,255,255,0.05); }
-                                    .ql-container.ql-snow { border: none; min-height: 200px; font-size: 1rem; color: white; }
+                                    .ql-toolbar.ql-snow { border: none; border-bottom: 1px solid var(--stroke); background: #f8fafc; }
+                                    .ql-container.ql-snow { border: none; min-height: 200px; font-size: 1rem; color: var(--text-main); }
                                     .ql-editor.ql-blank::before { color: var(--text-muted); font-style: normal; }
+                                    .ql-snow .ql-stroke { stroke: var(--text-main); }
+                                    .ql-snow .ql-fill { fill: var(--text-main); }
+                                    .ql-snow .ql-picker { color: var(--text-main); }
                                 `}</style>
                                 <ReactQuill
                                     ref={quillRef}
@@ -472,8 +475,9 @@ const PostForm = ({ id: propId, onSuccess, autoOpenMedia }) => {
                         className="btn"
                         style={{
                             flex: 1,
-                            background: 'rgba(255,255,255,0.05)',
-                            color: 'white'
+                            background: '#f1f5f9',
+                            color: 'var(--text-main)',
+                            border: '1px solid var(--stroke)'
                         }}
                     >
                         {t('common.cancel') || 'Cancel'}

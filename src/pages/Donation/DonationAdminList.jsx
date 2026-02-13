@@ -80,7 +80,7 @@ const DonationAdminList = () => {
     };
 
     const getTypeColor = (type) => {
-        return '#D3920A';
+        return '#D49000';
     };
 
     return (
@@ -94,14 +94,14 @@ const DonationAdminList = () => {
 
             {loading ? (
                 <div style={{ display: 'flex', justifyContent: 'center', padding: '4rem' }}>
-                    <Loader2 size={48} className="animate-spin" color="#D3920A" />
+                    <Loader2 size={48} className="animate-spin" color="#D49000" />
                 </div>
             ) : (
-                <div className="glass-card" style={{ padding: 0, overflow: 'hidden' }}>
+                <div className="glass-card" style={{ padding: 0, overflow: 'hidden', background: '#FFFFFF', border: '1px solid var(--stroke)' }}>
                     <div style={{ overflowX: 'auto' }}>
                         <table style={{ width: '100%', borderCollapse: 'collapse', textAlign: 'left' }}>
                             <thead>
-                                <tr style={{ borderBottom: '1px solid var(--glass-border)', background: 'rgba(255,255,255,0.02)' }}>
+                                <tr style={{ borderBottom: '1px solid var(--stroke)', background: '#f8fafc' }}>
                                     <th style={{ padding: '1.25rem 1.5rem', color: 'var(--text-muted)', fontWeight: '600' }}>{t('donations.admin.table.donor')}</th>
                                     <th style={{ padding: '1.25rem 1.5rem', color: 'var(--text-muted)', fontWeight: '600' }}>{t('donations.admin.table.amount')}</th>
                                     <th style={{ padding: '1.25rem 1.5rem', color: 'var(--text-muted)', fontWeight: '600' }}>{t('donations.admin.table.type')}</th>
@@ -114,7 +114,7 @@ const DonationAdminList = () => {
                                 {donations.map((donation) => {
                                     const statusObj = getStatusStyle(donation.status);
                                     return (
-                                        <tr key={donation.donationId} style={{ borderBottom: '1px solid var(--glass-border)' }}>
+                                        <tr key={donation.donationId} style={{ borderBottom: '1px solid var(--stroke)' }}>
                                             <td style={{ padding: '1.25rem 1.5rem' }}>
                                                 <Link
                                                     to={`/gamblers/${donation.donorGamblerId}`}
@@ -133,11 +133,11 @@ const DonationAdminList = () => {
                                                         width: '36px',
                                                         height: '36px',
                                                         borderRadius: '50%',
-                                                        background: donation.donorAvatar ? `url(${donation.donorAvatar}) center/cover` : 'rgba(255,255,255,0.05)',
+                                                        background: donation.donorAvatar ? `url(${donation.donorAvatar}) center/cover` : '#f1f5f9',
                                                         display: 'flex',
                                                         alignItems: 'center',
                                                         justifyContent: 'center',
-                                                        border: donation.donorAvatar ? '1px solid var(--glass-border)' : 'none'
+                                                        border: donation.donorAvatar ? '1px solid var(--stroke)' : 'none'
                                                     }}>
                                                         {!donation.donorAvatar && <User size={18} color="var(--text-muted)" />}
                                                     </div>
@@ -145,7 +145,7 @@ const DonationAdminList = () => {
                                                 </Link>
                                             </td>
                                             <td style={{ padding: '1.25rem 1.5rem' }}>
-                                                <div style={{ fontWeight: '800', color: 'white', display: 'flex', alignItems: 'center', gap: '0.25rem' }}>
+                                                <div style={{ fontWeight: '800', color: 'var(--text-main)', display: 'flex', alignItems: 'center', gap: '0.25rem' }}>
                                                     <DollarSign size={14} />
                                                     {donation.amount.toFixed(2)}
                                                 </div>
@@ -167,8 +167,8 @@ const DonationAdminList = () => {
                                                         <button
                                                             onClick={() => setSelectedDonation(donation)}
                                                             style={{
-                                                                background: 'rgba(255,255,255,0.05)',
-                                                                border: '1px solid var(--glass-border)',
+                                                                background: '#f1f5f9',
+                                                                border: '1px solid var(--stroke)',
                                                                 borderRadius: '4px',
                                                                 fontSize: '0.7rem',
                                                                 color: 'var(--text-muted)',
@@ -282,7 +282,7 @@ const DonationAdminList = () => {
                     left: 0,
                     right: 0,
                     bottom: 0,
-                    backgroundColor: 'rgba(0,0,0,0.8)',
+                    backgroundColor: 'rgba(0,0,0,0.4)',
                     backdropFilter: 'blur(4px)',
                     display: 'flex',
                     alignItems: 'center',
@@ -294,7 +294,9 @@ const DonationAdminList = () => {
                         width: '100%',
                         maxWidth: '500px',
                         padding: '2rem',
-                        position: 'relative'
+                        position: 'relative',
+                        background: '#FFFFFF',
+                        border: '1px solid var(--stroke)'
                     }}>
                         <button
                             onClick={() => setSelectedDonation(null)}
@@ -311,7 +313,7 @@ const DonationAdminList = () => {
                             <X size={24} />
                         </button>
 
-                        <h2 style={{ fontSize: '1.5rem', fontWeight: '800', marginBottom: '1.5rem' }}>
+                        <h2 style={{ fontSize: '1.5rem', fontWeight: '800', marginBottom: '1.5rem', color: 'var(--text-main)' }}>
                             {t('donations.admin.beneficiaries_modal.title')}
                         </h2>
 
@@ -323,9 +325,9 @@ const DonationAdminList = () => {
                                         alignItems: 'center',
                                         gap: '1rem',
                                         padding: '1rem',
-                                        background: 'rgba(255,255,255,0.05)',
+                                        background: '#f8fafc',
                                         borderRadius: '0.75rem',
-                                        border: '1px solid var(--glass-border)'
+                                        border: '1px solid var(--stroke)'
                                     }}>
                                         <Link
                                             to={`/gamblers/${b.gamblerId}`}
@@ -345,22 +347,22 @@ const DonationAdminList = () => {
                                                 width: '40px',
                                                 height: '40px',
                                                 borderRadius: '50%',
-                                                background: b.beneficiaryAvatar ? `url(${b.beneficiaryAvatar}) center/cover` : 'rgba(255,255,255,0.1)',
+                                                background: b.beneficiaryAvatar ? `url(${b.beneficiaryAvatar}) center/cover` : '#f1f5f9',
                                                 display: 'flex',
                                                 alignItems: 'center',
                                                 justifyContent: 'center',
-                                                border: b.beneficiaryAvatar ? '1px solid var(--glass-border)' : 'none'
+                                                border: b.beneficiaryAvatar ? '1px solid var(--stroke)' : 'none'
                                             }}>
-                                                {!b.beneficiaryAvatar && <User size={20} color="#D3920A" />}
+                                                {!b.beneficiaryAvatar && <User size={20} color="#D49000" />}
                                             </div>
                                             <div>
-                                                <div style={{ fontWeight: '700' }}>{b.beneficiaryName}</div>
+                                                <div style={{ fontWeight: '700', color: 'var(--text-main)' }}>{b.beneficiaryName}</div>
                                                 <div style={{ fontSize: '0.85rem', color: 'var(--text-muted)' }}>
                                                     {t('donations.admin.beneficiaries_modal.percentage')}: {b.percentage}%
                                                 </div>
                                             </div>
                                         </Link>
-                                        <div style={{ fontWeight: '800', color: '#D3920A', fontSize: '1.1rem' }}>
+                                        <div style={{ fontWeight: '800', color: '#D49000', fontSize: '1.1rem' }}>
                                             ${b.amount.toFixed(2)}
                                         </div>
                                     </div>
@@ -378,12 +380,13 @@ const DonationAdminList = () => {
                                 width: '100%',
                                 marginTop: '2rem',
                                 padding: '1rem',
-                                background: '#D3920A',
+                                background: 'var(--primary)',
                                 color: 'white',
                                 border: 'none',
                                 borderRadius: '0.75rem',
                                 fontWeight: '700',
-                                cursor: 'pointer'
+                                cursor: 'pointer',
+                                boxShadow: '0 4px 12px rgba(212, 144, 0, 0.2)'
                             }}
                         >
                             {t('donations.admin.beneficiaries_modal.close')}

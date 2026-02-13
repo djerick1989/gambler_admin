@@ -188,10 +188,9 @@ const DonationForm = () => {
                                         flex: 1,
                                         minWidth: '80px',
                                         height: '50px',
-                                        borderRadius: '0.75rem',
-                                        border: `2px solid ${amount === p.toString() ? '#D3920A' : 'var(--glass-border)'}`,
-                                        background: amount === p.toString() ? 'rgba(211, 146, 10, 0.2)' : 'rgba(255,255,255,0.05)',
-                                        color: amount === p.toString() ? '#D3920A' : 'white',
+                                        border: `2px solid ${amount === p.toString() ? '#D49000' : 'var(--stroke)'}`,
+                                        background: amount === p.toString() ? 'rgba(212, 144, 0, 0.1)' : '#FFFFFF',
+                                        color: amount === p.toString() ? '#D49000' : 'var(--text-main)',
                                         fontWeight: '700',
                                         cursor: 'pointer',
                                         transition: 'all 0.2s'
@@ -218,10 +217,10 @@ const DonationForm = () => {
                                     width: '100%',
                                     height: '60px',
                                     padding: '0 1rem 0 2.5rem',
-                                    background: 'rgba(255,255,255,0.05)',
-                                    border: '2px solid var(--glass-border)',
+                                    background: '#FFFFFF',
+                                    border: '1px solid var(--stroke)',
                                     borderRadius: '1rem',
-                                    color: 'white',
+                                    color: 'var(--text-main)',
                                     fontSize: '1.25rem',
                                     fontWeight: '700',
                                     outline: 'none'
@@ -247,10 +246,10 @@ const DonationForm = () => {
                                         width: '100%',
                                         height: '50px',
                                         paddingLeft: '3rem',
-                                        background: 'rgba(255,255,255,0.05)',
-                                        border: '1px solid var(--glass-border)',
+                                        background: '#FFFFFF',
+                                        border: '1px solid var(--stroke)',
                                         borderRadius: '0.75rem',
-                                        color: 'white'
+                                        color: 'var(--text-main)'
                                     }}
                                 />
                                 {searching && <Loader2 size={18} className="animate-spin" style={{ position: 'absolute', right: '1rem', top: '50%', transform: 'translateY(-50%)' }} />}
@@ -261,11 +260,12 @@ const DonationForm = () => {
                                         top: '110%',
                                         left: 0,
                                         right: 0,
-                                        background: '#1e293b',
+                                        background: '#FFFFFF',
                                         borderRadius: '0.75rem',
-                                        boxShadow: '0 10px 25px rgba(0,0,0,0.5)',
+                                        boxShadow: '0 10px 25px rgba(0,0,0,0.1)',
                                         zIndex: 10,
-                                        overflow: 'hidden'
+                                        overflow: 'hidden',
+                                        border: '1px solid var(--stroke)'
                                     }}>
                                         {searchResults.map(gambler => (
                                             <div
@@ -292,10 +292,10 @@ const DonationForm = () => {
 
                             <div style={{ display: 'flex', flexDirection: 'column', gap: '0.75rem' }}>
                                 {selectedBeneficiaries.map(b => (
-                                    <div key={b.gamblerId} style={{ display: 'flex', alignItems: 'center', gap: '1rem', padding: '0.75rem', background: 'rgba(255,255,255,0.05)', borderRadius: '0.75rem' }}>
-                                        <div style={{ width: '40px', height: '40px', borderRadius: '50%', background: b.avatar ? `url(${b.avatar}) center/cover` : 'rgba(255,255,255,0.1)' }}></div>
+                                    <div key={b.gamblerId} style={{ display: 'flex', alignItems: 'center', gap: '1rem', padding: '0.75rem', background: 'var(--bg-light)', borderRadius: '0.75rem', border: '1px solid var(--stroke)' }}>
+                                        <div style={{ width: '40px', height: '40px', borderRadius: '50%', background: b.avatar ? `url(${b.avatar}) center/cover` : '#e2e8f0' }}></div>
                                         <div style={{ flex: 1 }}>
-                                            <div style={{ fontWeight: '600' }}>@{b.nickName}</div>
+                                            <div style={{ fontWeight: '600', color: 'var(--text-main)' }}>@{b.nickName}</div>
                                             <div style={{ fontSize: '0.75rem', color: 'var(--text-muted)' }}>{b.percentage.toFixed(1)}%</div>
                                         </div>
                                         <div style={{ position: 'relative', width: '120px' }}>
@@ -307,10 +307,10 @@ const DonationForm = () => {
                                                 style={{
                                                     width: '100%',
                                                     padding: '0.5rem 0.5rem 0.5rem 1.5rem',
-                                                    background: 'rgba(255,255,255,0.05)',
-                                                    border: '1px solid var(--glass-border)',
+                                                    background: '#FFFFFF',
+                                                    border: '1px solid var(--stroke)',
                                                     borderRadius: '0.5rem',
-                                                    color: 'white',
+                                                    color: 'var(--text-main)',
                                                     fontSize: '0.875rem'
                                                 }}
                                             />
@@ -346,7 +346,7 @@ const DonationForm = () => {
                         style={{
                             width: '100%',
                             height: '60px',
-                            background: '#D3920A',
+                            background: 'var(--primary)',
                             color: 'white',
                             border: 'none',
                             borderRadius: '1rem',
@@ -357,7 +357,7 @@ const DonationForm = () => {
                             alignItems: 'center',
                             justifyContent: 'center',
                             gap: '0.75rem',
-                            boxShadow: '0 10px 20px rgba(211, 146, 10, 0.25)',
+                            boxShadow: '0 10px 20px rgba(212, 144, 0, 0.25)',
                             transition: 'all 0.2s'
                         }}
                     >
@@ -365,7 +365,7 @@ const DonationForm = () => {
                     </button>
                 </form>
 
-                <div style={{ marginTop: '3rem', padding: '2rem', background: 'rgba(255,255,255,0.02)', borderRadius: '1rem', border: '1px solid var(--glass-border)' }}>
+                <div style={{ marginTop: '3rem', padding: '2rem', background: '#f8fafc', borderRadius: '1rem', border: '1px solid var(--stroke)' }}>
                     <h4 style={{
                         color: getColor(),
                         marginBottom: '1rem',

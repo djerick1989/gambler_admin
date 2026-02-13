@@ -81,16 +81,16 @@ const CreateGroupModal = ({ onClose, onGroupCreated }) => {
     return (
         <div className="modal-overlay">
             <div className="modal-content glass-card" style={{ maxWidth: '500px', width: '100%', padding: '0', overflow: 'hidden' }}>
-                <div className="modal-header" style={{ padding: '1.5rem', borderBottom: '1px solid rgba(255,255,255,0.1)', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-                    <h3 style={{ margin: 0, color: 'white' }}>{t('chat.create_group')}</h3>
-                    <button onClick={onClose} style={{ background: 'transparent', border: 'none', color: '#888', cursor: 'pointer' }}>
+                <div className="modal-header" style={{ padding: '1.5rem', borderBottom: '1px solid var(--stroke)', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                    <h3 style={{ margin: 0, color: 'var(--text-main)' }}>{t('chat.create_group')}</h3>
+                    <button onClick={onClose} style={{ background: 'transparent', border: 'none', color: 'var(--text-muted)', cursor: 'pointer' }}>
                         <X size={24} />
                     </button>
                 </div>
 
                 <div className="modal-body" style={{ padding: '1.5rem' }}>
                     <div style={{ marginBottom: '1.5rem' }}>
-                        <label style={{ display: 'block', color: '#ccc', marginBottom: '0.5rem', fontSize: '0.9rem' }}>{t('chat.group_name')}</label>
+                        <label style={{ display: 'block', color: 'var(--text-muted)', marginBottom: '0.5rem', fontSize: '0.9rem' }}>{t('chat.group_name')}</label>
                         <input
                             type="text"
                             value={groupName}
@@ -99,19 +99,19 @@ const CreateGroupModal = ({ onClose, onGroupCreated }) => {
                             style={{
                                 width: '100%',
                                 padding: '0.75rem',
-                                background: 'rgba(0,0,0,0.2)',
-                                border: '1px solid rgba(255,255,255,0.1)',
+                                background: '#f8fafc',
+                                border: '1px solid var(--stroke)',
                                 borderRadius: '0.5rem',
-                                color: 'white',
+                                color: 'var(--text-main)',
                                 outline: 'none'
                             }}
                         />
                     </div>
 
                     <div style={{ marginBottom: '1rem' }}>
-                        <label style={{ display: 'block', color: '#ccc', marginBottom: '0.5rem', fontSize: '0.9rem' }}>{t('chat.select_participants')}</label>
+                        <label style={{ display: 'block', color: 'var(--text-muted)', marginBottom: '0.5rem', fontSize: '0.9rem' }}>{t('chat.select_participants')}</label>
                         <div style={{ position: 'relative', marginBottom: '1rem' }}>
-                            <Search size={18} style={{ position: 'absolute', left: '10px', top: '50%', transform: 'translateY(-50%)', color: '#888' }} />
+                            <Search size={18} style={{ position: 'absolute', left: '10px', top: '50%', transform: 'translateY(-50%)', color: 'var(--text-muted)' }} />
                             <input
                                 type="text"
                                 placeholder={t('common.search')}
@@ -120,10 +120,10 @@ const CreateGroupModal = ({ onClose, onGroupCreated }) => {
                                 style={{
                                     width: '100%',
                                     padding: '0.6rem 0.6rem 0.6rem 2.5rem',
-                                    background: 'rgba(0,0,0,0.2)',
-                                    border: '1px solid rgba(255,255,255,0.1)',
+                                    background: '#f8fafc',
+                                    border: '1px solid var(--stroke)',
                                     borderRadius: '0.5rem',
-                                    color: 'white',
+                                    color: 'var(--text-main)',
                                     outline: 'none',
                                     fontSize: '0.9rem'
                                 }}
@@ -134,7 +134,7 @@ const CreateGroupModal = ({ onClose, onGroupCreated }) => {
                             {loading ? (
                                 <p style={{ textAlign: 'center', color: '#888', padding: '1rem' }}>{t('common.loading')}</p>
                             ) : users.length === 0 ? (
-                                <p style={{ textAlign: 'center', color: '#888', padding: '1rem' }}>{t('gambler_mgmt.empty')}</p>
+                                <p style={{ textAlign: 'center', color: 'var(--text-muted)', padding: '1rem' }}>{t('gambler_mgmt.empty')}</p>
                             ) : (
                                 users.map(u => (
                                     <div
@@ -147,22 +147,22 @@ const CreateGroupModal = ({ onClose, onGroupCreated }) => {
                                             padding: '8px',
                                             borderRadius: '6px',
                                             cursor: 'pointer',
-                                            background: selectedUsers.includes(u.userId) ? 'rgba(59, 130, 246, 0.15)' : 'transparent',
-                                            border: selectedUsers.includes(u.userId) ? '1px solid rgba(59, 130, 246, 0.3)' : '1px solid transparent'
+                                            background: selectedUsers.includes(u.userId) ? 'rgba(212, 144, 0, 0.15)' : 'transparent',
+                                            border: selectedUsers.includes(u.userId) ? '1px solid rgba(212, 144, 0, 0.3)' : '1px solid transparent'
                                         }}
                                     >
-                                        <div style={{ width: '32px', height: '32px', borderRadius: '50%', background: u.user?.avatar ? `url(${u.user.avatar}) center/cover` : '#333' }} />
+                                        <div style={{ width: '32px', height: '32px', borderRadius: '50%', background: u.user?.avatar ? `url(${u.user.avatar}) center/cover` : '#e2e8f0' }} />
                                         <div style={{ flex: 1 }}>
-                                            <div style={{ color: 'white', fontSize: '0.9rem' }}>{u.user?.nickName || u.user?.name}</div>
+                                            <div style={{ color: 'var(--text-main)', fontSize: '0.9rem' }}>{u.user?.nickName || u.user?.name}</div>
                                         </div>
-                                        {selectedUsers.includes(u.userId) && <Check size={16} color="#3b82f6" />}
+                                        {selectedUsers.includes(u.userId) && <Check size={16} color="var(--primary)" />}
                                     </div>
                                 ))
                             )}
                         </div>
                     </div>
 
-                    <div style={{ marginTop: '1rem', textAlign: 'right', fontSize: '0.85rem', color: '#888' }}>
+                    <div style={{ marginTop: '1rem', textAlign: 'right', fontSize: '0.85rem', color: 'var(--text-muted)' }}>
                         {selectedUsers.length} {t('chat.selected')}
                     </div>
                 </div>
@@ -171,7 +171,7 @@ const CreateGroupModal = ({ onClose, onGroupCreated }) => {
                     <button
                         onClick={onClose}
                         className="btn"
-                        style={{ background: 'transparent', color: '#ccc', border: '1px solid rgba(255,255,255,0.1)', padding: '0.6rem 1.2rem' }}
+                        style={{ background: 'transparent', color: 'var(--text-muted)', border: '1px solid var(--stroke)', padding: '0.6rem 1.2rem' }}
                     >
                         {t('common.cancel')}
                     </button>

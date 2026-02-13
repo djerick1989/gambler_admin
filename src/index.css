@@ -1,15 +1,16 @@
 :root {
-  --primary: #6366f1;
-  --primary-hover: #4f46e5;
-  --bg-dark: #0f172a;
-  --bg-darker: #020617;
-  --text-main: #f8fafc;
-  --text-muted: #94a3b8;
-  --glass-bg: rgba(255, 255, 255, 0.05);
-  --glass-border: rgba(255, 255, 255, 0.1);
-  --glass-blur: blur(12px);
-  --accent: #10b981;
+  --primary: #D49000;
+  --primary-hover: #b87d00;
+  --bg-white: #FFFFFF;
+  --bg-light: #f8fafc;
+  --text-main: #1e293b;
+  --text-muted: #64748b;
+  --glass-bg: rgba(255, 255, 255, 0.9);
+  --glass-border: #A9A9A9;
+  --glass-blur: blur(8px);
+  --accent: #D49000;
   --danger: #ef4444;
+  --stroke: #A9A9A9;
 }
 
 * {
@@ -20,18 +21,17 @@
 
 body {
   font-family: 'Inter', system-ui, -apple-system, sans-serif;
-  background-color: var(--bg-darker);
+  background-color: var(--bg-white);
   color: var(--text-main);
   min-height: 100vh;
   -webkit-font-smoothing: antialiased;
 }
 
 .glass-card {
-  background: var(--glass-bg);
-  backdrop-filter: var(--glass-blur);
-  border: 1px solid var(--glass-border);
+  background: var(--bg-white);
+  border: 1px solid var(--stroke);
   border-radius: 1rem;
-  box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.37);
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.05);
 }
 
 .btn {
@@ -45,13 +45,15 @@ body {
 }
 
 .btn-primary {
-  background-color: var(--primary);
+  background: var(--primary);
   color: white;
+  box-shadow: 0 4px 12px rgba(212, 144, 0, 0.2);
 }
 
 .btn-primary:hover {
-  background-color: var(--primary-hover);
   transform: translateY(-1px);
+  box-shadow: 0 6px 15px rgba(212, 144, 0, 0.3);
+  opacity: 0.9;
 }
 
 .input-group {
@@ -68,22 +70,30 @@ body {
 .input-group input {
   width: 100%;
   padding: 0.75rem 1rem;
-  background: rgba(255, 255, 255, 0.03);
-  border: 1px solid var(--glass-border);
+  background: #FFFFFF;
+  border: 1px solid var(--stroke);
   border-radius: 0.5rem;
-  color: white;
+  color: var(--text-main);
   outline: none;
   transition: border-color 0.2s;
 }
 
 .input-group input:focus {
   border-color: var(--primary);
+  box-shadow: 0 0 0 2px rgba(212, 144, 0, 0.1);
 }
 
 /* Animations */
 @keyframes fadeIn {
-  from { opacity: 0; transform: translateY(10px); }
-  to { opacity: 1; transform: translateY(0); }
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
 }
 
 .animate-fade-in {

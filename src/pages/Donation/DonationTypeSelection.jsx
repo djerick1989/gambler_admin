@@ -13,21 +13,21 @@ const DonationTypeSelection = () => {
             title: t('donations.community.title'),
             subtitle: t('donations.community.subtitle'),
             icon: Users,
-            color: '#D3920A'
+            color: '#D49000'
         },
         {
             id: 'PERSON',
             title: t('donations.person.title'),
             subtitle: t('donations.person.subtitle'),
             icon: User,
-            color: '#D3920A'
+            color: '#D49000'
         },
         {
             id: 'ORGANIZATION',
             title: t('donations.organization.title'),
             subtitle: t('donations.organization.subtitle'),
             icon: Building2,
-            color: '#D3920A'
+            color: '#D49000'
         }
     ];
 
@@ -64,7 +64,7 @@ const DonationTypeSelection = () => {
                             width: '64px',
                             height: '64px',
                             borderRadius: '1rem',
-                            backgroundColor: `${type.color}20`,
+                            backgroundColor: 'rgba(212, 144, 0, 0.1)',
                             display: 'flex',
                             alignItems: 'center',
                             justifyContent: 'center',

@@ -94,7 +94,7 @@ const MainLayout = () => {
     ];
 
     return (
-        <div style={{ display: 'flex', minHeight: '100vh', background: 'var(--bg-darker)' }}>
+        <div style={{ display: 'flex', minHeight: '100vh', background: 'var(--bg-light)' }}>
             {/* Sidebar */}
             <div className="glass-card" style={{
                 width: sidebarOpen ? '260px' : '0',
@@ -114,7 +114,7 @@ const MainLayout = () => {
                         alt="Logo"
                         style={{ width: '40px', height: '40px', objectFit: 'contain' }}
                     />
-                    <span style={{ fontSize: '1.25rem', fontWeight: '800' }}>{t('sidebar.title')}</span>
+                    <span style={{ fontSize: '1.25rem', fontWeight: '800', color: 'var(--text-main)' }}>{t('sidebar.title')}</span>
                 </div>
 
                 <nav style={{ flex: 1, padding: '1rem' }}>
@@ -162,16 +162,17 @@ const MainLayout = () => {
                     alignItems: 'center',
                     padding: '0 2rem',
                     justifyContent: 'space-between',
-                    background: 'rgba(2, 6, 23, 0.8)',
+                    background: 'rgba(255, 255, 255, 0.8)',
                     backdropFilter: 'blur(8px)',
                     position: 'sticky',
                     top: 0,
-                    zIndex: 40
+                    zIndex: 40,
+                    color: 'var(--text-main)'
                 }}>
                     <div style={{ display: 'flex', alignItems: 'center', gap: '1.5rem' }}>
                         <button
                             onClick={() => setSidebarOpen(!sidebarOpen)}
-                            style={{ background: 'transparent', border: 'none', color: 'white', cursor: 'pointer' }}
+                            style={{ background: 'transparent', border: 'none', color: 'var(--text-main)', cursor: 'pointer' }}
                         >
                             {sidebarOpen ? <X size={24} /> : <Menu size={24} />}
                         </button>
@@ -182,8 +183,8 @@ const MainLayout = () => {
                                 style={{
                                     padding: '0.25rem 0.75rem',
                                     borderRadius: '0.25rem',
-                                    background: i18n.language.startsWith('en') ? 'var(--primary)' : 'transparent',
-                                    color: 'white',
+                                    background: i18n.language.startsWith('en') ? 'var(--primary)' : 'rgba(0,0,0,0.05)',
+                                    color: i18n.language.startsWith('en') ? 'white' : 'var(--text-main)',
                                     border: 'none',
                                     cursor: 'pointer',
                                     fontSize: '0.75rem',
@@ -197,8 +198,8 @@ const MainLayout = () => {
                                 style={{
                                     padding: '0.25rem 0.75rem',
                                     borderRadius: '0.25rem',
-                                    background: i18n.language.startsWith('es') ? 'var(--primary)' : 'transparent',
-                                    color: 'white',
+                                    background: i18n.language.startsWith('es') ? 'var(--primary)' : 'rgba(0,0,0,0.05)',
+                                    color: i18n.language.startsWith('es') ? 'white' : 'var(--text-main)',
                                     border: 'none',
                                     cursor: 'pointer',
                                     fontSize: '0.75rem',
@@ -214,13 +215,13 @@ const MainLayout = () => {
                         <Link
                             to="/notifications"
                             style={{
-                                color: 'white',
+                                color: 'var(--text-main)',
                                 position: 'relative',
                                 display: 'flex',
                                 alignItems: 'center'
                             }}
                         >
-                            <Bell size={22} color={totalUnreadCount > 0 ? '#ef4444' : 'white'} />
+                            <Bell size={22} color={totalUnreadCount > 0 ? '#ef4444' : 'var(--text-main)'} />
                             {totalUnreadCount > 0 && (
                                 <span style={{
                                     position: 'absolute',
@@ -230,7 +231,7 @@ const MainLayout = () => {
                                     width: '10px',
                                     height: '10px',
                                     borderRadius: '50%',
-                                    border: '2px solid var(--bg-darker)'
+                                    border: '2px solid var(--bg-white)'
                                 }}></span>
                             )}
                         </Link>

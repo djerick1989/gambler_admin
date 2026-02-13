@@ -165,19 +165,19 @@ const PaymentPlatformList = () => {
                                     setPage(1);
                                 }}
                                 style={{
-                                    background: 'rgba(255,255,255,0.05)',
-                                    border: '1px solid var(--glass-border)',
+                                    background: '#FFFFFF',
+                                    border: '1px solid var(--stroke)',
                                     borderRadius: '0.4rem',
-                                    color: 'white',
+                                    color: 'var(--text-main)',
                                     padding: '0.25rem 0.5rem',
                                     fontSize: '0.875rem',
                                     cursor: 'pointer',
                                     outline: 'none'
                                 }}
                             >
-                                <option value={10} style={{ background: '#1a1a2e' }}>10</option>
-                                <option value={20} style={{ background: '#1a1a2e' }}>20</option>
-                                <option value={50} style={{ background: '#1a1a2e' }}>50</option>
+                                <option value={10} style={{ background: '#FFFFFF', color: 'var(--text-main)' }}>10</option>
+                                <option value={20} style={{ background: '#FFFFFF', color: 'var(--text-main)' }}>20</option>
+                                <option value={50} style={{ background: '#FFFFFF', color: 'var(--text-main)' }}>50</option>
                             </select>
                         </div>
 
@@ -185,17 +185,17 @@ const PaymentPlatformList = () => {
                             <button
                                 disabled={page === 1}
                                 onClick={() => setPage(page - 1)}
-                                style={{ background: 'none', border: 'none', color: page === 1 ? 'var(--text-muted)' : 'white', cursor: page === 1 ? 'default' : 'pointer', display: 'flex', alignItems: 'center' }}
+                                style={{ background: 'none', border: 'none', color: page === 1 ? 'var(--text-muted)' : 'var(--text-main)', cursor: page === 1 ? 'default' : 'pointer', display: 'flex', alignItems: 'center' }}
                             >
                                 <ChevronLeft size={20} />
                             </button>
-                            <span style={{ fontSize: '0.875rem', fontWeight: '500' }}>
+                            <span style={{ fontSize: '0.875rem', fontWeight: '500', color: 'var(--text-main)' }}>
                                 {t('common.page_x_of_y', { current: page, total: totalPages })}
                             </span>
                             <button
                                 disabled={page >= totalPages}
                                 onClick={() => setPage(page + 1)}
-                                style={{ background: 'none', border: 'none', color: page >= totalPages ? 'var(--text-muted)' : 'white', cursor: page >= totalPages ? 'default' : 'pointer', display: 'flex', alignItems: 'center' }}
+                                style={{ background: 'none', border: 'none', color: page >= totalPages ? 'var(--text-muted)' : 'var(--text-main)', cursor: page >= totalPages ? 'default' : 'pointer', display: 'flex', alignItems: 'center' }}
                             >
                                 <ChevronRight size={20} />
                             </button>

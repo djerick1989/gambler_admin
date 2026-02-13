@@ -30,7 +30,7 @@ const ChatList = ({ chats, activeChatId, onSelectChat, currentUser }) => {
                 <h3>{t('chat.messages')}</h3>
                 <button
                     onClick={() => setShowCreateGroup(true)}
-                    style={{ background: 'transparent', border: 'none', color: 'var(--primary-color, #3b82f6)', cursor: 'pointer' }}
+                    style={{ background: 'transparent', border: 'none', color: 'var(--primary)', cursor: 'pointer' }}
                     title={t('chat.create_group')}
                 >
                     <PlusCircle size={20} />

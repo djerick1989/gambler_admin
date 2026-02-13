@@ -108,20 +108,20 @@ const PostMediaGrid = ({ mediaList = [] }) => {
         switch (count) {
             case 1:
                 return (
-                    <div style={{ borderRadius: '0.75rem', overflow: 'hidden', border: '1px solid var(--glass-border)' }}>
+                    <div style={{ borderRadius: '0.75rem', overflow: 'hidden', border: '1px solid var(--stroke)' }}>
                         {renderMediaItem(mediaList[0], 0, { minHeight: '300px', maxHeight: '500px' })}
                     </div>
                 );
             case 2:
                 return (
-                    <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '4px', height: '300px', borderRadius: '0.75rem', overflow: 'hidden', border: '1px solid var(--glass-border)' }}>
+                    <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '4px', height: '300px', borderRadius: '0.75rem', overflow: 'hidden', border: '1px solid var(--stroke)' }}>
                         {renderMediaItem(mediaList[0], 0)}
                         {renderMediaItem(mediaList[1], 1)}
                     </div>
                 );
             case 3:
                 return (
-                    <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gridTemplateRows: '1fr 1fr', gap: '4px', height: '400px', borderRadius: '0.75rem', overflow: 'hidden', border: '1px solid var(--glass-border)' }}>
+                    <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gridTemplateRows: '1fr 1fr', gap: '4px', height: '400px', borderRadius: '0.75rem', overflow: 'hidden', border: '1px solid var(--stroke)' }}>
                         <div style={{ gridRow: '1 / 3' }}>{renderMediaItem(mediaList[0], 0)}</div>
                         <div>{renderMediaItem(mediaList[1], 1)}</div>
                         <div>{renderMediaItem(mediaList[2], 2)}</div>
@@ -129,7 +129,7 @@ const PostMediaGrid = ({ mediaList = [] }) => {
                 );
             case 4:
                 return (
-                    <div style={{ display: 'grid', gridTemplateColumns: '2fr 1fr', gridTemplateRows: 'repeat(3, 1fr)', gap: '4px', height: '400px', borderRadius: '0.75rem', overflow: 'hidden', border: '1px solid var(--glass-border)' }}>
+                    <div style={{ display: 'grid', gridTemplateColumns: '2fr 1fr', gridTemplateRows: 'repeat(3, 1fr)', gap: '4px', height: '400px', borderRadius: '0.75rem', overflow: 'hidden', border: '1px solid var(--stroke)' }}>
                         <div style={{ gridRow: '1 / 4' }}>{renderMediaItem(mediaList[0], 0)}</div>
                         <div>{renderMediaItem(mediaList[1], 1)}</div>
                         <div>{renderMediaItem(mediaList[2], 2)}</div>
@@ -138,7 +138,7 @@ const PostMediaGrid = ({ mediaList = [] }) => {
                 );
             default: // 5+
                 return (
-                    <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gridTemplateRows: 'repeat(2, minmax(0, 1fr))', gap: '4px', height: '400px', borderRadius: '0.75rem', overflow: 'hidden', border: '1px solid var(--glass-border)' }}>
+                    <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gridTemplateRows: 'repeat(2, minmax(0, 1fr))', gap: '4px', height: '400px', borderRadius: '0.75rem', overflow: 'hidden', border: '1px solid var(--stroke)' }}>
                         <div style={{ gridColumn: '1 / 2', gridRow: '1 / 3' }}>{renderMediaItem(mediaList[0], 0)}</div>
                         <div style={{ gridColumn: '2 / 3', gridRow: '1 / 2' }}>{renderMediaItem(mediaList[1], 1)}</div>
                         <div style={{ gridColumn: '2 / 3', gridRow: '2 / 3', position: 'relative' }}>{renderMediaItem(mediaList[2], 2, { height: '100%' }, count - 3)}</div>

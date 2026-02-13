@@ -166,7 +166,7 @@ const Profile = () => {
         );
     }
 
-    if (!gambler) return <div style={{ color: 'white' }}>Profile not found</div>;
+    if (!gambler) return <div style={{ color: 'var(--text-main)' }}>Profile not found</div>;
 
     return (
         <div style={{ maxWidth: '1200px', margin: '0 auto' }} className="animate-fade-in">
@@ -188,7 +188,7 @@ const Profile = () => {
                                 border: 'none',
                                 borderRadius: '0.5rem',
                                 background: activeSection === 'profile' ? 'var(--primary)' : 'transparent',
-                                color: 'white',
+                                color: activeSection === 'profile' ? 'white' : 'var(--text-main)',
                                 textAlign: 'left',
                                 display: 'flex',
                                 alignItems: 'center',
@@ -208,7 +208,7 @@ const Profile = () => {
                                 border: 'none',
                                 borderRadius: '0.5rem',
                                 background: activeSection === 'config' ? 'var(--primary)' : 'transparent',
-                                color: 'white',
+                                color: activeSection === 'config' ? 'white' : 'var(--text-main)',
                                 textAlign: 'left',
                                 display: 'flex',
                                 alignItems: 'center',
@@ -228,7 +228,7 @@ const Profile = () => {
                                 border: 'none',
                                 borderRadius: '0.5rem',
                                 background: activeSection === 'notifications' ? 'var(--primary)' : 'transparent',
-                                color: 'white',
+                                color: activeSection === 'notifications' ? 'white' : 'var(--text-main)',
                                 textAlign: 'left',
                                 display: 'flex',
                                 alignItems: 'center',
@@ -264,20 +264,20 @@ const Profile = () => {
                 <div className="glass-card" style={{ padding: '2rem' }}>
                     {activeSection === 'profile' && (
                         <form onSubmit={handleUpdateProfile} style={{ display: 'flex', flexDirection: 'column', gap: '2rem' }}>
-                            <div style={{ display: 'flex', alignItems: 'center', gap: '1.5rem', paddingBottom: '2rem', borderBottom: '1px solid var(--glass-border)' }}>
+                            <div style={{ display: 'flex', alignItems: 'center', gap: '1.5rem', paddingBottom: '2rem', borderBottom: '1px solid var(--stroke)' }}>
                                 <div
                                     onClick={() => document.getElementById('avatar-upload').click()}
                                     style={{
                                         width: '80px',
                                         height: '80px',
                                         borderRadius: '50%',
-                                        background: gambler.user?.avatar ? `url(${gambler.user.avatar}) center/cover` : 'linear-gradient(45deg, var(--primary), var(--accent))',
+                                        background: gambler.user?.avatar ? `url(${gambler.user.avatar}) center/cover` : '#f1f5f9',
                                         display: 'flex',
                                         alignItems: 'center',
                                         justifyContent: 'center',
                                         cursor: 'pointer',
                                         position: 'relative',
-                                        border: '2px solid rgba(255,255,255,0.1)'
+                                        border: '2px solid var(--stroke)'
                                     }}>
                                     {isUploadingAvatar ? (
                                         <Loader2 className="animate-spin" />
@@ -291,7 +291,7 @@ const Profile = () => {
                                         background: 'var(--primary)',
                                         borderRadius: '50%',
                                         padding: '0.35rem',
-                                        border: '2px solid var(--bg-darker)',
+                                        border: '2px solid #FFFFFF',
                                         display: 'flex',
                                         alignItems: 'center',
                                         justifyContent: 'center'
@@ -338,11 +338,11 @@ const Profile = () => {
                                     <select
                                         value={gambler.country || ''}
                                         onChange={(e) => setGambler({ ...gambler, country: e.target.value })}
-                                        style={{ width: '100%', padding: '0.75rem', background: 'rgba(255,255,255,0.05)', border: '1px solid var(--glass-border)', borderRadius: '0.5rem', color: 'white' }}
+                                        style={{ width: '100%', padding: '0.75rem', background: '#FFFFFF', border: '1px solid var(--stroke)', borderRadius: '0.5rem', color: 'var(--text-main)' }}
                                     >
-                                        <option value="" style={{ background: 'var(--bg-darker)' }}>Select Country</option>
+                                        <option value="">Select Country</option>
                                         {countries.map((country, index) => (
-                                            <option key={index} value={country} style={{ background: 'var(--bg-darker)' }}>
+                                            <option key={index} value={country}>
                                                 {country}
                                             </option>
                                         ))}
@@ -353,11 +353,11 @@ const Profile = () => {
                                     <select
                                         value={gambler.languageId || ''}
                                         onChange={(e) => setGambler({ ...gambler, languageId: e.target.value })}
-                                        style={{ width: '100%', padding: '0.75rem', background: 'rgba(255,255,255,0.05)', border: '1px solid var(--glass-border)', borderRadius: '0.5rem', color: 'white' }}
+                                        style={{ width: '100%', padding: '0.75rem', background: '#FFFFFF', border: '1px solid var(--stroke)', borderRadius: '0.5rem', color: 'var(--text-main)' }}
                                     >
-                                        <option value="" style={{ background: 'var(--bg-darker)' }}>Select Language</option>
+                                        <option value="">Select Language</option>
                                         {languages.map(lang => (
-                                            <option key={lang.languageId} value={lang.languageId} style={{ background: 'var(--bg-darker)' }}>
+                                            <option key={lang.languageId} value={lang.languageId}>
                                                 {lang.name} ({lang.code})
                                             </option>
                                         ))}
@@ -376,7 +376,7 @@ const Profile = () => {
 
                             <div className="input-group">
                                 <label style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}><Info size={16} /> {t('gambler_mgmt.detail.description')}</label>
-                                <div style={{ background: 'rgba(255,255,255,0.02)', borderRadius: '0.5rem', border: '1px solid var(--glass-border)', overflow: 'hidden' }}>
+                                <div style={{ background: '#FFFFFF', borderRadius: '0.5rem', border: '1px solid var(--stroke)', overflow: 'hidden' }}>
                                     <ReactQuill
                                         theme="snow"
                                         value={gambler.description || ''}
@@ -394,7 +394,7 @@ const Profile = () => {
 
                             <div className="input-group">
                                 <label style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}><Activity size={16} /> {t('gambler_mgmt.detail.biography')}</label>
-                                <div style={{ background: 'rgba(255,255,255,0.02)', borderRadius: '0.5rem', border: '1px solid var(--glass-border)', overflow: 'hidden' }}>
+                                <div style={{ background: '#FFFFFF', borderRadius: '0.5rem', border: '1px solid var(--stroke)', overflow: 'hidden' }}>
                                     <ReactQuill
                                         theme="snow"
                                         value={gambler.biography || ''}
@@ -423,7 +423,7 @@ const Profile = () => {
                                 <Shield color="var(--primary)" /> {t('gambler_mgmt.detail.configurations')}
                             </h3>
                             <div style={{ display: 'flex', flexDirection: 'column', gap: '1.5rem' }}>
-                                <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '1.5rem', background: 'rgba(255,255,255,0.02)', borderRadius: '1rem', border: '1px solid var(--glass-border)' }}>
+                                <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '1.5rem', background: '#f8fafc', borderRadius: '1rem', border: '1px solid var(--stroke)' }}>
                                     <div style={{ display: 'flex', gap: '1rem' }}>
                                         <div style={{ padding: '0.75rem', background: 'rgba(59, 130, 246, 0.1)', borderRadius: '0.75rem' }}>
                                             <Eye size={24} color="rgb(59, 130, 246)" />
@@ -441,7 +441,7 @@ const Profile = () => {
                                     />
                                 </div>
 
-                                <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '1.5rem', background: 'rgba(255,255,255,0.02)', borderRadius: '1rem', border: '1px solid var(--glass-border)' }}>
+                                <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '1.5rem', background: '#f8fafc', borderRadius: '1rem', border: '1px solid var(--stroke)' }}>
                                     <div style={{ display: 'flex', gap: '1rem' }}>
                                         <div style={{ padding: '0.75rem', background: 'rgba(16, 185, 129, 0.1)', borderRadius: '0.75rem' }}>
                                             <MessageSquare size={24} color="#10b981" />
@@ -459,7 +459,7 @@ const Profile = () => {
                                     />
                                 </div>
 
-                                <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '1.5rem', background: 'rgba(255,255,255,0.02)', borderRadius: '1rem', border: '1px solid var(--glass-border)' }}>
+                                <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '1.5rem', background: '#f8fafc', borderRadius: '1rem', border: '1px solid var(--stroke)' }}>
                                     <div style={{ display: 'flex', gap: '1rem' }}>
                                         <div style={{ padding: '0.75rem', background: 'rgba(245, 158, 11, 0.1)', borderRadius: '0.75rem' }}>
                                             <Heart size={24} color="#f59e0b" />
@@ -490,7 +490,7 @@ const Profile = () => {
                                 <Bell color="var(--primary)" /> {t('gambler_mgmt.detail.notifications')}
                             </h3>
                             <div style={{ display: 'flex', flexDirection: 'column', gap: '1.5rem' }}>
-                                <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '1.5rem', background: 'rgba(255,255,255,0.02)', borderRadius: '1rem', border: '1px solid var(--glass-border)' }}>
+                                <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '1.5rem', background: '#f8fafc', borderRadius: '1rem', border: '1px solid var(--stroke)' }}>
                                     <div style={{ display: 'flex', gap: '1rem' }}>
                                         <div style={{ padding: '0.75rem', background: 'rgba(139, 92, 246, 0.1)', borderRadius: '0.75rem' }}>
                                             <Bell size={24} color="#8b5cf6" />
@@ -508,7 +508,7 @@ const Profile = () => {
                                     />
                                 </div>
 
-                                <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '1.5rem', background: 'rgba(255,255,255,0.02)', borderRadius: '1rem', border: '1px solid var(--glass-border)' }}>
+                                <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '1.5rem', background: '#f8fafc', borderRadius: '1rem', border: '1px solid var(--stroke)' }}>
                                     <div style={{ display: 'flex', gap: '1rem' }}>
                                         <div style={{ padding: '0.75rem', background: 'rgba(236, 72, 153, 0.1)', borderRadius: '0.75rem' }}>
                                             <Mail size={24} color="#ec4899" />
@@ -540,7 +540,7 @@ const Profile = () => {
                     appearance: none;
                     width: 50px;
                     height: 26px;
-                    background: rgba(255,255,255,0.1);
+                    background: #e2e8f0;
                     border-radius: 13px;
                     position: relative;
                     cursor: pointer;
@@ -563,13 +563,13 @@ const Profile = () => {
                 .toggle:checked::before {
                     transform: translateX(24px);
                 }
-                .ql-toolbar.ql-snow { border: none; border-bottom: 1px solid var(--glass-border); background: rgba(255,255,255,0.05); }
-                .ql-container.ql-snow { border: none; min-height: 150px; font-size: 1rem; color: white; }
+                .ql-toolbar.ql-snow { border: none; border-bottom: 1px solid var(--stroke); background: #f8fafc; }
+                .ql-container.ql-snow { border: none; min-height: 150px; font-size: 1rem; color: var(--text-main); }
                 .ql-editor.ql-blank::before { color: var(--text-muted); }
-                .ql-snow .ql-stroke { stroke: #e2e8f0; }
-                .ql-snow .ql-fill { fill: #e2e8f0; }
-                .ql-snow .ql-picker { color: #e2e8f0; }
-                .ql-snow .ql-picker-options { background-color: var(--bg-darker); border-color: var(--glass-border); }
+                .ql-snow .ql-stroke { stroke: var(--text-main); }
+                .ql-snow .ql-fill { fill: var(--text-main); }
+                .ql-snow .ql-picker { color: var(--text-main); }
+                .ql-snow .ql-picker-options { background-color: #FFFFFF; border-color: var(--stroke); }
             `}</style>
         </div>
     );

@@ -196,7 +196,7 @@ const GamblerDetail = () => {
                 <button
                     onClick={() => navigate('/gamblers')}
                     className="btn"
-                    style={{ background: 'rgba(255,255,255,0.05)', color: 'white', padding: '0.5rem' }}
+                    style={{ background: '#f1f5f9', color: 'var(--text-main)', padding: '0.5rem', border: '1px solid var(--stroke)' }}
                 >
                     <ChevronLeft size={24} />
                 </button>
@@ -211,7 +211,7 @@ const GamblerDetail = () => {
                 <button
                     onClick={handleDelete}
                     className="btn"
-                    style={{ background: 'rgba(239, 68, 68, 0.1)', color: '#ef4444', display: 'flex', alignItems: 'center', gap: '0.5rem' }}
+                    style={{ background: 'rgba(239, 68, 68, 0.05)', color: '#ef4444', border: '1px solid rgba(239, 68, 68, 0.2)', display: 'flex', alignItems: 'center', gap: '0.5rem' }}
                 >
                     <Trash2 size={18} />
                     {t('gambler_mgmt.detail.delete_account')}
@@ -230,7 +230,7 @@ const GamblerDetail = () => {
                                 border: 'none',
                                 borderRadius: '0.5rem',
                                 background: activeSection === 'profile' ? 'var(--primary)' : 'transparent',
-                                color: 'white',
+                                color: activeSection === 'profile' ? 'white' : 'var(--text-main)',
                                 textAlign: 'left',
                                 display: 'flex',
                                 alignItems: 'center',
@@ -250,7 +250,7 @@ const GamblerDetail = () => {
                                 border: 'none',
                                 borderRadius: '0.5rem',
                                 background: activeSection === 'config' ? 'var(--primary)' : 'transparent',
-                                color: 'white',
+                                color: activeSection === 'config' ? 'white' : 'var(--text-main)',
                                 textAlign: 'left',
                                 display: 'flex',
                                 alignItems: 'center',
@@ -270,7 +270,7 @@ const GamblerDetail = () => {
                                 border: 'none',
                                 borderRadius: '0.5rem',
                                 background: activeSection === 'notifications' ? 'var(--primary)' : 'transparent',
-                                color: 'white',
+                                color: activeSection === 'notifications' ? 'white' : 'var(--text-main)',
                                 textAlign: 'left',
                                 display: 'flex',
                                 alignItems: 'center',
@@ -290,7 +290,7 @@ const GamblerDetail = () => {
                                 border: 'none',
                                 borderRadius: '0.5rem',
                                 background: activeSection === 'achievements' ? 'var(--primary)' : 'transparent',
-                                color: 'white',
+                                color: activeSection === 'achievements' ? 'white' : 'var(--text-main)',
                                 textAlign: 'left',
                                 display: 'flex',
                                 alignItems: 'center',
@@ -339,13 +339,13 @@ const GamblerDetail = () => {
                                         width: '80px',
                                         height: '80px',
                                         borderRadius: '50%',
-                                        background: gambler.user?.avatar ? `url(${gambler.user.avatar}) center/cover` : 'linear-gradient(45deg, var(--primary), var(--accent))',
+                                        background: gambler.user?.avatar ? `url(${gambler.user.avatar}) center/cover` : '#f1f5f9',
                                         display: 'flex',
                                         alignItems: 'center',
                                         justifyContent: 'center',
                                         cursor: 'pointer',
                                         position: 'relative',
-                                        border: '2px solid rgba(255,255,255,0.1)'
+                                        border: '1px solid var(--stroke)'
                                     }}>
                                     {isUploadingAvatar ? (
                                         <Loader2 className="animate-spin" />
@@ -359,7 +359,7 @@ const GamblerDetail = () => {
                                         background: 'var(--primary)',
                                         borderRadius: '50%',
                                         padding: '0.35rem',
-                                        border: '2px solid var(--bg-darker)',
+                                        border: '2px solid #FFFFFF',
                                         display: 'flex',
                                         alignItems: 'center',
                                         justifyContent: 'center'
@@ -406,9 +406,9 @@ const GamblerDetail = () => {
                                     <select
                                         value={gambler.country || ''}
                                         onChange={(e) => setGambler({ ...gambler, country: e.target.value })}
-                                        style={{ width: '100%', padding: '0.75rem', background: 'rgba(255,255,255,0.05)', border: '1px solid var(--glass-border)', borderRadius: '0.5rem', color: 'white' }}
+                                        style={{ width: '100%', padding: '0.75rem', background: '#FFFFFF', border: '1px solid var(--stroke)', borderRadius: '0.5rem', color: 'var(--text-main)' }}
                                     >
-                                        <option value="" style={{ background: 'var(--bg-darker)' }}>Select Country</option>
+                                        <option value="">Select Country</option>
                                         {countries.map((country, index) => (
                                             <option key={index} value={country} style={{ background: 'var(--bg-darker)' }}>
                                                 {country}
@@ -421,11 +421,11 @@ const GamblerDetail = () => {
                                     <select
                                         value={gambler.languageId || ''}
                                         onChange={(e) => setGambler({ ...gambler, languageId: e.target.value })}
-                                        style={{ width: '100%', padding: '0.75rem', background: 'rgba(255,255,255,0.05)', border: '1px solid var(--glass-border)', borderRadius: '0.5rem', color: 'white' }}
+                                        style={{ width: '100%', padding: '0.75rem', background: '#FFFFFF', border: '1px solid var(--stroke)', borderRadius: '0.5rem', color: 'var(--text-main)' }}
                                     >
-                                        <option value="" style={{ background: 'var(--bg-darker)' }}>Select Language</option>
+                                        <option value="">Select Language</option>
                                         {languages.map(lang => (
-                                            <option key={lang.languageId} value={lang.languageId} style={{ background: 'var(--bg-darker)' }}>
+                                            <option key={lang.languageId} value={lang.languageId}>
                                                 {lang.name} ({lang.code})
                                             </option>
                                         ))}
@@ -444,7 +444,7 @@ const GamblerDetail = () => {
 
                             <div className="input-group">
                                 <label style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}><Info size={16} /> {t('gambler_mgmt.detail.description')}</label>
-                                <div style={{ background: 'rgba(255,255,255,0.02)', borderRadius: '0.5rem', border: '1px solid var(--glass-border)', overflow: 'hidden' }}>
+                                <div style={{ background: '#FFFFFF', borderRadius: '0.5rem', border: '1px solid var(--stroke)', overflow: 'hidden' }}>
                                     <ReactQuill
                                         theme="snow"
                                         value={gambler.description || ''}
@@ -462,7 +462,7 @@ const GamblerDetail = () => {
 
                             <div className="input-group">
                                 <label style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}><Activity size={16} /> {t('gambler_mgmt.detail.biography')}</label>
-                                <div style={{ background: 'rgba(255,255,255,0.02)', borderRadius: '0.5rem', border: '1px solid var(--glass-border)', overflow: 'hidden' }}>
+                                <div style={{ background: '#FFFFFF', borderRadius: '0.5rem', border: '1px solid var(--stroke)', overflow: 'hidden' }}>
                                     <ReactQuill
                                         theme="snow"
                                         value={gambler.biography || ''}
@@ -479,13 +479,13 @@ const GamblerDetail = () => {
                             </div>
 
                             <style>{`
-                                .ql-toolbar.ql-snow { border: none; border-bottom: 1px solid var(--glass-border); background: rgba(255,255,255,0.05); }
-                                .ql-container.ql-snow { border: none; min-height: 150px; font-size: 1rem; color: white; }
-                                .ql-editor.ql-blank::before { color: var(--text-muted); }
-                                .ql-snow .ql-stroke { stroke: #e2e8f0; }
-                                .ql-snow .ql-fill { fill: #e2e8f0; }
-                                .ql-snow .ql-picker { color: #e2e8f0; }
-                                .ql-snow .ql-picker-options { background-color: var(--bg-darker); border-color: var(--glass-border); }
+                                .ql-toolbar.ql-snow { border: none; border-bottom: 1px solid var(--stroke); background: #f8fafc; }
+                                .ql-container.ql-snow { border: none; min-height: 150px; font-size: 1rem; color: var(--text-main); }
+                                .ql-editor.ql-blank::before { color: var(--text-muted); font-style: normal; }
+                                .ql-snow .ql-stroke { stroke: var(--text-main); }
+                                .ql-snow .ql-fill { fill: var(--text-main); }
+                                .ql-snow .ql-picker { color: var(--text-main); }
+                                .ql-snow .ql-picker-options { background-color: #FFFFFF; border-color: var(--stroke); }
                             `}</style>
 
                             <div style={{ display: 'flex', gap: '2rem', padding: '1rem', background: 'rgba(255,255,255,0.02)', borderRadius: '0.5rem' }}>
@@ -528,7 +528,7 @@ const GamblerDetail = () => {
                                 <Shield color="var(--primary)" /> {t('gambler_mgmt.detail.configurations')}
                             </h3>
                             <div style={{ display: 'flex', flexDirection: 'column', gap: '1.5rem' }}>
-                                <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '1.5rem', background: 'rgba(255,255,255,0.02)', borderRadius: '1rem', border: '1px solid var(--glass-border)' }}>
+                                <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '1.5rem', background: '#f8fafc', borderRadius: '1rem', border: '1px solid var(--stroke)' }}>
                                     <div style={{ display: 'flex', gap: '1rem' }}>
                                         <div style={{ padding: '0.75rem', background: 'rgba(59, 130, 246, 0.1)', borderRadius: '0.75rem' }}>
                                             <Eye size={24} color="rgb(59, 130, 246)" />
@@ -546,7 +546,7 @@ const GamblerDetail = () => {
                                     />
                                 </div>
 
-                                <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '1.5rem', background: 'rgba(255,255,255,0.02)', borderRadius: '1rem', border: '1px solid var(--glass-border)' }}>
+                                <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '1.5rem', background: '#f8fafc', borderRadius: '1rem', border: '1px solid var(--stroke)' }}>
                                     <div style={{ display: 'flex', gap: '1rem' }}>
                                         <div style={{ padding: '0.75rem', background: 'rgba(16, 185, 129, 0.1)', borderRadius: '0.75rem' }}>
                                             <MessageSquare size={24} color="#10b981" />
@@ -564,7 +564,7 @@ const GamblerDetail = () => {
                                     />
                                 </div>
 
-                                <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '1.5rem', background: 'rgba(255,255,255,0.02)', borderRadius: '1rem', border: '1px solid var(--glass-border)' }}>
+                                <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '1.5rem', background: '#f8fafc', borderRadius: '1rem', border: '1px solid var(--stroke)' }}>
                                     <div style={{ display: 'flex', gap: '1rem' }}>
                                         <div style={{ padding: '0.75rem', background: 'rgba(245, 158, 11, 0.1)', borderRadius: '0.75rem' }}>
                                             <Heart size={24} color="#f59e0b" />
@@ -595,7 +595,7 @@ const GamblerDetail = () => {
                                 <Bell color="var(--primary)" /> {t('gambler_mgmt.detail.notifications')}
                             </h3>
                             <div style={{ display: 'flex', flexDirection: 'column', gap: '1.5rem' }}>
-                                <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '1.5rem', background: 'rgba(255,255,255,0.02)', borderRadius: '1rem', border: '1px solid var(--glass-border)' }}>
+                                <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '1.5rem', background: '#f8fafc', borderRadius: '1rem', border: '1px solid var(--stroke)' }}>
                                     <div style={{ display: 'flex', gap: '1rem' }}>
                                         <div style={{ padding: '0.75rem', background: 'rgba(139, 92, 246, 0.1)', borderRadius: '0.75rem' }}>
                                             <Bell size={24} color="#8b5cf6" />
@@ -613,7 +613,7 @@ const GamblerDetail = () => {
                                     />
                                 </div>
 
-                                <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '1.5rem', background: 'rgba(255,255,255,0.02)', borderRadius: '1rem', border: '1px solid var(--glass-border)' }}>
+                                <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '1.5rem', background: '#f8fafc', borderRadius: '1rem', border: '1px solid var(--stroke)' }}>
                                     <div style={{ display: 'flex', gap: '1rem' }}>
                                         <div style={{ padding: '0.75rem', background: 'rgba(236, 72, 153, 0.1)', borderRadius: '0.75rem' }}>
                                             <Mail size={24} color="#ec4899" />
@@ -649,7 +649,8 @@ const GamblerDetail = () => {
                     appearance: none;
                     width: 50px;
                     height: 26px;
-                    background: rgba(255,255,255,0.1);
+                    background: #e2e8f0;
+                    border: 1px solid var(--stroke);
                     border-radius: 13px;
                     position: relative;
                     cursor: pointer;

@@ -269,12 +269,13 @@ const PostCard = ({ post, onEdit, onDelete }) => {
                             width: '48px',
                             height: '48px',
                             borderRadius: '50%',
-                            background: post.user?.avatar ? `url(${post.user.avatar}) center/cover` : 'rgba(255,255,255,0.1)',
+                            background: post.user?.avatar ? `url(${post.user.avatar}) center/cover` : '#f1f5f9',
                             display: 'flex',
                             alignItems: 'center',
                             justifyContent: 'center',
                             transition: 'opacity 0.2s',
-                            cursor: 'pointer'
+                            cursor: 'pointer',
+                            border: '1px solid var(--stroke)'
                         }}
                             onMouseEnter={(e) => e.currentTarget.style.opacity = '0.8'}
                             onMouseLeave={(e) => e.currentTarget.style.opacity = '1'}
@@ -305,10 +306,10 @@ const PostCard = ({ post, onEdit, onDelete }) => {
                                 onClick={() => setShowActionsMenu(!showActionsMenu)}
                                 style={{
                                     padding: '0.5rem',
-                                    background: showActionsMenu ? 'rgba(255,255,255,0.1)' : 'rgba(255,255,255,0.05)',
-                                    border: 'none',
+                                    background: showActionsMenu ? '#e2e8f0' : '#f1f5f9',
+                                    border: '1px solid var(--stroke)',
                                     borderRadius: '0.5rem',
-                                    color: 'white',
+                                    color: 'var(--text-main)',
                                     cursor: 'pointer',
                                     transition: 'all 0.2s'
                                 }}
@@ -322,14 +323,13 @@ const PostCard = ({ post, onEdit, onDelete }) => {
                                     top: '100%',
                                     right: 0,
                                     marginTop: '0.5rem',
-                                    background: 'rgba(15, 23, 42, 0.95)',
-                                    backdropFilter: 'blur(12px)',
-                                    border: '1px solid var(--glass-border)',
+                                    background: '#FFFFFF',
+                                    border: '1px solid var(--stroke)',
                                     borderRadius: '0.75rem',
                                     padding: '0.5rem',
                                     zIndex: 100,
                                     minWidth: '150px',
-                                    boxShadow: '0 10px 25px -5px rgba(0, 0, 0, 0.4)'
+                                    boxShadow: '0 10px 25px -5px rgba(0, 0, 0, 0.1)'
                                 }}>
                                     <button
                                         onClick={() => {
@@ -345,12 +345,12 @@ const PostCard = ({ post, onEdit, onDelete }) => {
                                             background: 'none',
                                             border: 'none',
                                             borderRadius: '0.5rem',
-                                            color: 'white',
+                                            color: 'var(--text-main)',
                                             cursor: 'pointer',
                                             textAlign: 'left',
                                             transition: 'background 0.2s'
                                         }}
-                                        onMouseEnter={(e) => e.target.style.background = 'rgba(255,255,255,0.05)'}
+                                        onMouseEnter={(e) => e.target.style.background = '#f1f5f9'}
                                         onMouseLeave={(e) => e.target.style.background = 'none'}
                                     >
                                         <Edit2 size={16} />
@@ -375,7 +375,7 @@ const PostCard = ({ post, onEdit, onDelete }) => {
                                             textAlign: 'left',
                                             transition: 'background 0.2s'
                                         }}
-                                        onMouseEnter={(e) => e.target.style.background = 'rgba(239, 68, 68, 0.1)'}
+                                        onMouseEnter={(e) => e.target.style.background = 'rgba(239, 68, 68, 0.05)'}
                                         onMouseLeave={(e) => e.target.style.background = 'none'}
                                     >
                                         <Trash2 size={16} />
@@ -449,7 +449,7 @@ const PostCard = ({ post, onEdit, onDelete }) => {
                 justifyContent: 'space-between',
                 marginTop: '1.5rem',
                 paddingTop: '1rem',
-                borderTop: '1px solid var(--glass-border)'
+                borderTop: '1px solid var(--stroke)'
             }}>
                 <div
                     style={{ position: 'relative', display: 'flex', alignItems: 'center' }}
@@ -465,15 +465,14 @@ const PostCard = ({ post, onEdit, onDelete }) => {
                                 left: '0',
                                 marginBottom: '0px',
                                 paddingBottom: '8px',
-                                background: 'rgba(15, 23, 42, 0.98)',
-                                border: '1px solid var(--glass-border)',
+                                background: '#FFFFFF',
+                                border: '1px solid var(--stroke)',
                                 borderRadius: '0.5rem',
                                 padding: '0.5rem 0.75rem',
                                 paddingBottom: 'calc(0.5rem + 8px)',
                                 whiteSpace: 'nowrap',
                                 zIndex: 50,
-                                boxShadow: '0 10px 25px -5px rgba(0, 0, 0, 0.3)',
-                                backdropFilter: 'blur(8px)'
+                                boxShadow: '0 10px 25px -5px rgba(0, 0, 0, 0.1)'
                             }}
                             onMouseEnter={handleTooltipMouseEnter}
                             onMouseLeave={handleTooltipMouseLeave}
@@ -503,7 +502,7 @@ const PostCard = ({ post, onEdit, onDelete }) => {
                                 marginTop: '-8px',
                                 borderLeft: '6px solid transparent',
                                 borderRight: '6px solid transparent',
-                                borderTop: '6px solid rgba(15, 23, 42, 0.98)',
+                                borderTop: '6px solid #FFFFFF',
                                 width: 0,
                                 height: 0
                             }} />
@@ -561,15 +560,14 @@ const PostCard = ({ post, onEdit, onDelete }) => {
                                 left: '0',
                                 marginBottom: '0px',
                                 paddingBottom: '8px',
-                                background: 'rgba(15, 23, 42, 0.98)',
-                                border: '1px solid var(--glass-border)',
+                                background: '#FFFFFF',
+                                border: '1px solid var(--stroke)',
                                 borderRadius: '0.5rem',
                                 padding: '0.5rem 0.75rem',
                                 paddingBottom: 'calc(0.5rem + 8px)',
                                 whiteSpace: 'nowrap',
                                 zIndex: 50,
-                                boxShadow: '0 10px 25px -5px rgba(0, 0, 0, 0.3)',
-                                backdropFilter: 'blur(8px)'
+                                boxShadow: '0 10px 25px -5px rgba(0, 0, 0, 0.1)'
                             }}
                             onMouseEnter={handleShareTooltipMouseEnter}
                             onMouseLeave={handleShareTooltipMouseLeave}
@@ -598,7 +596,7 @@ const PostCard = ({ post, onEdit, onDelete }) => {
                                 marginTop: '-8px',
                                 borderLeft: '6px solid transparent',
                                 borderRight: '6px solid transparent',
-                                borderTop: '6px solid rgba(15, 23, 42, 0.98)',
+                                borderTop: '6px solid #FFFFFF',
                                 width: 0,
                                 height: 0
                             }} />
@@ -627,7 +625,7 @@ const PostCard = ({ post, onEdit, onDelete }) => {
             </div>
 
             {showComments && (
-                <div style={{ marginTop: '1.5rem', paddingTop: '1rem', borderTop: '1px solid var(--glass-border)' }}>
+                <div style={{ marginTop: '1.5rem', paddingTop: '1rem', borderTop: '1px solid var(--stroke)' }}>
                     <PostComments
                         postId={post.postId}
                         onCommentAdded={() => setCommentsCount(prev => prev + 1)}

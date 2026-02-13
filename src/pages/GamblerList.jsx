@@ -284,19 +284,19 @@ const GamblerList = () => {
                                     setPagination(prev => ({ ...prev, pageSize: parseInt(e.target.value), page: 1 }));
                                 }}
                                 style={{
-                                    background: 'rgba(255,255,255,0.05)',
-                                    border: '1px solid var(--glass-border)',
+                                    background: '#FFFFFF',
+                                    border: '1px solid var(--stroke)',
                                     borderRadius: '0.4rem',
-                                    color: 'white',
+                                    color: 'var(--text-main)',
                                     padding: '0.25rem 0.5rem',
                                     fontSize: '0.875rem',
                                     cursor: 'pointer',
                                     outline: 'none'
                                 }}
                             >
-                                <option value={10} style={{ background: '#1a1a2e' }}>10</option>
-                                <option value={20} style={{ background: '#1a1a2e' }}>20</option>
-                                <option value={50} style={{ background: '#1a1a2e' }}>50</option>
+                                <option value={10} style={{ background: '#FFFFFF', color: 'var(--text-main)' }}>10</option>
+                                <option value={20} style={{ background: '#FFFFFF', color: 'var(--text-main)' }}>20</option>
+                                <option value={50} style={{ background: '#FFFFFF', color: 'var(--text-main)' }}>50</option>
                             </select>
                         </div>
 
@@ -304,17 +304,17 @@ const GamblerList = () => {
                             <button
                                 disabled={pagination.page === 1}
                                 onClick={() => setPagination(prev => ({ ...prev, page: prev.page - 1 }))}
-                                style={{ background: 'none', border: 'none', color: pagination.page === 1 ? 'var(--text-muted)' : 'white', cursor: pagination.page === 1 ? 'default' : 'pointer', display: 'flex', alignItems: 'center' }}
+                                style={{ background: 'none', border: 'none', color: pagination.page === 1 ? 'var(--text-muted)' : 'var(--text-main)', cursor: pagination.page === 1 ? 'default' : 'pointer', display: 'flex', alignItems: 'center' }}
                             >
                                 <ChevronLeft size={20} />
                             </button>
-                            <span style={{ fontSize: '0.875rem', fontWeight: '500' }}>
+                            <span style={{ fontSize: '0.875rem', fontWeight: '500', color: 'var(--text-main)' }}>
                                 {t('common.page_x_of_y', { current: pagination.page, total: pagination.lastPage })}
                             </span>
                             <button
                                 disabled={pagination.page >= pagination.lastPage}
                                 onClick={() => setPagination(prev => ({ ...prev, page: prev.page + 1 }))}
-                                style={{ background: 'none', border: 'none', color: pagination.page >= pagination.lastPage ? 'var(--text-muted)' : 'white', cursor: pagination.page >= pagination.lastPage ? 'default' : 'pointer', display: 'flex', alignItems: 'center' }}
+                                style={{ background: 'none', border: 'none', color: pagination.page >= pagination.lastPage ? 'var(--text-muted)' : 'var(--text-main)', cursor: pagination.page >= pagination.lastPage ? 'default' : 'pointer', display: 'flex', alignItems: 'center' }}
                             >
                                 <ChevronRight size={20} />
                             </button>

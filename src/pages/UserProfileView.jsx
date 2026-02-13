@@ -98,7 +98,7 @@ const UserProfileView = () => {
             <div style={{ maxWidth: '800px', margin: '2rem auto' }} className="glass-card">
                 <div style={{ padding: '3rem', textAlign: 'center' }}>
                     <AlertCircle size={48} color="#ef4444" style={{ marginBottom: '1rem' }} />
-                    <h3 style={{ color: 'white' }}>Profile not found</h3>
+                    <h3 style={{ color: 'var(--text-main)' }}>Profile not found</h3>
                     <button onClick={() => navigate(-1)} className="btn btn-primary" style={{ marginTop: '1rem' }}>
                         Go Back
                     </button>
@@ -114,7 +114,7 @@ const UserProfileView = () => {
                 <button
                     onClick={() => navigate(-1)}
                     className="btn"
-                    style={{ background: 'rgba(255,255,255,0.05)', color: 'white', padding: '0.5rem', marginBottom: '1.5rem' }}
+                    style={{ background: '#f1f5f9', color: 'var(--text-main)', padding: '0.5rem', marginBottom: '1.5rem', border: '1px solid var(--stroke)' }}
                 >
                     <ChevronLeft size={24} />
                 </button>
@@ -125,7 +125,7 @@ const UserProfileView = () => {
                         width: '120px',
                         height: '120px',
                         borderRadius: '50%',
-                        background: gambler.user?.avatar ? `url(${gambler.user.avatar}) center/cover` : 'rgba(255,255,255,0.1)',
+                        background: gambler.user?.avatar ? `url(${gambler.user.avatar}) center/cover` : '#f1f5f9',
                         display: 'flex',
                         alignItems: 'center',
                         justifyContent: 'center',
@@ -135,7 +135,7 @@ const UserProfileView = () => {
                         {!gambler.user?.avatar && <User size={48} color="var(--text-muted)" />}
                     </div>
                     <div>
-                        <h1 style={{ fontSize: '2rem', fontWeight: '800', marginBottom: '0.25rem', color: 'white' }}>
+                        <h1 style={{ fontSize: '2rem', fontWeight: '800', marginBottom: '0.25rem', color: 'var(--text-main)' }}>
                             {gambler.user?.name || 'User'}
                         </h1>
                         <p style={{ color: 'var(--primary)', fontWeight: '700', fontSize: '1.1rem', marginBottom: '1rem' }}>
@@ -176,7 +176,7 @@ const UserProfileView = () => {
 
             {/* Posts List */}
             <div style={{ marginBottom: '1.5rem' }}>
-                <h2 style={{ fontSize: '1.25rem', fontWeight: '700', color: 'white', marginBottom: '1.5rem' }}>
+                <h2 style={{ fontSize: '1.25rem', fontWeight: '700', color: 'var(--text-main)', marginBottom: '1.5rem' }}>
                     {t('user_profile.posts_by', { name: gambler.user?.nickName })}
                 </h2>
 
@@ -208,8 +208,9 @@ const UserProfileView = () => {
                                     disabled={loadingMore}
                                     className="btn"
                                     style={{
-                                        background: 'rgba(255,255,255,0.05)',
-                                        color: 'white',
+                                        background: '#f1f5f9',
+                                        color: 'var(--text-main)',
+                                        border: '1px solid var(--stroke)',
                                         padding: '0.75rem 2rem',
                                         display: 'flex',
                                         alignItems: 'center',

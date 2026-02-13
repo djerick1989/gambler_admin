@@ -122,14 +122,14 @@ const Keys = () => {
                         value={selectedLanguageId}
                         onChange={(e) => { setSelectedLanguageId(e.target.value); setPage(1); }}
                         style={{
-                            background: 'rgba(255,255,255,0.05)', border: '1px solid var(--glass-border)',
-                            borderRadius: '0.4rem', color: 'white', padding: '0.4rem 0.8rem', outline: 'none',
+                            background: '#FFFFFF', border: '1px solid var(--stroke)',
+                            borderRadius: '0.4rem', color: 'var(--text-main)', padding: '0.4rem 0.8rem', outline: 'none',
                             cursor: 'pointer'
                         }}
                     >
-                        <option value="" style={{ background: '#1a1a2e', color: 'white' }}>{i18nInstance.language.startsWith('es') ? 'Todos' : 'All'}</option>
+                        <option value="" style={{ background: '#FFFFFF', color: 'var(--text-main)' }}>{i18nInstance.language.startsWith('es') ? 'Todos' : 'All'}</option>
                         {languages.map(lang => (
-                            <option key={lang.languageId} value={lang.languageId} style={{ background: '#1a1a2e', color: 'white' }}>{lang.name}</option>
+                            <option key={lang.languageId} value={lang.languageId} style={{ background: '#FFFFFF', color: 'var(--text-main)' }}>{lang.name}</option>
                         ))}
                     </select>
                 </div>
@@ -211,21 +211,21 @@ const Keys = () => {
                                     setPage(1);
                                 }}
                                 style={{
-                                    background: 'rgba(255,255,255,0.05)',
-                                    border: '1px solid var(--glass-border)',
+                                    background: '#FFFFFF',
+                                    border: '1px solid var(--stroke)',
                                     borderRadius: '0.4rem',
-                                    color: 'white',
+                                    color: 'var(--text-main)',
                                     padding: '0.25rem 0.5rem',
                                     fontSize: '0.875rem',
                                     cursor: 'pointer',
                                     outline: 'none'
                                 }}
                             >
-                                <option value={10} style={{ background: '#1a1a2e', color: 'white' }}>10</option>
-                                <option value={20} style={{ background: '#1a1a2e', color: 'white' }}>20</option>
-                                <option value={50} style={{ background: '#1a1a2e', color: 'white' }}>50</option>
-                                <option value={100} style={{ background: '#1a1a2e', color: 'white' }}>100</option>
-                                <option value={200} style={{ background: '#1a1a2e', color: 'white' }}>200</option>
+                                <option value={10} style={{ background: '#FFFFFF', color: 'var(--text-main)' }}>10</option>
+                                <option value={20} style={{ background: '#FFFFFF', color: 'var(--text-main)' }}>20</option>
+                                <option value={50} style={{ background: '#FFFFFF', color: 'var(--text-main)' }}>50</option>
+                                <option value={100} style={{ background: '#FFFFFF', color: 'var(--text-main)' }}>100</option>
+                                <option value={200} style={{ background: '#FFFFFF', color: 'var(--text-main)' }}>200</option>
                             </select>
                         </div>
 
@@ -233,17 +233,17 @@ const Keys = () => {
                             <button
                                 disabled={page === 1}
                                 onClick={() => setPage(page - 1)}
-                                style={{ background: 'none', border: 'none', color: page === 1 ? 'var(--text-muted)' : 'white', cursor: page === 1 ? 'default' : 'pointer', display: 'flex', alignItems: 'center' }}
+                                style={{ background: 'none', border: 'none', color: page === 1 ? 'var(--text-muted)' : 'var(--text-main)', cursor: page === 1 ? 'default' : 'pointer', display: 'flex', alignItems: 'center' }}
                             >
                                 <ChevronLeft size={20} />
                             </button>
-                            <span style={{ fontSize: '0.875rem', fontWeight: '500' }}>
+                            <span style={{ fontSize: '0.875rem', fontWeight: '500', color: 'var(--text-main)' }}>
                                 {t('common.page_x_of_y', { current: page, total: totalPages })}
                             </span>
                             <button
                                 disabled={page >= totalPages}
                                 onClick={() => setPage(page + 1)}
-                                style={{ background: 'none', border: 'none', color: page >= totalPages ? 'var(--text-muted)' : 'white', cursor: page >= totalPages ? 'default' : 'pointer', display: 'flex', alignItems: 'center' }}
+                                style={{ background: 'none', border: 'none', color: page >= totalPages ? 'var(--text-muted)' : 'var(--text-main)', cursor: page >= totalPages ? 'default' : 'pointer', display: 'flex', alignItems: 'center' }}
                             >
                                 <ChevronRight size={20} />
                             </button>

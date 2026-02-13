@@ -87,15 +87,15 @@ const PostSharedViewersModal = ({ postId, onClose }) => {
         >
             <div
                 style={{
-                    background: 'linear-gradient(135deg, rgba(15, 23, 42, 0.98) 0%, rgba(30, 41, 59, 0.98) 100%)',
-                    border: '1px solid var(--glass-border)',
+                    background: '#FFFFFF',
+                    border: '1px solid var(--stroke)',
                     borderRadius: '1rem',
                     width: '100%',
                     maxWidth: '600px',
                     maxHeight: '80vh',
                     display: 'flex',
                     flexDirection: 'column',
-                    boxShadow: '0 25px 50px -12px rgba(0, 0, 0, 0.5)',
+                    boxShadow: '0 25px 50px -12px rgba(0, 0, 0, 0.1)',
                     overflow: 'hidden'
                 }}
                 onClick={(e) => e.stopPropagation()}
@@ -113,7 +113,7 @@ const PostSharedViewersModal = ({ postId, onClose }) => {
                             margin: 0,
                             fontSize: '1.5rem',
                             fontWeight: '700',
-                            color: 'white',
+                            color: 'var(--text-main)',
                             display: 'flex',
                             alignItems: 'center',
                             gap: '0.5rem'
@@ -214,7 +214,7 @@ const PostSharedViewersModal = ({ postId, onClose }) => {
                                         borderRadius: '50%',
                                         background: share.user?.avatar
                                             ? `url(${share.user.avatar}) center/cover`
-                                            : 'linear-gradient(135deg, rgba(14, 165, 233, 0.2) 0%, rgba(56, 189, 248, 0.2) 100%)',
+                                            : '#f1f5f9',
                                         display: 'flex',
                                         alignItems: 'center',
                                         justifyContent: 'center',
@@ -265,7 +265,7 @@ const PostSharedViewersModal = ({ postId, onClose }) => {
                             style={{
                                 width: '100%',
                                 padding: '0.75rem',
-                                background: 'linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%)',
+                                background: 'var(--primary)',
                                 border: 'none',
                                 borderRadius: '0.5rem',
                                 color: 'white',
