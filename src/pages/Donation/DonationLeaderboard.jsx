@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { donationService } from '../../services/api';
 import { useTranslation } from 'react-i18next';
 import { useNotification } from '../../context/NotificationContext';
-import { Loader2, DollarSign, Calendar, ArrowLeft, User, Trophy } from 'lucide-react';
+import { Loader2, DollarSign, Calendar, ArrowLeft, User, Trophy, ChevronLeft, ChevronRight } from 'lucide-react';
 import { Link, useNavigate } from 'react-router-dom';
 
 const DonationLeaderboard = () => {
@@ -113,103 +113,155 @@ const DonationLeaderboard = () => {
                             <p>{t('donations.admin.table.empty')}</p>
                         </div>
                     ) : (
-                        <div style={{ overflowX: 'auto' }}>
-                            <table style={{ width: '100%', borderCollapse: 'collapse', textAlign: 'left' }}>
-                                <thead>
-                                    <tr style={{ borderBottom: '1px solid var(--stroke)', background: '#f8fafc' }}>
-                                        <th style={{ padding: '1.25rem 1.5rem', color: 'var(--text-muted)', fontWeight: '600', width: '80px', textAlign: 'center' }}>
-                                            {t('donations.leaderboard.rank')}
-                                        </th>
-                                        <th style={{ padding: '1.25rem 1.5rem', color: 'var(--text-muted)', fontWeight: '600' }}>
-                                            {t('donations.admin.table.donor')}
-                                        </th>
-                                        <th style={{ padding: '1.25rem 1.5rem', color: 'var(--text-muted)', fontWeight: '600' }}>
-                                            {t('donations.admin.table.amount')}
-                                        </th>
-                                        <th style={{ padding: '1.25rem 1.5rem', color: 'var(--text-muted)', fontWeight: '600' }}>
-                                            {t('donations.admin.table.date')}
-                                        </th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    {donations.map((donation, index) => {
-                                        const globalIndex = (pagination.page - 1) * pagination.pageSize + index;
-                                        const isAnonymous = donation.isAnonymous;
+                        <>
+                            <div style={{ overflowX: 'auto' }}>
+                                <table style={{ width: '100%', borderCollapse: 'collapse', textAlign: 'left' }}>
+                                    <thead>
+                                        <tr style={{ borderBottom: '1px solid var(--stroke)', background: '#f8fafc' }}>
+                                            <th style={{ padding: '1.25rem 1.5rem', color: 'var(--text-muted)', fontWeight: '600', width: '80px', textAlign: 'center' }}>
+                                                {t('donations.leaderboard.rank')}
+                                            </th>
+                                            <th style={{ padding: '1.25rem 1.5rem', color: 'var(--text-muted)', fontWeight: '600' }}>
+                                                {t('donations.admin.table.donor')}
+                                            </th>
+                                            <th style={{ padding: '1.25rem 1.5rem', color: 'var(--text-muted)', fontWeight: '600' }}>
+                                                {t('donations.admin.table.amount')}
+                                            </th>
+                                            <th style={{ padding: '1.25rem 1.5rem', color: 'var(--text-muted)', fontWeight: '600' }}>
+                                                {t('donations.admin.table.date')}
+                                            </th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        {donations.map((donation, index) => {
+                                            const globalIndex = (pagination.page - 1) * pagination.pageSize + index;
+                                            const hasGamblerId = donation.donor?.userId != null;
 
-                                        return (
-                                            <tr key={donation.donationId || index} style={{ borderBottom: '1px solid var(--stroke)' }}>
-                                                <td style={{ padding: '1.25rem 1.5rem', textAlign: 'center' }}>
-                                                    <div style={{ display: 'flex', justifyContent: 'center' }}>
-                                                        {getRankIcon(globalIndex)}
-                                                    </div>
-                                                </td>
-                                                <td style={{ padding: '1.25rem 1.5rem' }}>
-                                                    {isAnonymous ? (
-                                                        <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem' }}>
-                                                            <div style={{
-                                                                width: '36px',
-                                                                height: '36px',
-                                                                borderRadius: '50%',
-                                                                background: '#f1f5f9',
-                                                                display: 'flex',
-                                                                alignItems: 'center',
-                                                                justifyContent: 'center',
-                                                                border: 'none'
-                                                            }}>
-                                                                <User size={18} color="var(--text-muted)" />
-                                                            </div>
-                                                            <span style={{ fontWeight: '600', color: 'var(--text-muted)', fontStyle: 'italic' }}>
-                                                                {donation.donorName}
-                                                            </span>
+                                            return (
+                                                <tr key={donation.donationId || index} style={{ borderBottom: '1px solid var(--stroke)' }}>
+                                                    <td style={{ padding: '1.25rem 1.5rem', textAlign: 'center' }}>
+                                                        <div style={{ display: 'flex', justifyContent: 'center' }}>
+                                                            {getRankIcon(globalIndex)}
                                                         </div>
-                                                    ) : (
-                                                        <Link
-                                                            to={`/gamblers/${donation.donorGamblerId}`}
-                                                            style={{
-                                                                display: 'flex',
-                                                                alignItems: 'center',
-                                                                gap: '0.75rem',
-                                                                textDecoration: 'none',
-                                                                color: 'inherit',
-                                                                transition: 'opacity 0.2s'
-                                                            }}
-                                                            onMouseOver={(e) => e.currentTarget.style.opacity = '0.7'}
-                                                            onMouseOut={(e) => e.currentTarget.style.opacity = '1'}
-                                                        >
-                                                            <div style={{
-                                                                width: '36px',
-                                                                height: '36px',
-                                                                borderRadius: '50%',
-                                                                background: donation.donorAvatar ? `url(${donation.donorAvatar}) center/cover` : '#f1f5f9',
-                                                                display: 'flex',
-                                                                alignItems: 'center',
-                                                                justifyContent: 'center',
-                                                                border: donation.donorAvatar ? '1px solid var(--stroke)' : 'none'
-                                                            }}>
-                                                                {!donation.donorAvatar && <User size={18} color="var(--text-muted)" />}
+                                                    </td>
+                                                    <td style={{ padding: '1.25rem 1.5rem' }}>
+                                                        {hasGamblerId ? (
+                                                            <Link
+                                                                to={`/user/${donation.donor.userId}`}
+                                                                style={{
+                                                                    display: 'flex',
+                                                                    alignItems: 'center',
+                                                                    gap: '0.75rem',
+                                                                    textDecoration: 'none',
+                                                                    color: 'inherit',
+                                                                    transition: 'opacity 0.2s'
+                                                                }}
+                                                                onMouseOver={(e) => e.currentTarget.style.opacity = '0.7'}
+                                                                onMouseOut={(e) => e.currentTarget.style.opacity = '1'}
+                                                            >
+                                                                <div style={{
+                                                                    width: '36px',
+                                                                    height: '36px',
+                                                                    borderRadius: '50%',
+                                                                    background: donation.donor.avatar ? `url(${donation.donor.avatar}) center/cover` : '#f1f5f9',
+                                                                    display: 'flex',
+                                                                    alignItems: 'center',
+                                                                    justifyContent: 'center',
+                                                                    border: donation.donor.avatar ? '1px solid var(--stroke)' : 'none'
+                                                                }}>
+                                                                    {!donation.donor.avatar && <User size={18} color="var(--text-muted)" />}
+                                                                </div>
+                                                                <span style={{ fontWeight: '600' }}>{donation.donor.nickName}</span>
+                                                            </Link>
+                                                        ) : (
+                                                            <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem' }}>
+                                                                <div style={{
+                                                                    width: '36px',
+                                                                    height: '36px',
+                                                                    borderRadius: '50%',
+                                                                    background: '#f1f5f9',
+                                                                    display: 'flex',
+                                                                    alignItems: 'center',
+                                                                    justifyContent: 'center',
+                                                                    border: 'none'
+                                                                }}>
+                                                                    <User size={18} color="var(--text-muted)" />
+                                                                </div>
+                                                                <span style={{ fontWeight: '600', color: 'var(--text-muted)', fontStyle: 'italic' }}>
+                                                                    {donation.donor?.nickName || 'Anónimo'}
+                                                                </span>
                                                             </div>
-                                                            <span style={{ fontWeight: '600' }}>{donation.donorName}</span>
-                                                        </Link>
-                                                    )}
-                                                </td>
-                                                <td style={{ padding: '1.25rem 1.5rem' }}>
-                                                    <div style={{ fontWeight: '800', color: 'var(--text-main)', display: 'flex', alignItems: 'center', gap: '0.25rem', fontSize: '1.1rem' }}>
-                                                        <DollarSign size={16} />
-                                                        {donation.amount.toFixed(2)}
-                                                    </div>
-                                                </td>
-                                                <td style={{ padding: '1.25rem 1.5rem' }}>
-                                                    <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', color: 'var(--text-muted)', fontSize: '0.85rem' }}>
-                                                        <Calendar size={14} />
-                                                        {new Date(donation.createdAt).toLocaleDateString()}
-                                                    </div>
-                                                </td>
-                                            </tr>
-                                        );
-                                    })}
-                                </tbody>
-                            </table>
-                        </div>
+                                                        )}
+                                                    </td>
+                                                    <td style={{ padding: '1.25rem 1.5rem' }}>
+                                                        <div style={{ fontWeight: '800', color: 'var(--text-main)', display: 'flex', alignItems: 'center', gap: '0.25rem', fontSize: '1.1rem' }}>
+                                                            <DollarSign size={16} />
+                                                            {donation.amount.toFixed(2)}
+                                                        </div>
+                                                    </td>
+                                                    <td style={{ padding: '1.25rem 1.5rem' }}>
+                                                        <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', color: 'var(--text-muted)', fontSize: '0.85rem' }}>
+                                                            <Calendar size={14} />
+                                                            {new Date(donation.createdAt).toLocaleDateString()}
+                                                        </div>
+                                                    </td>
+                                                </tr>
+                                            );
+                                        })}
+                                    </tbody>
+                                </table>
+                            </div>
+
+                            <div style={{ padding: '1rem', display: 'flex', justifyContent: 'space-between', alignItems: 'center', gap: '1rem', borderTop: '1px solid var(--stroke)', flexWrap: 'wrap' }}>
+                                <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem' }}>
+                                    <span style={{ fontSize: '0.875rem', color: 'var(--text-muted)' }}>{t('common.rows_per_page')}</span>
+                                    <select
+                                        value={pagination.pageSize}
+                                        onChange={(e) => {
+                                            setPagination(prev => ({
+                                                ...prev,
+                                                pageSize: parseInt(e.target.value),
+                                                page: 1
+                                            }));
+                                        }}
+                                        style={{
+                                            background: '#FFFFFF',
+                                            border: '1px solid var(--stroke)',
+                                            borderRadius: '0.4rem',
+                                            color: 'var(--text-main)',
+                                            padding: '0.25rem 0.5rem',
+                                            fontSize: '0.875rem',
+                                            cursor: 'pointer',
+                                            outline: 'none'
+                                        }}
+                                    >
+                                        <option value={10} style={{ background: '#FFFFFF', color: 'var(--text-main)' }}>10</option>
+                                        <option value={20} style={{ background: '#FFFFFF', color: 'var(--text-main)' }}>20</option>
+                                        <option value={50} style={{ background: '#FFFFFF', color: 'var(--text-main)' }}>50</option>
+                                    </select>
+                                </div>
+
+                                <div style={{ display: 'flex', alignItems: 'center', gap: '1rem' }}>
+                                    <button
+                                        disabled={pagination.page === 1}
+                                        onClick={() => setPagination(prev => ({ ...prev, page: prev.page - 1 }))}
+                                        style={{ background: 'none', border: 'none', color: pagination.page === 1 ? 'var(--text-muted)' : 'var(--text-main)', cursor: pagination.page === 1 ? 'default' : 'pointer', display: 'flex', alignItems: 'center' }}
+                                    >
+                                        <ChevronLeft size={20} />
+                                    </button>
+                                    <span style={{ fontSize: '0.875rem', fontWeight: '500', color: 'var(--text-main)' }}>
+                                        {t('common.page_x_of_y', { current: pagination.page, total: Math.ceil(pagination.totalCount / pagination.pageSize) || 1 })}
+                                    </span>
+                                    <button
+                                        disabled={pagination.page >= Math.ceil(pagination.totalCount / pagination.pageSize)}
+                                        onClick={() => setPagination(prev => ({ ...prev, page: prev.page + 1 }))}
+                                        style={{ background: 'none', border: 'none', color: pagination.page >= Math.ceil(pagination.totalCount / pagination.pageSize) ? 'var(--text-muted)' : 'var(--text-main)', cursor: pagination.page >= Math.ceil(pagination.totalCount / pagination.pageSize) ? 'default' : 'pointer', display: 'flex', alignItems: 'center' }}
+                                    >
+                                        <ChevronRight size={20} />
+                                    </button>
+                                </div>
+                            </div>
+                        </>
                     )}
                 </div>
             )}

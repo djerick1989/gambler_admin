@@ -4,7 +4,7 @@ import { donationService } from '../../services/api';
 import { useTranslation } from 'react-i18next';
 import { useAuth } from '../../context/AuthContext';
 import { useNotification } from '../../context/NotificationContext';
-import { Loader2, CheckCircle, XCircle, User, Calendar, DollarSign, Tag, Users, X } from 'lucide-react';
+import { Loader2, CheckCircle, XCircle, User, Calendar, DollarSign, Tag, Users, X, ChevronLeft, ChevronRight } from 'lucide-react';
 
 const DonationAdminList = () => {
     const { t } = useTranslation();
@@ -15,6 +15,7 @@ const DonationAdminList = () => {
     const [loading, setLoading] = useState(true);
     const [processing, setProcessing] = useState(null);
     const [selectedDonation, setSelectedDonation] = useState(null);
+    const [sortBy, setSortBy] = useState('date_desc');
     const [pagination, setPagination] = useState({
         page: 1,
         pageSize: 10,
@@ -23,12 +24,12 @@ const DonationAdminList = () => {
 
     useEffect(() => {
         fetchDonations();
-    }, [pagination.page]);
+    }, [pagination.page, pagination.pageSize, sortBy]);
 
     const fetchDonations = async () => {
         setLoading(true);
         try {
-            const response = await donationService.getAllDonations(pagination.page, pagination.pageSize);
+            const response = await donationService.getAllDonations(pagination.page, pagination.pageSize, sortBy);
             if (response.status) {
                 setDonations(response.data.items);
                 setPagination(prev => ({
@@ -90,6 +91,28 @@ const DonationAdminList = () => {
                     {t('donations.admin.title')}
                 </h1>
                 <p style={{ color: 'var(--text-muted)' }}>{t('donations.admin.subtitle')}</p>
+            </div>
+
+            <div style={{ display: 'flex', justifyContent: 'flex-end', marginBottom: '1.5rem' }}>
+                <select
+                    value={sortBy}
+                    onChange={(e) => setSortBy(e.target.value)}
+                    style={{
+                        padding: '0.75rem',
+                        borderRadius: '0.5rem',
+                        border: '1px solid var(--stroke)',
+                        background: '#FFFFFF',
+                        color: 'var(--text-main)',
+                        fontSize: '0.9rem',
+                        outline: 'none',
+                        cursor: 'pointer'
+                    }}
+                >
+                    <option value="amount_desc">{t('donations.sort.amount_desc')}</option>
+                    <option value="amount_asc">{t('donations.sort.amount_asc')}</option>
+                    <option value="date_desc">{t('donations.sort.date_desc')}</option>
+                    <option value="date_asc">{t('donations.sort.date_asc')}</option>
+                </select>
             </div>
 
             {loading ? (
@@ -290,6 +313,56 @@ const DonationAdminList = () => {
                                 })}
                             </tbody>
                         </table>
+                    </div>
+
+                    <div style={{ padding: '1rem', display: 'flex', justifyContent: 'space-between', alignItems: 'center', gap: '1rem', borderTop: '1px solid var(--stroke)', flexWrap: 'wrap' }}>
+                        <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem' }}>
+                            <span style={{ fontSize: '0.875rem', color: 'var(--text-muted)' }}>{t('common.rows_per_page')}</span>
+                            <select
+                                value={pagination.pageSize}
+                                onChange={(e) => {
+                                    setPagination(prev => ({
+                                        ...prev,
+                                        pageSize: parseInt(e.target.value),
+                                        page: 1
+                                    }));
+                                }}
+                                style={{
+                                    background: '#FFFFFF',
+                                    border: '1px solid var(--stroke)',
+                                    borderRadius: '0.4rem',
+                                    color: 'var(--text-main)',
+                                    padding: '0.25rem 0.5rem',
+                                    fontSize: '0.875rem',
+                                    cursor: 'pointer',
+                                    outline: 'none'
+                                }}
+                            >
+                                <option value={10} style={{ background: '#FFFFFF', color: 'var(--text-main)' }}>10</option>
+                                <option value={20} style={{ background: '#FFFFFF', color: 'var(--text-main)' }}>20</option>
+                                <option value={50} style={{ background: '#FFFFFF', color: 'var(--text-main)' }}>50</option>
+                            </select>
+                        </div>
+
+                        <div style={{ display: 'flex', alignItems: 'center', gap: '1rem' }}>
+                            <button
+                                disabled={pagination.page === 1}
+                                onClick={() => setPagination(prev => ({ ...prev, page: prev.page - 1 }))}
+                                style={{ background: 'none', border: 'none', color: pagination.page === 1 ? 'var(--text-muted)' : 'var(--text-main)', cursor: pagination.page === 1 ? 'default' : 'pointer', display: 'flex', alignItems: 'center' }}
+                            >
+                                <ChevronLeft size={20} />
+                            </button>
+                            <span style={{ fontSize: '0.875rem', fontWeight: '500', color: 'var(--text-main)' }}>
+                                {t('common.page_x_of_y', { current: pagination.page, total: Math.ceil(pagination.totalCount / pagination.pageSize) || 1 })}
+                            </span>
+                            <button
+                                disabled={pagination.page >= Math.ceil(pagination.totalCount / pagination.pageSize)}
+                                onClick={() => setPagination(prev => ({ ...prev, page: prev.page + 1 }))}
+                                style={{ background: 'none', border: 'none', color: pagination.page >= Math.ceil(pagination.totalCount / pagination.pageSize) ? 'var(--text-muted)' : 'var(--text-main)', cursor: pagination.page >= Math.ceil(pagination.totalCount / pagination.pageSize) ? 'default' : 'pointer', display: 'flex', alignItems: 'center' }}
+                            >
+                                <ChevronRight size={20} />
+                            </button>
+                        </div>
                     </div>
                 </div>
             )}
