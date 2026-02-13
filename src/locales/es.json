@@ -425,7 +425,8 @@
             "search_user": "Buscar usuario por nickname...",
             "payment_button": "Realizar Pago",
             "success": "¡Gracias por tu donación!",
-            "error": "Hubo un error al procesar tu donación."
+            "error": "Hubo un error al procesar tu donación.",
+            "additional_info": "Información Adicional"
         },
         "admin": {
             "title": "Gestión de Donaciones",

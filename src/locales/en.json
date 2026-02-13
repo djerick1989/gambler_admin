@@ -425,7 +425,8 @@
             "search_user": "Search user by nickname...",
             "payment_button": "Make Payment",
             "success": "Thank you for your donation!",
-            "error": "There was an error processing your donation."
+            "error": "There was an error processing your donation.",
+            "additional_info": "Additional Information"
         },
         "admin": {
             "title": "Donation Management",

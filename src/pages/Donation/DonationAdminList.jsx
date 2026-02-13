@@ -80,12 +80,7 @@ const DonationAdminList = () => {
     };
 
     const getTypeColor = (type) => {
-        switch (type) {
-            case 'COMMUNITY': return '#3b82f6';
-            case 'PERSON': return '#10b981';
-            case 'ORGANIZATION': return '#8b5cf6';
-            default: return 'white';
-        }
+        return '#D3920A';
     };
 
     return (
@@ -99,7 +94,7 @@ const DonationAdminList = () => {
 
             {loading ? (
                 <div style={{ display: 'flex', justifyContent: 'center', padding: '4rem' }}>
-                    <Loader2 size={48} className="animate-spin" color="var(--primary)" />
+                    <Loader2 size={48} className="animate-spin" color="#D3920A" />
                 </div>
             ) : (
                 <div className="glass-card" style={{ padding: 0, overflow: 'hidden' }}>
@@ -356,7 +351,7 @@ const DonationAdminList = () => {
                                                 justifyContent: 'center',
                                                 border: b.beneficiaryAvatar ? '1px solid var(--glass-border)' : 'none'
                                             }}>
-                                                {!b.beneficiaryAvatar && <User size={20} color="var(--primary)" />}
+                                                {!b.beneficiaryAvatar && <User size={20} color="#D3920A" />}
                                             </div>
                                             <div>
                                                 <div style={{ fontWeight: '700' }}>{b.beneficiaryName}</div>
@@ -365,7 +360,7 @@ const DonationAdminList = () => {
                                                 </div>
                                             </div>
                                         </Link>
-                                        <div style={{ fontWeight: '800', color: 'var(--primary)', fontSize: '1.1rem' }}>
+                                        <div style={{ fontWeight: '800', color: '#D3920A', fontSize: '1.1rem' }}>
                                             ${b.amount.toFixed(2)}
                                         </div>
                                     </div>
@@ -383,7 +378,7 @@ const DonationAdminList = () => {
                                 width: '100%',
                                 marginTop: '2rem',
                                 padding: '1rem',
-                                background: 'var(--primary)',
+                                background: '#D3920A',
                                 color: 'white',
                                 border: 'none',
                                 borderRadius: '0.75rem',

@@ -131,9 +131,7 @@ const DonationForm = () => {
     };
 
     const getColor = () => {
-        if (isCommunityDonation) return '#3b82f6';
-        if (isPersonDonation) return '#10b981';
-        return '#8b5cf6';
+        return '#D3920A';
     };
 
     return (
@@ -153,7 +151,6 @@ const DonationForm = () => {
                 }}
             >
                 <ArrowLeft size={20} />
-                {t('common.cancel')}
             </button>
 
             <div className="glass-card" style={{ padding: '2.5rem' }}>
@@ -192,9 +189,9 @@ const DonationForm = () => {
                                         minWidth: '80px',
                                         height: '50px',
                                         borderRadius: '0.75rem',
-                                        border: `2px solid ${amount === p.toString() ? getColor() : 'var(--glass-border)'}`,
-                                        background: amount === p.toString() ? `${getColor()}20` : 'rgba(255,255,255,0.05)',
-                                        color: amount === p.toString() ? getColor() : 'white',
+                                        border: `2px solid ${amount === p.toString() ? '#D3920A' : 'var(--glass-border)'}`,
+                                        background: amount === p.toString() ? 'rgba(211, 146, 10, 0.2)' : 'rgba(255,255,255,0.05)',
+                                        color: amount === p.toString() ? '#D3920A' : 'white',
                                         fontWeight: '700',
                                         cursor: 'pointer',
                                         transition: 'all 0.2s'
@@ -349,7 +346,7 @@ const DonationForm = () => {
                         style={{
                             width: '100%',
                             height: '60px',
-                            background: getColor(),
+                            background: '#D3920A',
                             color: 'white',
                             border: 'none',
                             borderRadius: '1rem',
@@ -360,7 +357,7 @@ const DonationForm = () => {
                             alignItems: 'center',
                             justifyContent: 'center',
                             gap: '0.75rem',
-                            boxShadow: `0 10px 20px ${getColor()}40`,
+                            boxShadow: '0 10px 20px rgba(211, 146, 10, 0.25)',
                             transition: 'all 0.2s'
                         }}
                     >
@@ -369,12 +366,39 @@ const DonationForm = () => {
                 </form>
 
                 <div style={{ marginTop: '3rem', padding: '2rem', background: 'rgba(255,255,255,0.02)', borderRadius: '1rem', border: '1px solid var(--glass-border)' }}>
-                    <h4 style={{ color: getColor(), marginBottom: '1rem', fontWeight: '800', fontSize: '1.1rem' }}>
-                        Información Adicional
+                    <h4 style={{
+                        color: getColor(),
+                        marginBottom: '1rem',
+                        fontWeight: '800',
+                        fontSize: '1.1rem',
+                        textAlign: isCommunityDonation ? 'center' : 'left'
+                    }}>
+                        {t('donations.form.additional_info')}
                     </h4>
-                    <p style={{ color: 'var(--text-muted)', fontSize: '0.95rem', lineHeight: '1.6', whiteSpace: 'pre-wrap' }}>
+                    <p style={{
+                        color: 'var(--text-muted)',
+                        fontSize: '0.95rem',
+                        lineHeight: '1.6',
+                        whiteSpace: 'pre-wrap',
+                        textAlign: isCommunityDonation ? 'center' : 'left'
+                    }}>
                         {t(`donations.${type.toLowerCase()}.description`)}
                     </p>
+                    {isCommunityDonation && (
+                        <div style={{ display: 'flex', justifyContent: 'center', marginTop: '2rem' }}>
+                            <img
+                                src="https://s3.us-east-2.amazonaws.com/ludopata.org/ruleta_20260213013600_6483f016.png"
+                                alt="Ruleta"
+                                style={{
+                                    maxWidth: '400px',
+                                    width: '100%',
+                                    height: 'auto',
+                                    borderRadius: '1rem',
+                                    boxShadow: '0 10px 30px rgba(0,0,0,0.5)'
+                                }}
+                            />
+                        </div>
+                    )}
                 </div>
             </div>
         </div>

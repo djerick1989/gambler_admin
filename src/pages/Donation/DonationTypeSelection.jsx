@@ -13,21 +13,21 @@ const DonationTypeSelection = () => {
             title: t('donations.community.title'),
             subtitle: t('donations.community.subtitle'),
             icon: Users,
-            color: '#3b82f6'
+            color: '#D3920A'
         },
         {
             id: 'PERSON',
             title: t('donations.person.title'),
             subtitle: t('donations.person.subtitle'),
             icon: User,
-            color: '#10b981'
+            color: '#D3920A'
         },
         {
             id: 'ORGANIZATION',
             title: t('donations.organization.title'),
             subtitle: t('donations.organization.subtitle'),
             icon: Building2,
-            color: '#8b5cf6'
+            color: '#D3920A'
         }
     ];
 
