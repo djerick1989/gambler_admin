@@ -37,7 +37,8 @@
         "inactive": "Inactive",
         "upload": "Upload",
         "save": "Save",
-        "save_changes": "Save Changes"
+        "save_changes": "Save Changes",
+        "back_to_donations": "Back to Donations"
     },
     "posts": {
         "title": "Community Posts",
@@ -433,11 +434,12 @@
             "subtitle": "Manage and oversee all platform donations.",
             "status_update_success": "Donation {{status}} successfully",
             "status_update_error": "Error updating status",
+            "unknown_admin": "Unknown Admin",
             "fetch_error": "Error loading donations",
             "status": {
                 "pending": "Pending",
                 "approved": "Approved",
-                "denied": "Denied"
+                "rejected": "Rejected"
             },
             "table": {
                 "donor": "Donor",
@@ -456,8 +458,27 @@
                 "close": "Close",
                 "no_beneficiaries": "No specific beneficiaries for this donation."
             },
-            "approve_confirm": "Are you sure you want to approve this donation?",
             "deny_confirm": "Are you sure you want to deny this donation?"
+        },
+        "user": {
+            "title": "My Donations",
+            "empty_message": "You haven't made any donations yet. Make your first donation today and support the community!",
+            "empty_button": "Make a Donation"
+        },
+        "view_all_donations": "Community Donations",
+        "leaderboard": {
+            "title": "Community Impact",
+            "subtitle": "See how our community is making a difference.",
+            "rank": "Rank"
+        },
+        "common": {
+            "anonymous": "Anonymous"
+        },
+        "sort": {
+            "amount_desc": "Highest amount first",
+            "amount_asc": "Lowest amount first",
+            "date_desc": "Most recent first",
+            "date_asc": "Oldest first"
         }
     }
 }

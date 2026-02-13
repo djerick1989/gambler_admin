@@ -37,7 +37,8 @@
         "inactive": "Inactivo",
         "upload": "Subir",
         "save": "Guardar",
-        "save_changes": "Guardar Cambios"
+        "save_changes": "Guardar Cambios",
+        "back_to_donations": "Volver a Donaciones"
     },
     "posts": {
         "title": "Publicaciones de la Comunidad",
@@ -433,11 +434,12 @@
             "subtitle": "Gestiona y supervisa todas las donaciones de la plataforma.",
             "status_update_success": "Donación {{status}} con éxito",
             "status_update_error": "Error al actualizar el estado",
+            "unknown_admin": "Admin Desconocido",
             "fetch_error": "Error al cargar las donaciones",
             "status": {
                 "pending": "Pendiente",
                 "approved": "Aprobada",
-                "denied": "Denegada"
+                "rejected": "Rechazada"
             },
             "table": {
                 "donor": "Donante",
@@ -457,7 +459,27 @@
                 "no_beneficiaries": "No hay beneficiarios específicos para esta donación."
             },
             "approve_confirm": "¿Estás seguro de que deseas aprobar esta donación?",
-            "deny_confirm": "¿Estás seguro de que deseas denegar esta donación?"
+            "deny_confirm": "¿Estás seguro de que deseas rechazar esta donación?"
+        },
+        "user": {
+            "title": "Mis Donaciones",
+            "empty_message": "Aún no has realizado ninguna donación. ¡Haz tu primera donación hoy y apoya a la comunidad!",
+            "empty_button": "Hacer una Donación"
+        },
+        "view_all_donations": "Donaciones de la Comunidad",
+        "leaderboard": {
+            "title": "Impacto Comunitario",
+            "subtitle": "Descubre cómo nuestra comunidad está marcando la diferencia.",
+            "rank": "Rank"
+        },
+        "common": {
+            "anonymous": "Anónimo"
+        },
+        "sort": {
+            "amount_desc": "Mayor monto primero",
+            "amount_asc": "Menor monto primero",
+            "date_desc": "Más reciente primero",
+            "date_asc": "Más antiguo primero"
         }
     }
 }

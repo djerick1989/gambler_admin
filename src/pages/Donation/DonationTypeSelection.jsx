@@ -2,6 +2,7 @@ import React from 'react';
 import { useTranslation } from 'react-i18next';
 import { useNavigate } from 'react-router-dom';
 import { Users, User, Building2 } from 'lucide-react';
+import UserDonationList from './UserDonationList';
 
 const DonationTypeSelection = () => {
     const { t } = useTranslation();
@@ -33,8 +34,34 @@ const DonationTypeSelection = () => {
 
     return (
         <div className="animate-fade-in">
-            <h1 style={{ fontSize: '2rem', fontWeight: '800', marginBottom: '0.5rem' }}>{t('donations.title')}</h1>
-            <p style={{ color: 'var(--text-muted)', marginBottom: '2rem' }}>{t('donations.subtitle')}</p>
+            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '2rem' }}>
+                <div>
+                    <h1 style={{ fontSize: '2rem', fontWeight: '800', marginBottom: '0.5rem' }}>{t('donations.title')}</h1>
+                    <p style={{ color: 'var(--text-muted)' }}>{t('donations.subtitle')}</p>
+                </div>
+                <button
+                    onClick={() => navigate('/donations/leaderboard')}
+                    style={{
+                        padding: '0.75rem 1.5rem',
+                        background: 'rgba(212, 144, 0, 0.1)',
+                        color: '#D49000',
+                        border: '1px solid #D49000',
+                        borderRadius: '0.5rem',
+                        fontWeight: '600',
+                        cursor: 'pointer',
+                        fontSize: '0.9rem',
+                        display: 'flex',
+                        alignItems: 'center',
+                        gap: '0.5rem',
+                        transition: 'all 0.2s'
+                    }}
+                    onMouseOver={(e) => e.currentTarget.style.background = 'rgba(212, 144, 0, 0.2)'}
+                    onMouseOut={(e) => e.currentTarget.style.background = 'rgba(212, 144, 0, 0.1)'}
+                >
+                    <Users size={18} />
+                    {t('donations.view_all_donations') || 'Community Donations'}
+                </button>
+            </div>
 
             <div style={{
                 display: 'grid',
@@ -78,6 +105,8 @@ const DonationTypeSelection = () => {
                     </div>
                 ))}
             </div>
+
+            <UserDonationList />
         </div>
     );
 };

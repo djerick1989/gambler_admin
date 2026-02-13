@@ -27,8 +27,16 @@ export const NotificationProvider = ({ children }) => {
         setNotifications((prev) => prev.filter((n) => n.id !== id));
     }, []);
 
+    const addToast = useCallback((type, message) => {
+        showToast({
+            title: type === 'error' ? 'Error' : 'Success',
+            message,
+            type
+        });
+    }, [showToast]);
+
     return (
-        <NotificationContext.Provider value={{ showToast, removeToast, notifications }}>
+        <NotificationContext.Provider value={{ showToast, addToast, removeToast, notifications }}>
             {children}
         </NotificationContext.Provider>
     );

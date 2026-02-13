@@ -1,10 +1,10 @@
 import React from 'react';
-import { MessageSquare, X } from 'lucide-react';
+import { MessageSquare, X, CheckCircle, AlertCircle, Info } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 
 const Toast = ({ notification, onRemove }) => {
     const navigate = useNavigate();
-    const { id, title, message, chatId, sender } = notification;
+    const { id, title, message, chatId, sender, type } = notification;
 
     const handleClick = () => {
         if (chatId) {
@@ -12,6 +12,23 @@ const Toast = ({ notification, onRemove }) => {
         }
         onRemove(id);
     };
+
+    let icon;
+    let iconBg;
+
+    if (type === 'success') {
+        icon = <CheckCircle size={20} color="white" />;
+        iconBg = '#10b981';
+    } else if (type === 'error') {
+        icon = <AlertCircle size={20} color="white" />;
+        iconBg = '#ef4444';
+    } else if (sender) {
+        icon = <MessageSquare size={20} color="white" />;
+        iconBg = 'var(--primary, #3b82f6)';
+    } else {
+        icon = <Info size={20} color="white" />;
+        iconBg = 'var(--primary, #3b82f6)';
+    }
 
     return (
         <div
@@ -38,13 +55,13 @@ const Toast = ({ notification, onRemove }) => {
                 width: '40px',
                 height: '40px',
                 borderRadius: '50%',
-                background: sender?.avatar ? `url(${sender.avatar}) center/cover` : 'var(--primary, #3b82f6)',
+                background: sender?.avatar ? `url(${sender.avatar}) center/cover` : iconBg,
                 display: 'flex',
                 alignItems: 'center',
                 justifyContent: 'center',
                 flexShrink: 0
             }}>
-                {!sender?.avatar && <MessageSquare size={20} color="white" />}
+                {!sender?.avatar && icon}
             </div>
 
             <div style={{ flex: 1, minWidth: 0 }}>
