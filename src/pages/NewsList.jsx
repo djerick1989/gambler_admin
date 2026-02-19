@@ -97,7 +97,7 @@ const NewsList = () => {
 
                 <div style={{ display: 'flex', gap: '1rem', alignItems: 'center' }}>
                     {/* Tab Switcher */}
-                    <div style={{ display: 'flex', background: 'rgba(255,255,255,0.05)', padding: '0.25rem', borderRadius: '0.5rem' }}>
+                    <div style={{ display: 'flex', background: 'rgba(0,0,0,0.05)', padding: '0.25rem', borderRadius: '0.5rem' }}>
                         <button
                             onClick={() => { setActiveTab('news'); setSelectedNewsId(null); }}
                             style={{
@@ -105,7 +105,7 @@ const NewsList = () => {
                                 borderRadius: '0.4rem',
                                 border: 'none',
                                 background: activeTab === 'news' ? 'var(--primary)' : 'transparent',
-                                color: 'white',
+                                color: activeTab === 'news' ? 'white' : 'var(--text-main)',
                                 cursor: 'pointer',
                                 display: 'flex',
                                 alignItems: 'center',
@@ -125,7 +125,7 @@ const NewsList = () => {
                                 borderRadius: '0.4rem',
                                 border: 'none',
                                 background: activeTab === 'comments' ? 'var(--primary)' : 'transparent',
-                                color: 'white',
+                                color: activeTab === 'comments' ? 'white' : 'var(--text-main)',
                                 cursor: 'pointer',
                                 display: 'flex',
                                 alignItems: 'center',

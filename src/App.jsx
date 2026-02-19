@@ -14,6 +14,8 @@ import Keys from './pages/I18n/Keys';
 import KeyForm from './pages/I18n/KeyForm';
 import NewsList from './pages/NewsList';
 import NewsForm from './pages/NewsForm';
+import NewsGallery from './pages/NewsGallery';
+import NewsDetail from './pages/NewsDetail';
 import GamblerList from './pages/GamblerList';
 import GamblerDetail from './pages/GamblerDetail';
 import PostList from './pages/PostList';
@@ -52,6 +54,16 @@ const ProtectedRoute = ({ children }) => {
   return children;
 };
 
+const AdminRoute = ({ children }) => {
+  const { user, loading } = useAuth();
+  if (loading) return null;
+  // ADMIN = 1, SUPER_ADMIN = 2
+  if (user?.role !== 1 && user?.role !== 2) {
+    return <Navigate to="/posts" replace />;
+  }
+  return children;
+};
+
 function App() {
   return (
     <AuthProvider>
@@ -70,30 +82,36 @@ function App() {
                   <MainLayout />
                 </ProtectedRoute>
               }>
-                <Route index element={<Dashboard />} />
-                <Route path="language" element={<Language />} />
-                <Route path="onboarding" element={<OnBoarding />} />
+                <Route index element={
+                  <AdminRoute>
+                    <Dashboard />
+                  </AdminRoute>
+                } />
+                <Route path="language" element={<AdminRoute><Language /></AdminRoute>} />
+                <Route path="onboarding" element={<AdminRoute><OnBoarding /></AdminRoute>} />
                 <Route path="notifications" element={<NotificationsPage />} />
-                <Route path="onboarding/new" element={<OnBoardingForm />} />
-                <Route path="onboarding/edit/:id" element={<OnBoardingForm />} />
+                <Route path="onboarding/new" element={<AdminRoute><OnBoardingForm /></AdminRoute>} />
+                <Route path="onboarding/edit/:id" element={<AdminRoute><OnBoardingForm /></AdminRoute>} />
 
-                <Route path="i18n" element={<Namespaces />} />
-                <Route path="i18n/namespace/:id" element={<Keys />} />
-                <Route path="i18n/namespace/:namespaceId/key/new" element={<KeyForm />} />
-                <Route path="i18n/namespace/:namespaceId/key/edit/:id" element={<KeyForm />} />
+                <Route path="i18n" element={<AdminRoute><Namespaces /></AdminRoute>} />
+                <Route path="i18n/namespace/:id" element={<AdminRoute><Keys /></AdminRoute>} />
+                <Route path="i18n/namespace/:namespaceId/key/new" element={<AdminRoute><KeyForm /></AdminRoute>} />
+                <Route path="i18n/namespace/:namespaceId/key/edit/:id" element={<AdminRoute><KeyForm /></AdminRoute>} />
 
-                <Route path="news" element={<NewsList />} />
-                <Route path="news/new" element={<NewsForm />} />
-                <Route path="news/edit/:id" element={<NewsForm />} />
+                <Route path="news" element={<NewsSwitch />} />
+                <Route path="news/gallery" element={<NewsGallery />} />
+                <Route path="news/view/:id" element={<NewsDetail />} />
+                <Route path="news/new" element={<AdminRoute><NewsForm /></AdminRoute>} />
+                <Route path="news/edit/:id" element={<AdminRoute><NewsForm /></AdminRoute>} />
 
-                <Route path="gamblers" element={<GamblerList />} />
-                <Route path="gamblers/:id" element={<GamblerDetail />} />
+                <Route path="gamblers" element={<AdminRoute><GamblerList /></AdminRoute>} />
+                <Route path="gamblers/:id" element={<AdminRoute><GamblerDetail /></AdminRoute>} />
 
                 <Route path="posts" element={<PostList />} />
                 <Route path="posts/new" element={<PostForm />} />
                 <Route path="posts/edit/:id" element={<PostForm />} />
 
-                <Route path="media" element={<MediaList />} />
+                <Route path="media" element={<AdminRoute><MediaList /></AdminRoute>} />
                 <Route path="profile" element={<Profile />} />
                 <Route path="user/:userId" element={<UserProfileView />} />
                 <Route path="chat" element={<ChatPage />} />
@@ -107,9 +125,9 @@ function App() {
                 <Route path="achievements/new" element={<AchievementForm />} />
                 <Route path="achievements/edit/:id" element={<AchievementForm />} />
 
-                <Route path="payment-platforms" element={<PaymentPlatformList />} />
-                <Route path="payment-platforms/new" element={<PaymentPlatformForm />} />
-                <Route path="payment-platforms/edit/:id" element={<PaymentPlatformForm />} />
+                <Route path="payment-platforms" element={<AdminRoute><PaymentPlatformList /></AdminRoute>} />
+                <Route path="payment-platforms/new" element={<AdminRoute><PaymentPlatformForm /></AdminRoute>} />
+                <Route path="payment-platforms/edit/:id" element={<AdminRoute><PaymentPlatformForm /></AdminRoute>} />
 
                 <Route path="donations" element={<DonationList />} />
                 <Route path="donations/leaderboard" element={<DonationLeaderboard />} />
@@ -128,6 +146,13 @@ const AchievementSwitch = () => {
   // ADMIN = 1, SUPER_ADMIN = 2
   const isAdmin = user?.role === 1 || user?.role === 2;
   return isAdmin ? <AchievementList /> : <UserAchievements />;
+};
+
+const NewsSwitch = () => {
+  const { user } = useAuth();
+  // ADMIN = 1, SUPER_ADMIN = 2
+  const isAdmin = user?.role === 1 || user?.role === 2;
+  return isAdmin ? <NewsList /> : <NewsGallery />;
 };
 
 export default App;

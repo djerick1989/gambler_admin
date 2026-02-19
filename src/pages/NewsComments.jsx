@@ -87,7 +87,8 @@ const NewsComments = ({ newsId = null, onBack = null }) => {
                     {newsId && onBack && (
                         <button
                             onClick={onBack}
-                            style={{ background: 'rgba(255,255,255,0.05)', color: 'white', padding: '0.5rem', borderRadius: '0.5rem', border: 'none', cursor: 'pointer' }}
+                            className="btn btn-secondary"
+                            style={{ padding: '0.5rem', display: 'flex', alignItems: 'center', justifyContent: 'center' }}
                         >
                             <X size={20} />
                         </button>
@@ -114,11 +115,12 @@ const NewsComments = ({ newsId = null, onBack = null }) => {
                         style={{
                             width: '300px',
                             padding: '0.75rem 1rem 0.75rem 3rem',
-                            background: 'rgba(255,255,255,0.05)',
-                            border: '1px solid var(--glass-border)',
+                            background: 'white',
+                            border: '1px solid var(--stroke)',
                             borderRadius: '0.5rem',
-                            color: 'white',
-                            fontSize: '0.875rem'
+                            color: 'var(--text-main)',
+                            fontSize: '0.875rem',
+                            outline: 'none'
                         }}
                     />
                 </div>
@@ -155,7 +157,7 @@ const NewsComments = ({ newsId = null, onBack = null }) => {
                                                     width: '32px',
                                                     height: '32px',
                                                     borderRadius: '50%',
-                                                    background: comment.avatar ? `url(${comment.avatar}) center/cover` : 'rgba(255,255,255,0.1)',
+                                                    background: comment.avatar ? `url(${comment.avatar}) center/cover` : 'var(--bg-light)',
                                                     display: 'flex',
                                                     alignItems: 'center',
                                                     justifyContent: 'center',

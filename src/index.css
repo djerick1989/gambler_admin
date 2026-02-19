@@ -56,6 +56,26 @@ body {
   opacity: 0.9;
 }
 
+.btn-secondary {
+  background: #f1f5f9;
+  color: var(--text-main);
+  border: 1px solid var(--stroke);
+}
+
+.btn-secondary:hover {
+  background: #e2e8f0;
+}
+
+.btn-outline {
+  background: transparent;
+  border: 1px solid var(--stroke);
+  color: var(--text-main);
+}
+
+.btn-outline:hover {
+  background: var(--bg-light);
+}
+
 .input-group {
   margin-bottom: 1.25rem;
 }

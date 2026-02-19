@@ -120,14 +120,17 @@ const OnBoardingForm = () => {
                 <button
                     onClick={() => navigate('/onboarding')}
                     style={{
-                        background: 'rgba(255,255,255,0.05)',
-                        border: 'none',
-                        color: 'white',
+                        background: 'var(--bg-light)',
+                        border: '1px solid var(--stroke)',
+                        color: 'var(--text-main)',
                         padding: '0.5rem',
                         borderRadius: '0.5rem',
                         cursor: 'pointer',
-                        display: 'flex'
+                        display: 'flex',
+                        transition: 'all 0.2s'
                     }}
+                    onMouseOver={(e) => e.currentTarget.style.background = '#e2e8f0'}
+                    onMouseOut={(e) => e.currentTarget.style.background = 'var(--bg-light)'}
                 >
                     <ChevronLeft size={24} />
                 </button>
@@ -152,12 +155,13 @@ const OnBoardingForm = () => {
                                 width: '100%',
                                 minHeight: '150px',
                                 padding: '1rem',
-                                background: 'rgba(255,255,255,0.03)',
-                                border: '1px solid var(--glass-border)',
+                                background: 'white',
+                                border: '1px solid var(--stroke)',
                                 borderRadius: '0.5rem',
-                                color: 'white',
+                                color: 'var(--text-main)',
                                 fontSize: '1rem',
-                                resize: 'vertical'
+                                resize: 'vertical',
+                                outline: 'none'
                             }}
                         />
                     </div>
@@ -182,17 +186,17 @@ const OnBoardingForm = () => {
                                 style={{
                                     width: '100%',
                                     padding: '0.75rem 1rem',
-                                    background: 'rgba(255,255,255,0.03)',
-                                    border: '1px solid var(--glass-border)',
+                                    background: 'white',
+                                    border: '1px solid var(--stroke)',
                                     borderRadius: '0.5rem',
-                                    color: 'white',
+                                    color: 'var(--text-main)',
                                     fontSize: '1rem',
                                     outline: 'none',
                                     cursor: 'pointer'
                                 }}
                             >
-                                <option value={LANGUAGE_IDS.en} style={{ background: 'var(--bg-darker)' }}>English</option>
-                                <option value={LANGUAGE_IDS.es} style={{ background: 'var(--bg-darker)' }}>Español</option>
+                                <option value={LANGUAGE_IDS.en}>English</option>
+                                <option value={LANGUAGE_IDS.es}>Español</option>
                             </select>
                         </div>
                     </div>
@@ -202,8 +206,8 @@ const OnBoardingForm = () => {
                         <div
                             onClick={() => fileInputRef.current?.click()}
                             style={{
-                                background: 'rgba(255,255,255,0.02)',
-                                border: '1px dashed var(--glass-border)',
+                                background: 'var(--bg-light)',
+                                border: '1px dashed var(--stroke)',
                                 borderRadius: '0.5rem',
                                 padding: '2rem',
                                 textAlign: 'center',
@@ -216,8 +220,8 @@ const OnBoardingForm = () => {
                                 justifyContent: 'center',
                                 transition: 'all 0.3s ease'
                             }}
-                            onMouseOver={(e) => e.currentTarget.style.background = 'rgba(255,255,255,0.04)'}
-                            onMouseOut={(e) => e.currentTarget.style.background = 'rgba(255,255,255,0.02)'}
+                            onMouseOver={(e) => e.currentTarget.style.background = '#e2e8f0'}
+                            onMouseOut={(e) => e.currentTarget.style.background = 'var(--bg-light)'}
                         >
                             {isUploading ? (
                                 <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '1rem' }}>
@@ -258,7 +262,7 @@ const OnBoardingForm = () => {
                                         width: '64px',
                                         height: '64px',
                                         borderRadius: '50%',
-                                        background: 'rgba(255,255,255,0.05)',
+                                        background: 'rgba(0,0,0,0.05)',
                                         display: 'flex',
                                         alignItems: 'center',
                                         justifyContent: 'center',
@@ -286,8 +290,8 @@ const OnBoardingForm = () => {
                         <button
                             type="button"
                             onClick={() => navigate('/onboarding')}
-                            className="btn"
-                            style={{ flex: 1, background: 'rgba(255,255,255,0.05)', color: 'white', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '0.5rem' }}
+                            className="btn btn-secondary"
+                            style={{ flex: 1, display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '0.5rem' }}
                         >
                             <X size={20} /> {t('onboarding.form.cancel')}
                         </button>

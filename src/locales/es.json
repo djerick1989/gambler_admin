@@ -38,7 +38,10 @@
         "upload": "Subir",
         "save": "Guardar",
         "save_changes": "Guardar Cambios",
-        "back_to_donations": "Volver a Donaciones"
+        "back_to_donations": "Volver a Donaciones",
+        "back": "Volver",
+        "error_loading": "Error al cargar los datos",
+        "deleted_success": "Eliminado con éxito"
     },
     "posts": {
         "title": "Publicaciones de la Comunidad",
@@ -242,6 +245,22 @@
         "news_title": "Artículo",
         "comment_text": "Comentario",
         "no_comments": "No hay comentarios para esta selección."
+    },
+    "news": {
+        "gallery": {
+            "title": "Últimas Noticias",
+            "subtitle": "Explora nuestras actualizaciones e historias más recientes"
+        },
+        "comments": "Comentarios",
+        "read_more": "Leer más",
+        "comments_count": "Comentarios",
+        "comments_section": "Discusión",
+        "comment_placeholder": "Comparte tus pensamientos...",
+        "post_comment": "Publicar",
+        "no_comments_yet": "No hay comentarios aún. ¡Sé el primero en compartir!",
+        "must_login_comment": "Debes iniciar sesión para comentar",
+        "comment_success": "¡Comentario publicado con éxito!",
+        "comment_error": "Error al publicar el comentario"
     },
     "gambler_mgmt": {
         "title": "Gamblers",

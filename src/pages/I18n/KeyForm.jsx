@@ -19,13 +19,15 @@ const KeyForm = () => {
         key: '',
         translations: []
     });
+    const [namespaceName, setNamespaceName] = useState('...');
 
     useEffect(() => {
         fetchLanguages();
+        fetchNamespaceName();
         if (isEditing) {
             fetchKeyDetails();
         }
-    }, [keyId, isEditing]);
+    }, [keyId, isEditing, namespaceId]);
 
     const fetchLanguages = async () => {
         try {
@@ -33,6 +35,17 @@ const KeyForm = () => {
             if (response.status) setLanguages(response.data);
         } catch (err) {
             console.error("Error fetching languages:", err);
+        }
+    };
+
+    const fetchNamespaceName = async () => {
+        try {
+            const response = await i18nService.getNamespaceById(namespaceId);
+            if (response.status && response.data) {
+                setNamespaceName(response.data.name);
+            }
+        } catch (err) {
+            console.error("Error fetching namespace name:", err);
         }
     };
 
@@ -124,8 +137,8 @@ const KeyForm = () => {
             <div style={{ display: 'flex', alignItems: 'center', gap: '1rem', marginBottom: '2rem' }}>
                 <button
                     onClick={() => navigate(`/i18n/namespace/${namespaceId}`)}
-                    className="btn"
-                    style={{ background: 'rgba(255,255,255,0.05)', color: 'white', padding: '0.5rem' }}
+                    className="btn btn-secondary"
+                    style={{ padding: '0.5rem', display: 'flex', alignItems: 'center', justifyContent: 'center' }}
                 >
                     <ChevronLeft size={24} />
                 </button>
@@ -133,7 +146,7 @@ const KeyForm = () => {
                     <h1 style={{ fontSize: '1.875rem', fontWeight: '800' }}>
                         {isEditing ? t('i18n.edit_key') : t('i18n.add_key')}
                     </h1>
-                    <p style={{ color: 'var(--text-muted)' }}>{t('i18n.keys_subtitle', { name: '...' })}</p>
+                    <p style={{ color: 'var(--text-muted)' }}>{t('i18n.keys_subtitle', { name: namespaceName })}</p>
                 </div>
             </div>
 
@@ -182,7 +195,7 @@ const KeyForm = () => {
                                                 value={tr.languageId}
                                                 onChange={(e) => handleUpdateTranslation(index, 'languageId', e.target.value)}
                                                 style={{
-                                                    background: 'transparent', border: 'none', color: 'white',
+                                                    background: 'transparent', border: 'none', color: 'var(--text-main)',
                                                     fontWeight: 'bold', fontSize: '1rem', outline: 'none', cursor: 'pointer'
                                                 }}
                                             >
@@ -190,7 +203,7 @@ const KeyForm = () => {
                                                     <option
                                                         key={lang.languageId}
                                                         value={lang.languageId}
-                                                        style={{ background: '#1a1a2e', color: 'white' }}
+                                                        style={{ background: 'white', color: 'var(--text-main)' }}
                                                         disabled={formData.translations.some((t, i) => i !== index && t.languageId === lang.languageId)}
                                                     >
                                                         {lang.name} ({lang.code})
@@ -212,8 +225,9 @@ const KeyForm = () => {
                                             placeholder="Enter translation text..."
                                             style={{
                                                 width: '100%', minHeight: '80px', padding: '0.75rem',
-                                                background: 'rgba(255,255,255,0.03)', border: '1px solid var(--glass-border)',
-                                                borderRadius: '0.5rem', color: 'white', resize: 'vertical'
+                                                background: 'white', border: '1px solid var(--stroke)',
+                                                borderRadius: '0.5rem', color: 'var(--text-main)', resize: 'vertical',
+                                                outline: 'none'
                                             }}
                                         />
                                     </div>
@@ -226,8 +240,8 @@ const KeyForm = () => {
                         <button
                             type="button"
                             onClick={() => navigate(`/i18n/namespace/${namespaceId}`)}
-                            className="btn"
-                            style={{ flex: 1, background: 'rgba(255,255,255,0.05)', color: 'white', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '0.5rem' }}
+                            className="btn btn-secondary"
+                            style={{ flex: 1, display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '0.5rem' }}
                         >
                             <X size={20} /> {t('onboarding.form.cancel')}
                         </button>

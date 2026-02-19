@@ -168,14 +168,17 @@ const NewsForm = () => {
                 <button
                     onClick={() => navigate('/news')}
                     style={{
-                        background: 'rgba(255,255,255,0.05)',
-                        border: 'none',
-                        color: 'white',
+                        background: 'var(--bg-light)',
+                        border: '1px solid var(--stroke)',
+                        color: 'var(--text-main)',
                         padding: '0.5rem',
                         borderRadius: '0.5rem',
                         cursor: 'pointer',
-                        display: 'flex'
+                        display: 'flex',
+                        transition: 'all 0.2s'
                     }}
+                    onMouseOver={(e) => e.currentTarget.style.background = '#e2e8f0'}
+                    onMouseOut={(e) => e.currentTarget.style.background = 'var(--bg-light)'}
                 >
                     <ChevronLeft size={24} />
                 </button>
@@ -206,13 +209,13 @@ const NewsForm = () => {
                             <label>{t('news_mgmt.form.content')}</label>
                             <div style={{ background: 'rgba(255,255,255,0.02)', borderRadius: '0.5rem', border: '1px solid var(--glass-border)', overflow: 'hidden' }}>
                                 <style>{`
-                                    .ql-toolbar.ql-snow { border: none; border-bottom: 1px solid var(--glass-border); background: rgba(255,255,255,0.05); }
-                                    .ql-container.ql-snow { border: none; min-height: 400px; font-size: 1rem; color: white; }
+                                    .ql-toolbar.ql-snow { border: none; border-bottom: 1px solid var(--stroke); background: #f8fafc; }
+                                    .ql-container.ql-snow { border: none; min-height: 400px; font-size: 1rem; color: var(--text-main); }
                                     .ql-editor.ql-blank::before { color: var(--text-muted); }
-                                    .ql-snow .ql-stroke { stroke: #e2e8f0; }
-                                    .ql-snow .ql-fill { fill: #e2e8f0; }
-                                    .ql-snow .ql-picker { color: #e2e8f0; }
-                                    .ql-snow .ql-picker-options { background-color: var(--bg-darker); border-color: var(--glass-border); }
+                                    .ql-snow .ql-stroke { stroke: var(--text-main); }
+                                    .ql-snow .ql-fill { fill: var(--text-main); }
+                                    .ql-snow .ql-picker { color: var(--text-main); }
+                                    .ql-snow .ql-picker-options { background-color: white; border-color: var(--stroke); }
                                 `}</style>
                                 <ReactQuill
                                     ref={quillRef}
@@ -238,14 +241,14 @@ const NewsForm = () => {
                                 style={{
                                     width: '100%',
                                     padding: '0.75rem',
-                                    background: 'rgba(255,255,255,0.03)',
-                                    border: '1px solid var(--glass-border)',
+                                    background: 'white',
+                                    border: '1px solid var(--stroke)',
                                     borderRadius: '0.5rem',
-                                    color: 'white'
+                                    color: 'var(--text-main)'
                                 }}
                             >
-                                <option value={LANGUAGE_IDS.en} style={{ background: 'var(--bg-darker)' }}>English</option>
-                                <option value={LANGUAGE_IDS.es} style={{ background: 'var(--bg-darker)' }}>Español</option>
+                                <option value={LANGUAGE_IDS.en}>English</option>
+                                <option value={LANGUAGE_IDS.es}>Español</option>
                             </select>
                         </div>
 

@@ -250,14 +250,15 @@ const Namespaces = () => {
                                     onChange={(e) => setFormData({ ...formData, description: e.target.value })}
                                     style={{
                                         width: '100%', minHeight: '100px', padding: '0.75rem',
-                                        background: 'rgba(255,255,255,0.03)', border: '1px solid var(--glass-border)',
-                                        borderRadius: '0.5rem', color: 'white'
+                                        background: 'white', border: '1px solid var(--stroke)',
+                                        borderRadius: '0.5rem', color: 'var(--text-main)',
+                                        outline: 'none'
                                     }}
                                 />
                             </div>
 
                             <div style={{ display: 'flex', gap: '1rem', marginTop: '2rem' }}>
-                                <button type="button" onClick={handleCloseModal} className="btn" style={{ flex: 1, background: 'rgba(255,255,255,0.05)', color: 'white' }}>
+                                <button type="button" onClick={handleCloseModal} className="btn btn-secondary" style={{ flex: 1 }}>
                                     {t('onboarding.form.cancel')}
                                 </button>
                                 <button type="submit" className="btn btn-primary" style={{ flex: 1, display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '0.5rem' }} disabled={isSaving}>

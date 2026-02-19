@@ -81,14 +81,17 @@ const PaymentPlatformForm = () => {
                 <button
                     onClick={() => navigate('/payment-platforms')}
                     style={{
-                        background: 'rgba(255,255,255,0.05)',
-                        border: 'none',
-                        color: 'white',
+                        background: 'var(--bg-light)',
+                        border: '1px solid var(--stroke)',
+                        color: 'var(--text-main)',
                         padding: '0.5rem',
                         borderRadius: '0.5rem',
                         cursor: 'pointer',
-                        display: 'flex'
+                        display: 'flex',
+                        transition: 'all 0.2s'
                     }}
+                    onMouseOver={(e) => e.currentTarget.style.background = '#e2e8f0'}
+                    onMouseOut={(e) => e.currentTarget.style.background = 'var(--bg-light)'}
                 >
                     <ChevronLeft size={24} />
                 </button>
@@ -148,12 +151,13 @@ const PaymentPlatformForm = () => {
                                 width: '100%',
                                 minHeight: '120px',
                                 padding: '1rem',
-                                background: 'rgba(255,255,255,0.03)',
-                                border: '1px solid var(--glass-border)',
+                                background: 'white',
+                                border: '1px solid var(--stroke)',
                                 borderRadius: '0.5rem',
-                                color: 'white',
+                                color: 'var(--text-main)',
                                 fontSize: '1rem',
-                                resize: 'vertical'
+                                resize: 'vertical',
+                                outline: 'none'
                             }}
                         />
                     </div>
@@ -174,8 +178,8 @@ const PaymentPlatformForm = () => {
                         <button
                             type="button"
                             onClick={() => navigate('/payment-platforms')}
-                            className="btn"
-                            style={{ flex: 1, background: 'rgba(255,255,255,0.05)', color: 'white', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '0.5rem' }}
+                            className="btn btn-secondary"
+                            style={{ flex: 1, display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '0.5rem' }}
                         >
                             <X size={20} /> {t('common.cancel')}
                         </button>

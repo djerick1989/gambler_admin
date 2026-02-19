@@ -164,8 +164,8 @@ const AchievementForm = () => {
             <div style={{ display: 'flex', alignItems: 'center', gap: '1rem', marginBottom: '2rem' }}>
                 <button
                     onClick={() => navigate('/achievements')}
-                    className="btn"
-                    style={{ background: 'rgba(255,255,255,0.05)', color: 'white', padding: '0.5rem' }}
+                    className="btn btn-secondary"
+                    style={{ padding: '0.5rem', display: 'flex', alignItems: 'center', justifyContent: 'center' }}
                 >
                     <ChevronLeft size={24} />
                 </button>
@@ -185,8 +185,8 @@ const AchievementForm = () => {
                                 width: '100%',
                                 height: '200px',
                                 borderRadius: '0.5rem',
-                                background: 'rgba(255,255,255,0.02)',
-                                border: '1px dashed var(--glass-border)',
+                                background: '#f8fafc',
+                                border: '1px dashed var(--stroke)',
                                 display: 'flex',
                                 alignItems: 'center',
                                 justifyContent: 'center',
@@ -238,8 +238,8 @@ const AchievementForm = () => {
                                 width: '100%',
                                 height: '200px',
                                 borderRadius: '0.5rem',
-                                background: 'rgba(255,255,255,0.02)',
-                                border: '1px dashed var(--glass-border)',
+                                background: '#f8fafc',
+                                border: '1px dashed var(--stroke)',
                                 display: 'flex',
                                 alignItems: 'center',
                                 justifyContent: 'center',
@@ -337,7 +337,7 @@ const AchievementForm = () => {
                         {saving ? <Loader2 size={18} className="animate-spin" /> : <Save size={18} />}
                         {isEdit ? (t('common.save_changes') || 'Save Changes') : (t('common.create') || 'Create Achievement')}
                     </button>
-                    <button type="button" onClick={() => navigate('/achievements')} className="btn" style={{ background: 'rgba(255,255,255,0.05)', color: 'white', flex: 1 }}>
+                    <button type="button" onClick={() => navigate('/achievements')} className="btn btn-secondary" style={{ flex: 1 }}>
                         {t('common.cancel') || 'Cancel'}
                     </button>
                 </div>

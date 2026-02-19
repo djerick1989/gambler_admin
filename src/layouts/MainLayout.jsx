@@ -48,6 +48,7 @@ const SidebarLink = ({ to, icon: Icon, label, active, onClick, badge }) => (
 const MainLayout = () => {
     const { t, i18n } = useTranslation();
     const [sidebarOpen, setSidebarOpen] = useState(true);
+    const [userMenuOpen, setUserMenuOpen] = useState(false);
     const { user, logout } = useAuth();
     const { notifications, removeToast } = useNotification();
     const { setActiveChatId, totalUnreadCount } = useChat();
@@ -78,20 +79,23 @@ const MainLayout = () => {
     };
 
     const menuItems = [
-        { path: '/', label: t('common.dashboard'), icon: LayoutDashboard },
-        { path: '/language', label: t('common.language'), icon: Languages },
-        { path: '/onboarding', label: t('common.onboarding'), icon: UserCheck },
-        { path: '/i18n', label: t('common.i18n'), icon: Globe },
-        { path: '/news', label: t('common.news'), icon: Newspaper },
+        { path: '/', label: t('common.dashboard'), icon: LayoutDashboard, roles: [1, 2] },
+        { path: '/language', label: t('common.language'), icon: Languages, roles: [1, 2] },
+        { path: '/onboarding', label: t('common.onboarding'), icon: UserCheck, roles: [1, 2] },
+        { path: '/i18n', label: t('common.i18n'), icon: Globe, roles: [1, 2] },
         { path: '/posts', label: t('common.posts') || 'Posts', icon: FileText },
         { path: '/chat', label: t('common.chat') || 'Chat', icon: MessageSquare },
-        { path: '/media', label: t('media_mgmt.title') || 'Media', icon: Image },
+        { path: '/news', label: t('common.news'), icon: Newspaper },
+        { path: '/media', label: t('media_mgmt.title') || 'Media', icon: Image, roles: [1, 2] },
         { path: '/achievements', label: t('achievements.title') || 'Achievements', icon: Award },
         { path: '/donations', label: t('donations.title') || 'Donations', icon: CreditCard },
-        { path: '/payment-platforms', label: t('payment_platforms.title') || 'Payment Platforms', icon: CreditCard },
-        { path: '/gamblers', label: t('gambler_mgmt.title'), icon: UserCheck },
-        { path: '/profile', label: t('common.profile'), icon: User },
+        { path: '/payment-platforms', label: t('payment_platforms.title') || 'Payment Platforms', icon: CreditCard, roles: [1, 2] },
+        { path: '/gamblers', label: t('gambler_mgmt.title'), icon: UserCheck, roles: [1, 2] },
     ];
+
+    const filteredMenuItems = menuItems.filter(item =>
+        !item.roles || item.roles.includes(user?.role)
+    );
 
     return (
         <div style={{ display: 'flex', minHeight: '100vh', background: 'var(--bg-light)' }}>
@@ -106,7 +110,10 @@ const MainLayout = () => {
                 borderRadius: 0,
                 display: 'flex',
                 flexDirection: 'column',
-                zIndex: 50
+                zIndex: 50,
+                position: 'sticky',
+                top: 0,
+                height: '100vh'
             }}>
                 <div style={{ padding: '2rem 1.5rem', display: 'flex', alignItems: 'center', gap: '0.75rem' }}>
                     <img
@@ -117,8 +124,33 @@ const MainLayout = () => {
                     <span style={{ fontSize: '1.25rem', fontWeight: '800', color: 'var(--text-main)' }}>{t('sidebar.title')}</span>
                 </div>
 
-                <nav style={{ flex: 1, padding: '1rem' }}>
-                    {menuItems.map(item => (
+                <nav className="sidebar-nav" style={{ flex: 1, padding: '1rem', overflowY: 'auto' }}>
+                    <style>{`
+                        .sidebar-nav::-webkit-scrollbar {
+                            width: 4px;
+                        }
+                        .sidebar-nav::-webkit-scrollbar-track {
+                            background: transparent;
+                        }
+                        .sidebar-nav::-webkit-scrollbar-thumb {
+                            background: transparent;
+                            border-radius: 10px;
+                            transition: background 0.3s;
+                        }
+                        .sidebar-nav:hover::-webkit-scrollbar-thumb {
+                            background: rgba(0, 0, 0, 0.1);
+                        }
+                        /* Firefox */
+                        .sidebar-nav {
+                            scrollbar-width: thin;
+                            scrollbar-color: transparent transparent;
+                            transition: scrollbar-color 0.3s;
+                        }
+                        .sidebar-nav:hover {
+                            scrollbar-color: rgba(0, 0, 0, 0.1) transparent;
+                        }
+                    `}</style>
+                    {filteredMenuItems.map(item => (
                         <SidebarLink
                             key={item.path}
                             {...item}
@@ -128,29 +160,6 @@ const MainLayout = () => {
                         />
                     ))}
                 </nav>
-
-                <div style={{ padding: '1rem', borderTop: '1px solid var(--glass-border)' }}>
-                    <button
-                        onClick={handleLogout}
-                        style={{
-                            display: 'flex',
-                            alignItems: 'center',
-                            width: '100%',
-                            padding: '0.75rem',
-                            color: 'var(--danger)',
-                            background: 'transparent',
-                            border: 'none',
-                            cursor: 'pointer',
-                            borderRadius: '0.5rem',
-                            transition: 'background 0.2s'
-                        }}
-                        onMouseOver={(e) => e.currentTarget.style.background = 'rgba(239, 68, 68, 0.1)'}
-                        onMouseOut={(e) => e.currentTarget.style.background = 'transparent'}
-                    >
-                        <LogOut size={20} style={{ marginRight: '0.75rem' }} />
-                        <span>{t('common.logout')}</span>
-                    </button>
-                </div>
             </div>
 
             {/* Main Content */}
@@ -211,7 +220,7 @@ const MainLayout = () => {
                         </div>
                     </div>
 
-                    <div style={{ display: 'flex', alignItems: 'center', gap: '1.5rem' }}>
+                    <div style={{ display: 'flex', alignItems: 'center', gap: '1.5rem', position: 'relative' }}>
                         <Link
                             to="/notifications"
                             style={{
@@ -236,16 +245,101 @@ const MainLayout = () => {
                             )}
                         </Link>
 
-                        <div style={{ textAlign: 'right' }}>
-                            <div style={{ fontSize: '0.875rem', fontWeight: '600' }}>{user?.nickName || user?.name || t('common.admin')}</div>
-                            <div style={{ fontSize: '0.75rem', color: 'var(--text-muted)' }}>{getRoleName(user?.role)}</div>
+                        <div
+                            onClick={() => setUserMenuOpen(!userMenuOpen)}
+                            style={{
+                                display: 'flex',
+                                alignItems: 'center',
+                                gap: '1rem',
+                                cursor: 'pointer',
+                                padding: '0.5rem',
+                                borderRadius: '0.75rem',
+                                transition: 'all 0.2s',
+                                background: userMenuOpen ? 'rgba(0,0,0,0.03)' : 'transparent'
+                            }}
+                        >
+                            <div style={{ textAlign: 'right', display: 'block' }}>
+                                <div style={{ fontSize: '0.875rem', fontWeight: '600' }}>{user?.nickName || user?.name || t('common.admin')}</div>
+                                <div style={{ fontSize: '0.75rem', color: 'var(--text-muted)' }}>{getRoleName(user?.role)}</div>
+                            </div>
+                            <div style={{
+                                width: '40px',
+                                height: '40px',
+                                borderRadius: '50%',
+                                background: user?.avatar ? `url(${user.avatar}) center/cover` : 'linear-gradient(45deg, var(--primary), var(--accent))',
+                                border: '2px solid var(--bg-white)',
+                                boxShadow: '0 2px 4px rgba(0,0,0,0.1)'
+                            }}></div>
                         </div>
-                        <div style={{
-                            width: '40px',
-                            height: '40px',
-                            borderRadius: '50%',
-                            background: user?.avatar ? `url(${user.avatar}) center/cover` : 'linear-gradient(45deg, var(--primary), var(--accent))'
-                        }}></div>
+
+                        {userMenuOpen && (
+                            <>
+                                <div
+                                    onClick={() => setUserMenuOpen(false)}
+                                    style={{ position: 'fixed', top: 0, left: 0, right: 0, bottom: 0, zIndex: 90 }}
+                                />
+                                <div className="glass-card animate-fade-in" style={{
+                                    position: 'absolute',
+                                    top: '100%',
+                                    right: 0,
+                                    marginTop: '0.5rem',
+                                    width: '240px',
+                                    zIndex: 100,
+                                    padding: '0.5rem',
+                                    boxShadow: '0 10px 15px -3px rgba(0, 0, 0, 0.1)',
+                                    animation: 'fadeIn 0.2s ease-out'
+                                }}>
+                                    <div style={{ padding: '0.75rem 1rem', borderBottom: '1px solid var(--stroke)', marginBottom: '0.5rem' }}>
+                                        <div style={{ fontWeight: 'bold', fontSize: '0.9rem' }}>{user?.nickName}</div>
+                                        <div style={{ fontSize: '0.75rem', color: 'var(--text-muted)' }}>{user?.email}</div>
+                                    </div>
+
+                                    <Link
+                                        to="/profile"
+                                        onClick={() => setUserMenuOpen(false)}
+                                        style={{
+                                            display: 'flex',
+                                            alignItems: 'center',
+                                            padding: '0.75rem 1rem',
+                                            color: 'var(--text-main)',
+                                            textDecoration: 'none',
+                                            borderRadius: '0.5rem',
+                                            transition: 'background 0.2s'
+                                        }}
+                                        onMouseOver={(e) => e.currentTarget.style.background = '#f1f5f9'}
+                                        onMouseOut={(e) => e.currentTarget.style.background = 'transparent'}
+                                    >
+                                        <User size={18} style={{ marginRight: '0.75rem' }} />
+                                        <span>{t('common.profile')}</span>
+                                    </Link>
+
+                                    <button
+                                        onClick={() => {
+                                            setUserMenuOpen(false);
+                                            handleLogout();
+                                        }}
+                                        style={{
+                                            display: 'flex',
+                                            alignItems: 'center',
+                                            width: '100%',
+                                            padding: '0.75rem 1rem',
+                                            color: 'var(--danger)',
+                                            background: 'transparent',
+                                            border: 'none',
+                                            cursor: 'pointer',
+                                            borderRadius: '0.5rem',
+                                            transition: 'background 0.2s',
+                                            textAlign: 'left'
+                                        }}
+                                        onMouseOver={(e) => e.currentTarget.style.background = 'rgba(239, 68, 68, 0.1)'}
+                                        onMouseOut={(e) => e.currentTarget.style.background = 'transparent'}
+                                    >
+                                        <LogOut size={18} style={{ marginRight: '0.75rem' }} />
+                                        <span>{t('common.logout')}</span>
+                                    </button>
+                                </div>
+                            </>
+                        )}
                     </div>
                 </header>
 
@@ -264,7 +358,7 @@ const MainLayout = () => {
                     `}
                 </style>
             </div>
-        </div>
+        </div >
     );
 };
 
