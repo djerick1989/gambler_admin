@@ -4,8 +4,9 @@ import ReactQuill from 'react-quill-new';
 import 'react-quill-new/dist/quill.snow.css';
 import {
     ChevronLeft, Loader2, Image as ImageIcon,
-    Save, X, Type, Video, Plus, Globe
+    Save, X, Type, Video, Plus, Globe, Smile
 } from 'lucide-react';
+import EmojiPicker, { Theme as EmojiTheme } from 'emoji-picker-react';
 import {
     DndContext,
     closestCenter,
@@ -114,6 +115,7 @@ const PostForm = ({ id: propId, onSuccess, autoOpenMedia }) => {
         languageId: '',
         postMediaList: []
     });
+    const [showEmojiPicker, setShowEmojiPicker] = useState(false);
 
     const isAdmin = user?.role === 1 || user?.role === 2;
 
@@ -255,6 +257,14 @@ const PostForm = ({ id: propId, onSuccess, autoOpenMedia }) => {
         }
     }), []);
 
+    const onEmojiClick = (emojiData) => {
+        const quill = quillRef.current.getEditor();
+        const range = quill.getSelection(true);
+        quill.insertText(range.index, emojiData.emoji);
+        quill.setSelection(range.index + 2); // Emojis are usually 2 chars in length for selection
+        setShowEmojiPicker(false);
+    };
+
     const handleSubmit = async (e) => {
         e.preventDefault();
 
@@ -348,24 +358,101 @@ const PostForm = ({ id: propId, onSuccess, autoOpenMedia }) => {
                 <div style={{ display: 'flex', flexDirection: 'column', gap: '1.5rem' }}>
                     <div className={isModal ? "" : "glass-card"} style={{ padding: isModal ? '0' : '1.5rem' }}>
 
-                        <div className="input-group" style={{ marginBottom: 0 }}>
-                            <div style={{ background: '#FFFFFF', borderRadius: '0.5rem', border: '1px solid var(--stroke)', overflow: 'hidden' }}>
+                        <div className="input-group" style={{ marginBottom: 0, position: 'relative' }}>
+                            <div style={{ background: '#FFFFFF', borderRadius: '0.5rem', border: '1px solid var(--stroke)' }}>
                                 <style>{`
-                                    .ql-toolbar.ql-snow { border: none; border-bottom: 1px solid var(--stroke); background: #f8fafc; }
+                                    .ql-toolbar.ql-snow { border: none; border-bottom: 1px solid var(--stroke); background: #f8fafc; display: flex; align-items: center; flex-wrap: wrap; }
                                     .ql-container.ql-snow { border: none; min-height: 200px; font-size: 1rem; color: var(--text-main); }
                                     .ql-editor.ql-blank::before { color: var(--text-muted); font-style: normal; }
                                     .ql-snow .ql-stroke { stroke: var(--text-main); }
                                     .ql-snow .ql-fill { fill: var(--text-main); }
                                     .ql-snow .ql-picker { color: var(--text-main); }
+                                    /* Fix emoji picker search input conflict with global styles */
+                                    .EmojiPickerReact .epr-search-container {
+                                        padding: 10px !important;
+                                        display: flex !important;
+                                        align-items: center !important;
+                                    }
+                                    .EmojiPickerReact input.epr-search {
+                                        padding: 0 12px !important;
+                                        margin: 0 !important;
+                                        border: 1px solid var(--stroke) !important;
+                                        background: var(--bg-white) !important;
+                                        border-radius: 8px !important;
+                                        height: 36px !important;
+                                        width: 100% !important;
+                                        box-shadow: none !important;
+                                    }
+                                    .EmojiPickerReact .epr-icn-search {
+                                        display: none !important;
+                                    }
+                                    /* Reset emoji button distortions */
+                                    .EmojiPickerReact button {
+                                        background: transparent !important;
+                                        box-shadow: none !important;
+                                        border-radius: 0 !important;
+                                        width: auto !important;
+                                        height: auto !important;
+                                        padding: 0 !important;
+                                    }
+                                    .EmojiPickerReact button:hover {
+                                        background: #f1f5f9 !important;
+                                        transform: none !important;
+                                    }
                                 `}</style>
-                                <ReactQuill
-                                    ref={quillRef}
-                                    theme="snow"
-                                    value={formData.contentHtml}
-                                    onChange={(content) => setFormData({ ...formData, contentHtml: content })}
-                                    modules={modules}
-                                    placeholder={t('posts.placeholder') || 'What story do you want to tell today?'}
-                                />
+                                <div style={{ position: 'relative' }}>
+                                    <ReactQuill
+                                        ref={quillRef}
+                                        theme="snow"
+                                        value={formData.contentHtml}
+                                        onChange={(content) => setFormData({ ...formData, contentHtml: content })}
+                                        modules={modules}
+                                        placeholder={t('posts.placeholder') || 'What story do you want to tell today?'}
+                                    />
+                                    <button
+                                        type="button"
+                                        onClick={() => setShowEmojiPicker(!showEmojiPicker)}
+                                        style={{
+                                            position: 'absolute',
+                                            top: '8px',
+                                            right: '12px',
+                                            background: showEmojiPicker ? 'var(--primary)' : '#f1f5f9',
+                                            color: showEmojiPicker ? 'white' : 'var(--text-muted)',
+                                            border: '1px solid var(--stroke)',
+                                            borderRadius: '0.4rem',
+                                            padding: '4px',
+                                            cursor: 'pointer',
+                                            zIndex: 10,
+                                            display: 'flex',
+                                            alignItems: 'center',
+                                            justifyContent: 'center',
+                                            transition: 'all 0.2s'
+                                        }}
+                                        title="Emojis"
+                                    >
+                                        <Smile size={20} />
+                                    </button>
+
+                                    {showEmojiPicker && (
+                                        <div style={{
+                                            position: 'absolute',
+                                            top: '45px',
+                                            right: '0',
+                                            zIndex: 999999,
+                                            boxShadow: '0 10px 25px -5px rgba(0, 0, 0, 0.2)',
+                                            borderRadius: '8px',
+                                            overflow: 'hidden'
+                                        }}>
+                                            <EmojiPicker
+                                                onEmojiClick={onEmojiClick}
+                                                autoFocusSearch={false}
+                                                theme={EmojiTheme.LIGHT}
+                                                width={320}
+                                                height={400}
+                                            />
+                                        </div>
+                                    )}
+                                </div>
                             </div>
                         </div>
                     </div>

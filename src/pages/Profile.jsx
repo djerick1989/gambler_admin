@@ -14,7 +14,7 @@ import { countries } from '../utils/countries';
 
 const Profile = () => {
     const { t } = useTranslation();
-    const { user } = useAuth();
+    const { user, fetchUser } = useAuth();
 
     const [gambler, setGambler] = useState(null);
     const [languages, setLanguages] = useState([]);
@@ -106,6 +106,7 @@ const Profile = () => {
             };
             const response = await gamblerService.updateGambler(updateData);
             if (response.status) {
+                await fetchUser();
                 alert(t('profile.success_update'));
             }
         } catch (err) {
@@ -128,6 +129,7 @@ const Profile = () => {
             };
             const response = await gamblerService.updateGamblerConfiguration(configData);
             if (response.status) {
+                await fetchUser();
                 alert(t('profile.success_update'));
             }
         } catch (err) {
@@ -148,6 +150,7 @@ const Profile = () => {
             };
             const response = await gamblerService.updateNotificationConfiguration(notifData);
             if (response.status) {
+                await fetchUser();
                 alert(t('profile.success_update'));
             }
         } catch (err) {

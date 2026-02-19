@@ -16,6 +16,7 @@
     "@microsoft/signalr": "^10.0.0",
     "axios": "^1.13.2",
     "chart.js": "^4.5.1",
+    "emoji-picker-react": "^4.18.0",
     "i18next": "^25.8.0",
     "i18next-browser-languagedetector": "^8.2.0",
     "lucide-react": "^0.562.0",

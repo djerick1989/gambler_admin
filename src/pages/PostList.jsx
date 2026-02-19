@@ -222,8 +222,9 @@ const PostList = () => {
                                 disabled={loadingMore}
                                 className="btn"
                                 style={{
-                                    background: 'rgba(255,255,255,0.05)',
-                                    color: 'white',
+                                    background: '#f1f5f9',
+                                    color: 'var(--text-main)',
+                                    border: '1px solid var(--stroke)',
                                     padding: '0.75rem 2rem',
                                     display: 'flex',
                                     alignItems: 'center',

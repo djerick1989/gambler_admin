@@ -47,15 +47,15 @@ const Modal = ({ isOpen, onClose, title, children, maxWidth = '600px' }) => {
             `}</style>
             <div
                 style={{
-                    background: 'linear-gradient(135deg, #0f172a 0%, #1e293b 100%)',
-                    border: '1px solid rgba(255, 255, 255, 0.1)',
+                    background: 'var(--bg-white)',
+                    border: '1px solid var(--stroke)',
                     borderRadius: '1.25rem',
                     width: '100%',
                     maxWidth: maxWidth,
                     maxHeight: '90vh',
                     display: 'flex',
                     flexDirection: 'column',
-                    boxShadow: '0 25px 50px -12px rgba(0, 0, 0, 0.5)',
+                    boxShadow: '0 25px 50px -12px rgba(0, 0, 0, 0.15)',
                     overflow: 'hidden',
                     animation: 'modalScaleIn 0.3s ease-out'
                 }}
@@ -64,17 +64,17 @@ const Modal = ({ isOpen, onClose, title, children, maxWidth = '600px' }) => {
                 {/* Header */}
                 <div style={{
                     padding: '1.25rem 1.75rem',
-                    borderBottom: '1px solid rgba(255, 255, 255, 0.1)',
+                    borderBottom: '1px solid var(--stroke)',
                     display: 'flex',
                     justifyContent: 'space-between',
                     alignItems: 'center',
-                    background: 'rgba(255, 255, 255, 0.02)'
+                    background: 'var(--bg-light)'
                 }}>
                     <h2 style={{
                         margin: 0,
                         fontSize: '1.25rem',
                         fontWeight: '700',
-                        color: 'white',
+                        color: 'var(--text-main)',
                         letterSpacing: '-0.025em'
                     }}>
                         {title}
@@ -82,7 +82,7 @@ const Modal = ({ isOpen, onClose, title, children, maxWidth = '600px' }) => {
                     <button
                         onClick={onClose}
                         style={{
-                            background: 'rgba(255, 255, 255, 0.05)',
+                            background: '#f1f5f9',
                             border: 'none',
                             borderRadius: '0.5rem',
                             padding: '0.5rem',
@@ -94,11 +94,11 @@ const Modal = ({ isOpen, onClose, title, children, maxWidth = '600px' }) => {
                             transition: 'all 0.2s'
                         }}
                         onMouseEnter={(e) => {
-                            e.currentTarget.style.background = 'rgba(239, 68, 68, 0.2)';
+                            e.currentTarget.style.background = 'rgba(239, 68, 68, 0.1)';
                             e.currentTarget.style.color = '#ef4444';
                         }}
                         onMouseLeave={(e) => {
-                            e.currentTarget.style.background = 'rgba(255, 255, 255, 0.05)';
+                            e.currentTarget.style.background = '#f1f5f9';
                             e.currentTarget.style.color = 'var(--text-muted)';
                         }}
                     >

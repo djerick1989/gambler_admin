@@ -178,16 +178,29 @@ const PostCard = ({ post, onEdit, onDelete }) => {
     };
 
     const formatDate = (dateString) => {
-        const date = new Date(dateString);
+        if (!dateString) return "";
+
+        // Ensure the date is treated as UTC if it doesn't have a timezone suffix
+        const normalizedDate = dateString.endsWith('Z') || dateString.includes('+')
+            ? dateString
+            : `${dateString.replace(' ', 'T')}Z`;
+
+        const date = new Date(normalizedDate);
         const now = new Date();
         const diffInSeconds = Math.floor((now - date) / 1000);
         const lang = i18n.language.substring(0, 2).toLowerCase();
         const isEs = lang === 'es';
 
+        // Handle future dates (clock skew)
+        if (diffInSeconds < 0) {
+            if (isEs) return 'Recién ahora';
+            return 'Just now';
+        }
+
         if (diffInSeconds < 60) {
             const val = Math.max(1, Math.floor(diffInSeconds));
-            if (isEs) return `Hace ${val} ${val === 1 ? 'minuto' : 'minutos'}`;
-            return `${val} ${val === 1 ? 'minute' : 'minutes'} ago`;
+            if (isEs) return `Hace ${val} ${val === 1 ? 'segundo' : 'segundos'}`;
+            return `${val} ${val === 1 ? 'second' : 'seconds'} ago`;
         }
 
         const diffInMinutes = Math.floor(diffInSeconds / 60);
@@ -235,29 +248,20 @@ const PostCard = ({ post, onEdit, onDelete }) => {
         return tmp.textContent || tmp.innerText || "";
     };
 
+    // Replace &nbsp; (non-breaking spaces inserted by Quill) with regular spaces
+    // so the browser can wrap text naturally at word boundaries.
+    const sanitizeHtml = (html) => {
+        if (!html) return "";
+        return html.replace(/&nbsp;/g, ' ');
+    };
+
     // Extract content from postTranslations if available (nested structure)
     // Otherwise fallback to post.contentHtml or post.content
     const translationContent = post.postTranslations?.[0]?.contentHtml;
-    const rawContent = translationContent || post.contentHtml || post.content || "";
+    const rawContent = sanitizeHtml(translationContent || post.contentHtml || post.content || "");
 
     const contentText = stripHtml(rawContent);
     const shouldTruncate = contentText.length > 200;
-
-    let displayedContent = rawContent;
-
-    if (shouldTruncate && !isExpanded) {
-        // Simple truncation that avoids breaking in the middle of a tag if possible
-        const previewSize = 300;
-        const truncated = rawContent.substring(0, previewSize);
-        const lastTagOpen = truncated.lastIndexOf('<');
-        const lastTagClose = truncated.lastIndexOf('>');
-
-        if (lastTagOpen > lastTagClose) {
-            displayedContent = rawContent.substring(0, lastTagOpen) + '...';
-        } else {
-            displayedContent = truncated + '...';
-        }
-    }
 
     return (
         <div ref={cardRef} className="glass-card" style={{ padding: '1.5rem', marginBottom: '1.5rem' }}>
@@ -393,9 +397,13 @@ const PostCard = ({ post, onEdit, onDelete }) => {
                 <style>{`
                     .rich-text-content.ql-editor {
                         padding: 0;
-                        overflow: hidden;
+                        overflow: visible;
                         color: inherit;
                         font-family: inherit;
+                        word-break: normal !important;
+                        overflow-wrap: break-word !important;
+                        white-space: normal !important;
+                        word-wrap: normal !important;
                     }
                     .rich-text-content.ql-editor p, 
                     .rich-text-content.ql-editor ol, 
@@ -404,6 +412,8 @@ const PostCard = ({ post, onEdit, onDelete }) => {
                     .rich-text-content.ql-editor h2,
                     .rich-text-content.ql-editor h3 {
                         margin-bottom: 1rem !important;
+                        word-break: normal;
+                        overflow-wrap: break-word;
                     }
                     .rich-text-content.ql-editor p:last-child {
                         margin-bottom: 0 !important;
@@ -412,21 +422,35 @@ const PostCard = ({ post, onEdit, onDelete }) => {
                     .rich-text-content.ql-editor ul {
                         padding-left: 1.5rem;
                     }
-                    .rich-text-content.ql-editor.ql-truncated {
+                    .rich-text-content-wrapper.truncated {
+                        position: relative;
                         max-height: 120px;
+                        overflow: hidden;
+                    }
+                    .rich-text-content-wrapper.truncated::after {
+                        content: '';
+                        position: absolute;
+                        bottom: 0;
+                        left: 0;
+                        right: 0;
+                        height: 40px;
+                        background: linear-gradient(to bottom, transparent, var(--bg-white));
+                        pointer-events: none;
                     }
                 `}</style>
-                {displayedContent && (
-                    <div
-                        className={`rich-text-content ql-editor ${isExpanded ? '' : 'ql-truncated'}`}
-                        style={{
-                            fontSize: '1rem',
-                            lineHeight: '1.6',
-                            color: 'var(--text-main)',
-                            fontWeight: isExpanded ? '400' : '500'
-                        }}
-                        dangerouslySetInnerHTML={{ __html: displayedContent }}
-                    />
+                {rawContent && (
+                    <div className={`rich-text-content-wrapper ${!isExpanded && shouldTruncate ? 'truncated' : ''}`}>
+                        <div
+                            className="rich-text-content ql-editor"
+                            style={{
+                                fontSize: '1rem',
+                                lineHeight: '1.6',
+                                color: 'var(--text-main)',
+                                fontWeight: '400'
+                            }}
+                            dangerouslySetInnerHTML={{ __html: rawContent }}
+                        />
+                    </div>
                 )}
 
                 {shouldTruncate && (
