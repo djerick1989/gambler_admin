@@ -5,9 +5,9 @@ import {
     Loader2, User as UserIcon, Phone, Globe, Mail,
     Save, Shield, Bell, MessageSquare, Heart,
     Activity, Calendar, Info, MapPin, Languages, Edit2,
-    Eye
+    Eye, Trash2
 } from 'lucide-react';
-import { gamblerService, languageService, mediaService } from '../services/api';
+import { gamblerService, languageService, mediaService, dataDeletionService } from '../services/api';
 import { useTranslation } from 'react-i18next';
 import { useAuth } from '../context/AuthContext';
 import { countries } from '../utils/countries';
@@ -156,6 +156,27 @@ const Profile = () => {
         } catch (err) {
             console.error("Error updating notifications:", err);
             alert("Error updating notifications");
+        } finally {
+            setSaving(false);
+        }
+    };
+
+    const handleRequestDataDeletion = async () => {
+        if (!window.confirm(t('profile.confirm_data_deletion') || "Are you sure you want to request your data deletion? This action cannot be undone.")) {
+            return;
+        }
+
+        setSaving(true);
+        try {
+            const response = await dataDeletionService.request(user.userId);
+            if (response.status) {
+                alert(t('profile.data_deletion_requested') || "Data deletion request submitted successfully.");
+            } else {
+                alert(response.errorMessage || "Error requesting data deletion");
+            }
+        } catch (err) {
+            console.error("Error requesting data deletion:", err);
+            alert("Error requesting data deletion");
         } finally {
             setSaving(false);
         }
@@ -478,6 +499,35 @@ const Profile = () => {
                                         checked={gambler.receiveDonations}
                                         onChange={(e) => setGambler({ ...gambler, receiveDonations: e.target.checked })}
                                     />
+                                </div>
+
+                                <div style={{ marginTop: '2rem', padding: '1.5rem', background: 'rgba(239, 68, 68, 0.05)', borderRadius: '1rem', border: '1px solid rgba(239, 68, 68, 0.2)' }}>
+                                    <h4 style={{ color: '#ef4444', fontWeight: 'bold', marginBottom: '0.5rem', display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
+                                        <Trash2 size={20} /> {t('profile.danger_zone') || "Danger Zone"}
+                                    </h4>
+                                    <p style={{ color: 'var(--text-muted)', fontSize: '0.875rem', marginBottom: '1rem' }}>
+                                        {t('profile.data_deletion_desc') || "Request the deletion of all your personal data from our systems."}
+                                    </p>
+                                    <button
+                                        onClick={handleRequestDataDeletion}
+                                        className="btn"
+                                        disabled={saving}
+                                        style={{
+                                            background: '#ef4444',
+                                            color: 'white',
+                                            border: 'none',
+                                            padding: '0.75rem 1.5rem',
+                                            borderRadius: '0.5rem',
+                                            cursor: 'pointer',
+                                            fontWeight: '600',
+                                            display: 'flex',
+                                            alignItems: 'center',
+                                            gap: '0.5rem'
+                                        }}
+                                    >
+                                        {saving ? <Loader2 size={18} className="animate-spin" /> : <Trash2 size={18} />}
+                                        {t('profile.request_data_deletion') || "Request Data Deletion"}
+                                    </button>
                                 </div>
                             </div>
                             <button onClick={handleUpdateConfig} className="btn btn-primary" disabled={saving} style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '0.5rem', alignSelf: 'flex-start', minWidth: '200px', marginTop: '1rem' }}>

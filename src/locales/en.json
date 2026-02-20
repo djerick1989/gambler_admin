@@ -41,7 +41,12 @@
         "back_to_donations": "Back to Donations",
         "back": "Back",
         "error_loading": "Error loading data",
-        "deleted_success": "Deleted successfully"
+        "deleted_success": "Deleted successfully",
+        "confirm_action": "Are you sure you want to proceed?",
+        "success": "Operation successful",
+        "approve": "Approve",
+        "deny": "Deny",
+        "send": "Send"
     },
     "posts": {
         "title": "Community Posts",
@@ -335,7 +340,20 @@
     "profile": {
         "title": "Profile Settings",
         "subtitle": "Manage your personal information and preferences.",
-        "success_update": "Profile updated successfully"
+        "success_update": "Profile updated successfully",
+        "danger_zone": "Danger Zone",
+        "data_deletion_desc": "Request the deletion of all your personal data from our systems.",
+        "request_data_deletion": "Request Data Deletion",
+        "confirm_data_deletion": "Are you sure you want to request your data deletion? This action cannot be undone.",
+        "data_deletion_requested": "Data deletion request submitted successfully."
+    },
+    "data_deletion": {
+        "title": "Data Deletion Requests",
+        "subtitle": "Manage user requests to delete their account and personal data.",
+        "empty": "No data deletion requests found.",
+        "denial_reason_prompt": "Enter the reason for denial:",
+        "denial_reason_title": "Denial Reason",
+        "denial_reason_placeholder": "Write the reason here..."
     },
     "user_profile": {
         "title": "User Profile",

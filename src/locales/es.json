@@ -41,7 +41,12 @@
         "back_to_donations": "Volver a Donaciones",
         "back": "Volver",
         "error_loading": "Error al cargar los datos",
-        "deleted_success": "Eliminado con éxito"
+        "deleted_success": "Eliminado con éxito",
+        "confirm_action": "¿Estás seguro de que deseas proceder?",
+        "success": "Operación exitosa",
+        "approve": "Aprobar",
+        "deny": "Denegar",
+        "send": "Enviar"
     },
     "posts": {
         "title": "Publicaciones de la Comunidad",
@@ -335,7 +340,20 @@
     "profile": {
         "title": "Configuración de Perfil",
         "subtitle": "Gestiona tu información personal y preferencias.",
-        "success_update": "Perfil actualizado con éxito"
+        "success_update": "Perfil actualizado con éxito",
+        "danger_zone": "Zona de Peligro",
+        "data_deletion_desc": "Solicita la eliminación de todos tus datos personales de nuestros sistemas.",
+        "request_data_deletion": "Solicitar Borrado de Datos",
+        "confirm_data_deletion": "¿Estás seguro de que deseas solicitar el borrado de tus datos? Esta acción no se puede deshacer.",
+        "data_deletion_requested": "Solicitud de borrado de datos enviada con éxito."
+    },
+    "data_deletion": {
+        "title": "Solicitudes de Borrado de Datos",
+        "subtitle": "Gestiona las solicitudes de los usuarios para eliminar su cuenta y datos personales.",
+        "empty": "No hay solicitudes de borrado de datos.",
+        "denial_reason_prompt": "Ingresa el motivo de la denegación:",
+        "denial_reason_title": "Motivo de Denegación",
+        "denial_reason_placeholder": "Escribe el motivo aquí..."
     },
     "user_profile": {
         "title": "Perfil de Usuario",

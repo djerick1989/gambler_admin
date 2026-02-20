@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { Outlet, Link, useLocation, useNavigate } from 'react-router-dom';
-import { LayoutDashboard, Languages, UserCheck, LogOut, Menu, X, ChevronRight, Globe, Newspaper, MessageSquare, Image, User, FileText, Bell, Award, CreditCard } from 'lucide-react';
+import { LayoutDashboard, Languages, UserCheck, LogOut, Menu, X, ChevronRight, Globe, Newspaper, MessageSquare, Image, User, FileText, Bell, Award, CreditCard, Trash2 } from 'lucide-react';
 import { useAuth } from '../context/AuthContext';
 import { useChat } from '../context/ChatContext';
 import { useNotification } from '../context/NotificationContext';
@@ -91,6 +91,7 @@ const MainLayout = () => {
         { path: '/donations', label: t('donations.title') || 'Donations', icon: CreditCard },
         { path: '/payment-platforms', label: t('payment_platforms.title') || 'Payment Platforms', icon: CreditCard, roles: [1, 2] },
         { path: '/gamblers', label: t('gambler_mgmt.title'), icon: UserCheck, roles: [1, 2] },
+        { path: '/data-deletion-requests', label: t('data_deletion.title') || 'Data Deletion', icon: Trash2, roles: [1, 2] },
     ];
 
     const filteredMenuItems = menuItems.filter(item =>

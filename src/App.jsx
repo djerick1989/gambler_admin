@@ -27,6 +27,7 @@ import AchievementForm from './pages/Achievement/AchievementForm';
 import UserAchievements from './pages/Achievement/UserAchievements';
 import Profile from './pages/Profile';
 import UserProfileView from './pages/UserProfileView';
+import DataDeletionRequests from './pages/DataDeletionRequests';
 import ChatPage from './pages/Chat/ChatPage';
 import PaymentPlatformList from './pages/PaymentPlatformList';
 import PaymentPlatformForm from './pages/PaymentPlatformForm';
@@ -106,6 +107,7 @@ function App() {
 
                 <Route path="gamblers" element={<AdminRoute><GamblerList /></AdminRoute>} />
                 <Route path="gamblers/:id" element={<AdminRoute><GamblerDetail /></AdminRoute>} />
+                <Route path="data-deletion-requests" element={<AdminRoute><DataDeletionRequests /></AdminRoute>} />
 
                 <Route path="posts" element={<PostList />} />
                 <Route path="posts/new" element={<PostForm />} />

@@ -557,4 +557,19 @@ export const donationService = {
   }
 };
 
+export const dataDeletionService = {
+  request: async (userId) => {
+    const response = await apiClient.post('/api/DataDeletion/request', { userId });
+    return response.data;
+  },
+  list: async () => {
+    const response = await apiClient.get('/api/DataDeletion/list');
+    return response.data;
+  },
+  process: async (data) => {
+    const response = await apiClient.put('/api/DataDeletion/process', data);
+    return response.data;
+  }
+};
+
 export default apiClient;
