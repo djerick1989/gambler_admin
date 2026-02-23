@@ -34,6 +34,10 @@ import PaymentPlatformForm from './pages/PaymentPlatformForm';
 import DonationList from './pages/Donation/DonationList';
 import DonationForm from './pages/Donation/DonationForm';
 import DonationLeaderboard from './pages/Donation/DonationLeaderboard';
+import FormList from './pages/Form/FormList';
+import FormCategoryList from './pages/Form/FormCategoryList';
+import FormForm from './pages/Form/FormForm';
+import FormQuestions from './pages/Form/FormQuestions';
 import MainLayout from './layouts/MainLayout';
 import { AuthProvider, useAuth } from './context/AuthContext';
 import { ChatProvider } from './context/ChatContext';
@@ -134,6 +138,13 @@ function App() {
                 <Route path="donations" element={<DonationList />} />
                 <Route path="donations/leaderboard" element={<DonationLeaderboard />} />
                 <Route path="donations/new/:type" element={<DonationForm />} />
+
+                {/* Forms Module */}
+                <Route path="forms" element={<AdminRoute><FormList /></AdminRoute>} />
+                <Route path="forms/categories" element={<AdminRoute><FormCategoryList /></AdminRoute>} />
+                <Route path="forms/new" element={<AdminRoute><FormForm /></AdminRoute>} />
+                <Route path="forms/edit/:id" element={<AdminRoute><FormForm /></AdminRoute>} />
+                <Route path="forms/:id/questions" element={<AdminRoute><FormQuestions /></AdminRoute>} />
               </Route>
             </Routes>
           </Router>

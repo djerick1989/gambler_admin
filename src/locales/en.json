@@ -46,7 +46,10 @@
         "success": "Operation successful",
         "approve": "Approve",
         "deny": "Deny",
-        "send": "Send"
+        "send": "Send",
+        "none": "None",
+        "title": "Title",
+        "description": "Description"
     },
     "posts": {
         "title": "Community Posts",
@@ -517,5 +520,49 @@
             "date_desc": "Most recent first",
             "date_asc": "Oldest first"
         }
+    },
+    "forms": {
+        "title": "Forms",
+        "subtitle": "Manage assessment forms and their categories.",
+        "categories": "Categories",
+        "manage_categories": "Manage Categories",
+        "add_category": "New Category",
+        "edit_category": "Edit Category",
+        "add_form": "New Form",
+        "edit_form": "Edit Form",
+        "title_placeholder": "Enter form title...",
+        "description_placeholder": "Enter form description...",
+        "select_category": "Select Category",
+        "questions": "Questions",
+        "manage_questions": "Manage Questions",
+        "add_question": "New Question",
+        "edit_question": "Edit Question",
+        "options": "Options",
+        "add_option": "New Option",
+        "edit_option": "Edit Option",
+        "empty_categories": "No categories registered.",
+        "empty_forms": "No forms registered.",
+        "empty_questions": "No questions in this form.",
+        "empty_options": "No options for this question.",
+        "form_type": "Form Type",
+        "question_type": "Question Type",
+        "order": "Order",
+        "required": "Required",
+        "icon": "Icon",
+        "category": "Category",
+        "types": {
+            "SELF_ASSESSMENT": "Self-diagnosis",
+            "GAMBLING_PROBLEM": "Gambling Problems",
+            "ADDICTION_EVALUATION": "Addiction Evaluation"
+        },
+        "question_types": {
+            "MULTIPLE_CHOICE_SINGLE": "Single Choice",
+            "MULTIPLE_CHOICE_MULTIPLE": "Multiple Choice",
+            "YES_NO": "Yes / No",
+            "OPEN_TEXT": "Open Text"
+        },
+        "questions_info": "Once you create the form, you can add questions and options to it from the form list.",
+        "question_text": "Question Text",
+        "option_text": "Option Text"
     }
 }

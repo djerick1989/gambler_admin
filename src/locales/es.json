@@ -46,7 +46,10 @@
         "success": "Operación exitosa",
         "approve": "Aprobar",
         "deny": "Denegar",
-        "send": "Enviar"
+        "send": "Enviar",
+        "none": "Ninguno",
+        "title": "Título",
+        "description": "Descripción"
     },
     "posts": {
         "title": "Publicaciones de la Comunidad",
@@ -518,5 +521,49 @@
             "date_desc": "Más reciente primero",
             "date_asc": "Más antiguo primero"
         }
+    },
+    "forms": {
+        "title": "Formularios",
+        "subtitle": "Gestiona los formularios de evaluación y sus categorías.",
+        "categories": "Categorías",
+        "manage_categories": "Gestionar Categorías",
+        "add_category": "Nueva Categoría",
+        "edit_category": "Editar Categoría",
+        "add_form": "Nuevo Formulario",
+        "edit_form": "Editar Formulario",
+        "title_placeholder": "Ingresa el título del formulario...",
+        "description_placeholder": "Ingresa la descripción del formulario...",
+        "select_category": "Seleccionar Categoría",
+        "questions": "Preguntas",
+        "manage_questions": "Gestionar Preguntas",
+        "add_question": "Nueva Pregunta",
+        "edit_question": "Editar Pregunta",
+        "options": "Opciones",
+        "add_option": "Nueva Opción",
+        "edit_option": "Editar Opción",
+        "empty_categories": "No hay categorías registradas.",
+        "empty_forms": "No hay formularios registrados.",
+        "empty_questions": "No hay preguntas en este formulario.",
+        "empty_options": "No hay opciones para esta pregunta.",
+        "form_type": "Tipo de Formulario",
+        "question_type": "Tipo de Pregunta",
+        "order": "Orden",
+        "required": "Obligatorio",
+        "icon": "Icono",
+        "category": "Categoría",
+        "types": {
+            "SELF_ASSESSMENT": "Autodiagnóstico",
+            "GAMBLING_PROBLEM": "Problemas de Juego",
+            "ADDICTION_EVALUATION": "Evaluación de Adicciones"
+        },
+        "question_types": {
+            "MULTIPLE_CHOICE_SINGLE": "Selección Única",
+            "MULTIPLE_CHOICE_MULTIPLE": "Selección Múltiple",
+            "YES_NO": "Sí / No",
+            "OPEN_TEXT": "Texto Abierto"
+        },
+        "questions_info": "Una vez creado el formulario, podrás añadir preguntas y opciones desde la lista de formularios.",
+        "question_text": "Texto de la Pregunta",
+        "option_text": "Texto de la Opción"
     }
 }

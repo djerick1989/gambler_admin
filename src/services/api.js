@@ -557,6 +557,91 @@ export const donationService = {
   }
 };
 
+export const formService = {
+  // Categories
+  getCategories: async (languageId = null) => {
+    const headers = languageId ? { languageId } : {};
+    const response = await apiClient.get('/api/Form/categories', { headers });
+    return response.data;
+  },
+  createCategory: async (data, languageId = null) => {
+    const headers = languageId ? { languageId } : {};
+    const response = await apiClient.post('/api/Form/category/create', data, { headers });
+    return response.data;
+  },
+  updateCategory: async (id, data, languageId = null) => {
+    const headers = languageId ? { languageId } : {};
+    const response = await apiClient.put(`/api/Form/category/update/${id}`, data, { headers });
+    return response.data;
+  },
+  deleteCategory: async (id, languageId = null) => {
+    const headers = languageId ? { languageId } : {};
+    const response = await apiClient.delete(`/api/Form/category/${id}`, { headers });
+    return response.data;
+  },
+
+  // Forms
+  createForm: async (data, languageId = null) => {
+    const headers = languageId ? { languageId } : {};
+    const response = await apiClient.post('/api/Form/create', data, { headers });
+    return response.data;
+  },
+  updateForm: async (id, data, languageId = null) => {
+    const headers = languageId ? { languageId } : {};
+    const response = await apiClient.put(`/api/Form/update/${id}`, data, { headers });
+    return response.data;
+  },
+  getAllForms: async (languageId = null) => {
+    const headers = languageId ? { languageId } : {};
+    const response = await apiClient.get('/api/Form/list', { headers });
+    return response.data;
+  },
+  getFormById: async (id, languageId = null) => {
+    const headers = languageId ? { languageId } : {};
+    const response = await apiClient.get(`/api/Form/${id}`, { headers });
+    return response.data;
+  },
+  deleteForm: async (id, languageId = null) => {
+    const headers = languageId ? { languageId } : {};
+    const response = await apiClient.delete(`/api/Form/${id}`, { headers });
+    return response.data;
+  },
+
+  // Questions
+  createQuestion: async (data, languageId = null) => {
+    const headers = languageId ? { languageId } : {};
+    const response = await apiClient.post('/api/Form/question/create', data, { headers });
+    return response.data;
+  },
+  updateQuestion: async (id, data, languageId = null) => {
+    const headers = languageId ? { languageId } : {};
+    const response = await apiClient.put(`/api/Form/question/update/${id}`, data, { headers });
+    return response.data;
+  },
+  deleteQuestion: async (id, languageId = null) => {
+    const headers = languageId ? { languageId } : {};
+    const response = await apiClient.delete(`/api/Form/question/${id}`, { headers });
+    return response.data;
+  },
+
+  // Question Options
+  createOption: async (data, languageId = null) => {
+    const headers = languageId ? { languageId } : {};
+    const response = await apiClient.post('/api/Form/question/option/create', data, { headers });
+    return response.data;
+  },
+  updateOption: async (id, data, languageId = null) => {
+    const headers = languageId ? { languageId } : {};
+    const response = await apiClient.put(`/api/Form/question/option/update/${id}`, data, { headers });
+    return response.data;
+  },
+  deleteOption: async (id, languageId = null) => {
+    const headers = languageId ? { languageId } : {};
+    const response = await apiClient.delete(`/api/Form/question/option/${id}`, { headers });
+    return response.data;
+  }
+};
+
 export const dataDeletionService = {
   request: async (userId) => {
     const response = await apiClient.post('/api/DataDeletion/request', { userId });

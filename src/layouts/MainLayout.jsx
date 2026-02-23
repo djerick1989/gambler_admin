@@ -90,6 +90,7 @@ const MainLayout = () => {
         { path: '/achievements', label: t('achievements.title') || 'Achievements', icon: Award },
         { path: '/donations', label: t('donations.title') || 'Donations', icon: CreditCard },
         { path: '/payment-platforms', label: t('payment_platforms.title') || 'Payment Platforms', icon: CreditCard, roles: [1, 2] },
+        { path: '/forms', label: t('forms.title') || 'Formularios', icon: FileText, roles: [1, 2] },
         { path: '/gamblers', label: t('gambler_mgmt.title'), icon: UserCheck, roles: [1, 2] },
         { path: '/data-deletion-requests', label: t('data_deletion.title') || 'Data Deletion', icon: Trash2, roles: [1, 2] },
     ];
