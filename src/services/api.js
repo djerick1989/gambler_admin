@@ -642,6 +642,15 @@ export const formService = {
   }
 };
 
+export const formResponseService = {
+  getAdminFormResponses: async (formId, page = 1, pageSize = 10) => {
+    const response = await apiClient.get(`/api/FormResponse/admin/form/${formId}`, {
+      params: { page, pageSize }
+    });
+    return response.data;
+  }
+};
+
 export const dataDeletionService = {
   request: async (userId) => {
     const response = await apiClient.post('/api/DataDeletion/request', { userId });

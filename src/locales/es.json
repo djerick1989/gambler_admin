@@ -564,6 +564,15 @@
         },
         "questions_info": "Una vez creado el formulario, podrás añadir preguntas y opciones desde la lista de formularios.",
         "question_text": "Texto de la Pregunta",
-        "option_text": "Texto de la Opción"
+        "option_text": "Texto de la Opción",
+        "view_responses": "Ver Respuestas",
+        "responses_title": "Respuestas del Formulario",
+        "responses_subtitle": "Consulta las respuestas de los usuarios para este formulario.",
+        "responses_count": "{{count}} respuestas recibidas",
+        "completed_at": "Completado el",
+        "view_details": "Ver Detalles",
+        "response_details": "Detalles de la Respuesta",
+        "user": "Usuario",
+        "no_responses": "Aún no hay respuestas para este formulario."
     }
 }

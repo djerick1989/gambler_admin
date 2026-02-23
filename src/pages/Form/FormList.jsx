@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import {
     Plus, Search, Edit2, Trash2, FileText,
-    ChevronLeft, ChevronRight, Loader2, List, Settings
+    ChevronLeft, ChevronRight, Loader2, List, Settings, Eye
 } from 'lucide-react';
 import { formService } from '../../services/api';
 import { useTranslation } from 'react-i18next';
@@ -195,6 +195,14 @@ const FormList = () => {
                                         </td>
                                         <td style={{ padding: '1.25rem 1.5rem', textAlign: 'right' }}>
                                             <div style={{ display: 'flex', justifyContent: 'flex-end', gap: '0.5rem' }}>
+                                                <button
+                                                    onClick={() => navigate(`/forms/${form.formId}/responses`)}
+                                                    className="btn"
+                                                    style={{ padding: '0.5rem', background: 'rgba(16, 185, 129, 0.1)', color: '#10b981' }}
+                                                    title={t('forms.view_responses')}
+                                                >
+                                                    <Eye size={18} />
+                                                </button>
                                                 <button
                                                     onClick={() => navigate(`/forms/${form.formId}/questions`)}
                                                     className="btn"

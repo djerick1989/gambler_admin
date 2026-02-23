@@ -38,6 +38,7 @@ import FormList from './pages/Form/FormList';
 import FormCategoryList from './pages/Form/FormCategoryList';
 import FormForm from './pages/Form/FormForm';
 import FormQuestions from './pages/Form/FormQuestions';
+import FormResponseList from './pages/Form/FormResponseList';
 import MainLayout from './layouts/MainLayout';
 import { AuthProvider, useAuth } from './context/AuthContext';
 import { ChatProvider } from './context/ChatContext';
@@ -145,6 +146,7 @@ function App() {
                 <Route path="forms/new" element={<AdminRoute><FormForm /></AdminRoute>} />
                 <Route path="forms/edit/:id" element={<AdminRoute><FormForm /></AdminRoute>} />
                 <Route path="forms/:id/questions" element={<AdminRoute><FormQuestions /></AdminRoute>} />
+                <Route path="forms/:id/responses" element={<AdminRoute><FormResponseList /></AdminRoute>} />
               </Route>
             </Routes>
           </Router>

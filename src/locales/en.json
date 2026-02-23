@@ -563,6 +563,15 @@
         },
         "questions_info": "Once you create the form, you can add questions and options to it from the form list.",
         "question_text": "Question Text",
-        "option_text": "Option Text"
+        "option_text": "Option Text",
+        "view_responses": "View Responses",
+        "responses_title": "Form Responses",
+        "responses_subtitle": "View user responses for this form.",
+        "responses_count": "{{count}} responses received",
+        "completed_at": "Completed at",
+        "view_details": "View Details",
+        "response_details": "Response Details",
+        "user": "User",
+        "no_responses": "No responses found for this form."
     }
 }
