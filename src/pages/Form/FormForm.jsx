@@ -149,7 +149,7 @@ const FormForm = () => {
                                 const translation = cat.translations?.find(tr => tr.languageId === currentLanguageId) || cat.translations?.[0] || {};
                                 return (
                                     <option key={cat.formCategoryId} value={cat.formCategoryId}>
-                                        {translation.name || 'Untitled'}
+                                        {translation.name || t('common.untitled')}
                                     </option>
                                 );
                             })}

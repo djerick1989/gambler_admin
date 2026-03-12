@@ -191,8 +191,8 @@ const FormCategoryList = () => {
                                     )}
                                 </div>
                                 <div style={{ flex: 1 }}>
-                                    <div style={{ fontWeight: '700', fontSize: '1.1rem' }}>{translation.name || 'Untitled'}</div>
-                                    <div style={{ fontSize: '0.875rem', color: 'var(--text-muted)' }}>{translation.description || category.description || 'No description'}</div>
+                                    <div style={{ fontWeight: '700', fontSize: '1.1rem' }}>{translation.name || t('common.untitled')}</div>
+                                    <div style={{ fontSize: '0.875rem', color: 'var(--text-muted)' }}>{translation.description || category.description || t('common.no_description')}</div>
                                     <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', marginTop: '0.5rem' }}>
                                         {category.active ? (
                                             <span style={{ fontSize: '0.7rem', color: '#10b981', fontWeight: '700', textTransform: 'uppercase' }}>{t('common.active')}</span>

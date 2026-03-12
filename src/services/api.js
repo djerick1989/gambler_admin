@@ -643,10 +643,22 @@ export const formService = {
 };
 
 export const formResponseService = {
-  getAdminFormResponses: async (formId, page = 1, pageSize = 10) => {
+  getAdminFormResponses: async (formId, page = 1, pageSize = 10, languageId = null) => {
+    const headers = languageId ? { languageId } : {};
     const response = await apiClient.get(`/api/FormResponse/admin/form/${formId}`, {
-      params: { page, pageSize }
+      params: { page, pageSize },
+      headers
     });
+    return response.data;
+  },
+  getFormAnalysis: async (userFormResponseId, languageId = null) => {
+    const headers = languageId ? { languageId } : {};
+    const response = await apiClient.get(`/api/FormAnalysis/${userFormResponseId}`, { headers });
+    return response.data;
+  },
+  getFormResponseById: async (id, languageId = null) => {
+    const headers = languageId ? { languageId } : {};
+    const response = await apiClient.get(`/api/FormResponse/${id}`, { headers });
     return response.data;
   }
 };

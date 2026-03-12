@@ -158,7 +158,7 @@ const FormList = () => {
                                                     </div>
                                                 )}
                                                 <div>
-                                                    <div style={{ fontWeight: '700', color: 'var(--text-main)' }}>{mainTranslation.title || 'Untitled'}</div>
+                                                    <div style={{ fontWeight: '700', color: 'var(--text-main)' }}>{mainTranslation.title || t('common.untitled')}</div>
                                                     <div style={{ fontSize: '0.75rem', color: 'var(--text-muted)', maxWidth: '300px', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>
                                                         {mainTranslation.description}
                                                     </div>

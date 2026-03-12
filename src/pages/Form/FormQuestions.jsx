@@ -264,7 +264,7 @@ const FormQuestions = () => {
                                         {question.order}
                                     </span>
                                     <div>
-                                        <div style={{ fontWeight: '700', color: 'var(--text-main)' }}>{translation.questionText || 'Untitled Question'}</div>
+                                        <div style={{ fontWeight: '700', color: 'var(--text-main)' }}>{translation.questionText || t('common.untitled_question')}</div>
                                         <div style={{ display: 'flex', gap: '0.75rem', marginTop: '0.25rem' }}>
                                             <span style={{ fontSize: '0.75rem', color: 'var(--text-muted)' }}>
                                                 {QUESTION_TYPES.find(t => t.value === question.questionType)?.label}

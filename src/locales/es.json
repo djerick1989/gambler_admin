@@ -49,7 +49,10 @@
         "send": "Enviar",
         "none": "Ninguno",
         "title": "Título",
-        "description": "Descripción"
+        "description": "Descripción",
+        "no_description": "Sin descripción",
+        "untitled": "Sin título",
+        "untitled_question": "Pregunta sin título"
     },
     "posts": {
         "title": "Publicaciones de la Comunidad",
@@ -573,6 +576,24 @@
         "view_details": "Ver Detalles",
         "response_details": "Detalles de la Respuesta",
         "user": "Usuario",
-        "no_responses": "Aún no hay respuestas para este formulario."
+        "no_responses": "Aún no hay respuestas para este formulario.",
+        "analysis_details": "Detalles del Análisis",
+        "analysis_subtitle": "Informe detallado de riesgos y recomendaciones generadas por el sistema.",
+        "risk_level": "Nivel de Riesgo",
+        "analysis_report": "Análisis del Resultado",
+        "recommendations": "Recomendaciones",
+        "user_response": "Respuesta del Usuario",
+        "view_answers": "Ver Respuestas",
+        "action_plan": "Plan de Acción",
+        "follow_recommendations": "Siga las recomendaciones anteriores para mejorar su bienestar y reducir los riesgos identificados.",
+        "user_answers": "Respuestas del Usuario",
+        "open_answer": "Respuesta abierta:",
+        "risk_assessment": "Evaluación de Riesgo",
+        "generating_analysis": "Generando análisis detallado...",
+        "analysis_not_available": "El análisis para esta respuesta no está disponible.",
+        "risk_high": "Riesgo Alto",
+        "risk_medium": "Riesgo Medio",
+        "risk_low": "Riesgo Bajo",
+        "risk_minimal": "Riesgo Mínimo"
     }
 }

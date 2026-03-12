@@ -49,7 +49,10 @@
         "send": "Send",
         "none": "None",
         "title": "Title",
-        "description": "Description"
+        "description": "Description",
+        "no_description": "No description",
+        "untitled": "Untitled",
+        "untitled_question": "Untitled Question"
     },
     "posts": {
         "title": "Community Posts",
@@ -572,6 +575,24 @@
         "view_details": "View Details",
         "response_details": "Response Details",
         "user": "User",
-        "no_responses": "No responses found for this form."
+        "no_responses": "No responses found for this form.",
+        "analysis_details": "Analysis Details",
+        "analysis_subtitle": "Detailed risk report and system-generated recommendations.",
+        "risk_level": "Risk Level",
+        "analysis_report": "Analysis Report",
+        "recommendations": "Recommendations",
+        "user_response": "User Response",
+        "view_answers": "View Answers",
+        "action_plan": "Action Plan",
+        "follow_recommendations": "Follow the recommendations above to improve your well-being and reduce identified risks.",
+        "user_answers": "User Answers",
+        "open_answer": "Open answer:",
+        "risk_assessment": "Risk Assessment",
+        "generating_analysis": "Generating detailed analysis...",
+        "analysis_not_available": "Analysis for this response is not available.",
+        "risk_high": "High Risk",
+        "risk_medium": "Medium Risk",
+        "risk_low": "Low Risk",
+        "risk_minimal": "Minimal Risk"
     }
 }
