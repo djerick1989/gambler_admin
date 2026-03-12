@@ -582,6 +582,8 @@
         "risk_level": "Nivel de Riesgo",
         "analysis_report": "Análisis del Resultado",
         "recommendations": "Recomendaciones",
+        "view_report": "Ver Reporte",
+        "report_title": "Reporte de Análisis",
         "user_response": "Respuesta del Usuario",
         "view_answers": "Ver Respuestas",
         "action_plan": "Plan de Acción",

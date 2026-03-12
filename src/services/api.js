@@ -160,12 +160,12 @@ export const i18nService = {
     return response.data;
   },
   getKeyById: async (id, languageId = null) => {
-    const headers = languageId ? { languageId } : {};
+    const headers = languageId ? { LanguageId: languageId } : {};
     const response = await apiClient.get(`/api/I18n/GetKeyById/${id}`, { headers });
     return response.data;
   },
   getKeysByNamespaceId: async (namespaceId, page = 1, pageSize = 200, languageId = null) => {
-    const headers = languageId ? { languageId } : {};
+    const headers = languageId ? { LanguageId: languageId } : {};
     const response = await apiClient.get('/api/I18n/getKeysByNamespaceId', {
       params: { namespaceId, page, pageSize },
       headers
@@ -182,7 +182,7 @@ export const i18nService = {
 
 export const newsService = {
   getAllNews: async (page = 1, pageSize = 10, languageId = null) => {
-    const headers = languageId ? { languageId } : {};
+    const headers = languageId ? { LanguageId: languageId } : {};
     const response = await apiClient.get('/api/News/getAllNews', {
       params: { page, pageSize },
       headers
@@ -190,7 +190,7 @@ export const newsService = {
     return response.data;
   },
   getNewsById: async (id, languageId = null) => {
-    const headers = languageId ? { languageId } : {};
+    const headers = languageId ? { LanguageId: languageId } : {};
     const response = await apiClient.get(`/api/News/getNewsById/${id}`, { headers });
     return response.data;
   },
@@ -294,12 +294,12 @@ export const postService = {
     return response.data;
   },
   getPostById: async (id, languageId = null) => {
-    const headers = languageId ? { languageId } : {};
+    const headers = languageId ? { LanguageId: languageId } : {};
     const response = await apiClient.get(`/api/Post/getPostById/${id}`, { headers });
     return response.data;
   },
   getAllPosts: async (userId, page = 1, pageSize = 100, languageId = null) => {
-    const headers = languageId ? { languageId } : {};
+    const headers = languageId ? { LanguageId: languageId } : {};
     const response = await apiClient.get('/api/Post/getAllPosts', {
       params: { userId, page, pageSize },
       headers
@@ -307,7 +307,7 @@ export const postService = {
     return response.data;
   },
   getPostsByUserId: async (userId, page = 1, pageSize = 10, languageId = null) => {
-    const headers = languageId ? { languageId } : {};
+    const headers = languageId ? { LanguageId: languageId } : {};
     const response = await apiClient.get('/api/Post/getPostsByUserId', {
       params: { userId, page, pageSize },
       headers
@@ -560,83 +560,83 @@ export const donationService = {
 export const formService = {
   // Categories
   getCategories: async (languageId = null) => {
-    const headers = languageId ? { languageId } : {};
+    const headers = languageId ? { LanguageId: languageId } : {};
     const response = await apiClient.get('/api/Form/categories', { headers });
     return response.data;
   },
   createCategory: async (data, languageId = null) => {
-    const headers = languageId ? { languageId } : {};
+    const headers = languageId ? { LanguageId: languageId } : {};
     const response = await apiClient.post('/api/Form/category/create', data, { headers });
     return response.data;
   },
   updateCategory: async (id, data, languageId = null) => {
-    const headers = languageId ? { languageId } : {};
+    const headers = languageId ? { LanguageId: languageId } : {};
     const response = await apiClient.put(`/api/Form/category/update/${id}`, data, { headers });
     return response.data;
   },
   deleteCategory: async (id, languageId = null) => {
-    const headers = languageId ? { languageId } : {};
+    const headers = languageId ? { LanguageId: languageId } : {};
     const response = await apiClient.delete(`/api/Form/category/${id}`, { headers });
     return response.data;
   },
 
   // Forms
   createForm: async (data, languageId = null) => {
-    const headers = languageId ? { languageId } : {};
+    const headers = languageId ? { LanguageId: languageId } : {};
     const response = await apiClient.post('/api/Form/create', data, { headers });
     return response.data;
   },
   updateForm: async (id, data, languageId = null) => {
-    const headers = languageId ? { languageId } : {};
+    const headers = languageId ? { LanguageId: languageId } : {};
     const response = await apiClient.put(`/api/Form/update/${id}`, data, { headers });
     return response.data;
   },
   getAllForms: async (languageId = null) => {
-    const headers = languageId ? { languageId } : {};
+    const headers = languageId ? { LanguageId: languageId } : {};
     const response = await apiClient.get('/api/Form/list', { headers });
     return response.data;
   },
   getFormById: async (id, languageId = null) => {
-    const headers = languageId ? { languageId } : {};
+    const headers = languageId ? { LanguageId: languageId } : {};
     const response = await apiClient.get(`/api/Form/${id}`, { headers });
     return response.data;
   },
   deleteForm: async (id, languageId = null) => {
-    const headers = languageId ? { languageId } : {};
+    const headers = languageId ? { LanguageId: languageId } : {};
     const response = await apiClient.delete(`/api/Form/${id}`, { headers });
     return response.data;
   },
 
   // Questions
   createQuestion: async (data, languageId = null) => {
-    const headers = languageId ? { languageId } : {};
+    const headers = languageId ? { LanguageId: languageId } : {};
     const response = await apiClient.post('/api/Form/question/create', data, { headers });
     return response.data;
   },
   updateQuestion: async (id, data, languageId = null) => {
-    const headers = languageId ? { languageId } : {};
+    const headers = languageId ? { LanguageId: languageId } : {};
     const response = await apiClient.put(`/api/Form/question/update/${id}`, data, { headers });
     return response.data;
   },
   deleteQuestion: async (id, languageId = null) => {
-    const headers = languageId ? { languageId } : {};
+    const headers = languageId ? { LanguageId: languageId } : {};
     const response = await apiClient.delete(`/api/Form/question/${id}`, { headers });
     return response.data;
   },
 
   // Question Options
   createOption: async (data, languageId = null) => {
-    const headers = languageId ? { languageId } : {};
+    const headers = languageId ? { LanguageId: languageId } : {};
     const response = await apiClient.post('/api/Form/question/option/create', data, { headers });
     return response.data;
   },
   updateOption: async (id, data, languageId = null) => {
-    const headers = languageId ? { languageId } : {};
+    const headers = languageId ? { LanguageId: languageId } : {};
     const response = await apiClient.put(`/api/Form/question/option/update/${id}`, data, { headers });
     return response.data;
   },
   deleteOption: async (id, languageId = null) => {
-    const headers = languageId ? { languageId } : {};
+    const headers = languageId ? { LanguageId: languageId } : {};
     const response = await apiClient.delete(`/api/Form/question/option/${id}`, { headers });
     return response.data;
   }
@@ -644,7 +644,7 @@ export const formService = {
 
 export const formResponseService = {
   getAdminFormResponses: async (formId, page = 1, pageSize = 10, languageId = null) => {
-    const headers = languageId ? { languageId } : {};
+    const headers = languageId ? { LanguageId: languageId } : {};
     const response = await apiClient.get(`/api/FormResponse/admin/form/${formId}`, {
       params: { page, pageSize },
       headers
@@ -652,12 +652,12 @@ export const formResponseService = {
     return response.data;
   },
   getFormAnalysis: async (userFormResponseId, languageId = null) => {
-    const headers = languageId ? { languageId } : {};
+    const headers = languageId ? { LanguageId: languageId } : {};
     const response = await apiClient.get(`/api/FormAnalysis/${userFormResponseId}`, { headers });
     return response.data;
   },
   getFormResponseById: async (id, languageId = null) => {
-    const headers = languageId ? { languageId } : {};
+    const headers = languageId ? { LanguageId: languageId } : {};
     const response = await apiClient.get(`/api/FormResponse/${id}`, { headers });
     return response.data;
   }
