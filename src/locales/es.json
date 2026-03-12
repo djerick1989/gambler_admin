@@ -596,6 +596,13 @@
         "risk_high": "Riesgo Alto",
         "risk_medium": "Riesgo Medio",
         "risk_low": "Riesgo Bajo",
-        "risk_minimal": "Riesgo Mínimo"
+        "risk_minimal": "Riesgo Mínimo",
+        "no_forms": "No hay formularios disponibles actualmente",
+        "results_title": "RESULTADOS",
+        "conclusions": "Conclusiones:",
+        "finish": "Finalizar",
+        "review": "Revisar",
+        "autodiagnosis": "Formularios",
+        "open_placeholder": "Escribe tu respuesta aquí..."
     }
 }

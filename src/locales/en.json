@@ -595,6 +595,13 @@
         "risk_high": "High Risk",
         "risk_medium": "Medium Risk",
         "risk_low": "Low Risk",
-        "risk_minimal": "Minimal Risk"
+        "risk_minimal": "Minimal Risk",
+        "no_forms": "No forms available at the moment",
+        "results_title": "RESULTS",
+        "conclusions": "Conclusions:",
+        "finish": "Finish",
+        "review": "Review",
+        "autodiagnosis": "Forms",
+        "open_placeholder": "Write your answer here..."
     }
 }

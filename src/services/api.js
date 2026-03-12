@@ -601,6 +601,11 @@ export const formService = {
     const response = await apiClient.get(`/api/Form/${id}`, { headers });
     return response.data;
   },
+  getFormSummaries: async (languageId = null) => {
+    const headers = languageId ? { LanguageId: languageId } : {};
+    const response = await apiClient.get('/api/Form/summaries', { headers });
+    return response.data;
+  },
   deleteForm: async (id, languageId = null) => {
     const headers = languageId ? { LanguageId: languageId } : {};
     const response = await apiClient.delete(`/api/Form/${id}`, { headers });
@@ -659,6 +664,24 @@ export const formResponseService = {
   getFormResponseById: async (id, languageId = null) => {
     const headers = languageId ? { LanguageId: languageId } : {};
     const response = await apiClient.get(`/api/FormResponse/${id}`, { headers });
+    return response.data;
+  },
+  startFormResponse: async (data, languageId = null) => {
+    const headers = languageId ? { LanguageId: languageId } : {};
+    const response = await apiClient.post('/api/FormResponse/start', data, { headers });
+    return response.data;
+  },
+  submitFormResponse: async (data, languageId = null) => {
+    const headers = languageId ? { LanguageId: languageId } : {};
+    const response = await apiClient.post('/api/FormResponse/submit', data, { headers });
+    return response.data;
+  }
+};
+
+export const formAnalysisService = {
+  generateAnalysis: async (userFormResponseId, languageId = null) => {
+    const headers = languageId ? { LanguageId: languageId } : {};
+    const response = await apiClient.post(`/api/FormAnalysis/generate/${userFormResponseId}`, {}, { headers });
     return response.data;
   }
 };

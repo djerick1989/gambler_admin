@@ -41,6 +41,9 @@ import FormQuestions from './pages/Form/FormQuestions';
 import FormResponseList from './pages/Form/FormResponseList';
 import FormResponseDetail from './pages/Form/FormResponseDetail';
 import FormResponseReport from './pages/Form/FormResponseReport';
+import CustomerFormList from './pages/CustomerForm/CustomerFormList';
+import CustomerFormProcess from './pages/CustomerForm/CustomerFormProcess';
+import CustomerFormResult from './pages/CustomerForm/CustomerFormResult';
 import MainLayout from './layouts/MainLayout';
 import { AuthProvider, useAuth } from './context/AuthContext';
 import { ChatProvider } from './context/ChatContext';
@@ -151,6 +154,12 @@ function App() {
                 <Route path="forms/:id/responses" element={<AdminRoute><FormResponseList /></AdminRoute>} />
                 <Route path="forms/response/:id" element={<AdminRoute><FormResponseDetail /></AdminRoute>} />
                 <Route path="forms/response/:id/report" element={<AdminRoute><FormResponseReport /></AdminRoute>} />
+
+                {/* Customer Forms */}
+                <Route path="customer/forms" element={<CustomerFormList />} />
+                <Route path="customer/forms/process/:id" element={<CustomerFormProcess />} />
+                <Route path="customer/forms/result/:id" element={<CustomerFormResult />} />
+
 
               </Route>
             </Routes>
