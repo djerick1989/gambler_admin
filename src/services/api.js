@@ -686,6 +686,45 @@ export const formAnalysisService = {
   }
 };
 
+export const debtService = {
+  getCurrencies: async () => {
+    const response = await apiClient.get('/api/Debt/currencies');
+    return response.data;
+  },
+  create: async (data) => {
+    const response = await apiClient.post('/api/Debt', data);
+    return response.data;
+  },
+  getById: async (id) => {
+    const response = await apiClient.get(`/api/Debt/${id}`);
+    return response.data;
+  },
+  update: async (id, data) => {
+    const response = await apiClient.put(`/api/Debt/${id}`, data);
+    return response.data;
+  },
+  delete: async (id) => {
+    const response = await apiClient.delete(`/api/Debt/${id}`);
+    return response.data;
+  },
+  getByGamblerId: async (gamblerId) => {
+    const response = await apiClient.get(`/api/Debt/gambler/${gamblerId}`);
+    return response.data;
+  },
+  addPayment: async (data) => {
+    const response = await apiClient.post('/api/Debt/payment', data);
+    return response.data;
+  },
+  cancelDebt: async (id) => {
+    const response = await apiClient.put(`/api/Debt/${id}/cancel`);
+    return response.data;
+  },
+  deletePayment: async (paymentId) => {
+    const response = await apiClient.delete(`/api/Debt/payment/${paymentId}`);
+    return response.data;
+  }
+};
+
 export const dataDeletionService = {
   request: async (userId) => {
     const response = await apiClient.post('/api/DataDeletion/request', { userId });

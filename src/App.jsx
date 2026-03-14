@@ -44,6 +44,9 @@ import FormResponseReport from './pages/Form/FormResponseReport';
 import CustomerFormList from './pages/CustomerForm/CustomerFormList';
 import CustomerFormProcess from './pages/CustomerForm/CustomerFormProcess';
 import CustomerFormResult from './pages/CustomerForm/CustomerFormResult';
+import DebtList from './pages/CustomerDebt/DebtList';
+import DebtForm from './pages/CustomerDebt/DebtForm';
+import DebtPolicy from './pages/CustomerDebt/DebtPolicy';
 import MainLayout from './layouts/MainLayout';
 import { AuthProvider, useAuth } from './context/AuthContext';
 import { ChatProvider } from './context/ChatContext';
@@ -159,6 +162,12 @@ function App() {
                 <Route path="customer/forms" element={<CustomerFormList />} />
                 <Route path="customer/forms/process/:id" element={<CustomerFormProcess />} />
                 <Route path="customer/forms/result/:id" element={<CustomerFormResult />} />
+
+                {/* Customer Debts */}
+                <Route path="customer/debts" element={<DebtList />} />
+                <Route path="customer/debts/new" element={<DebtForm />} />
+                <Route path="customer/debts/edit/:id" element={<DebtForm />} />
+                <Route path="customer/debts/policy" element={<DebtPolicy />} />
 
 
               </Route>

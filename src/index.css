@@ -119,3 +119,13 @@ body {
 .animate-fade-in {
   animation: fadeIn 0.5s ease forwards;
 }
+
+.debt-input {
+  text-align: left !important;
+}
+
+@media (max-width: 768px) {
+  .debt-input {
+    text-align: center !important;
+  }
+}

@@ -163,7 +163,7 @@ const CustomerFormResult = () => {
     }
 
     return (
-        <div style={{ padding: '1.5rem', maxWidth: '900px', margin: '0 auto', paddingBottom: '4rem' }}>
+        <div style={{ maxWidth: '900px', margin: '0 auto', paddingBottom: '4rem' }}>
             <div style={{ display: 'flex', alignItems: 'center', gap: '1rem', marginBottom: '1.5rem' }}>
                 <button 
                     onClick={() => navigate('/customer/forms')}
