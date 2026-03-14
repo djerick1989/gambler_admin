@@ -719,6 +719,10 @@ export const debtService = {
     const response = await apiClient.put(`/api/Debt/${id}/cancel`);
     return response.data;
   },
+  reactiveDebt: async (id) => {
+    const response = await apiClient.put(`/api/Debt/${id}/reactive`);
+    return response.data;
+  },
   deletePayment: async (paymentId) => {
     const response = await apiClient.delete(`/api/Debt/payment/${paymentId}`);
     return response.data;

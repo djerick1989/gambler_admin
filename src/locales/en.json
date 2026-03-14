@@ -612,6 +612,7 @@
         "total_to_pay": "Total to Pay",
         "next_pago": "Next Payment",
         "no_debts": "You have no debts",
+        "no_cancelled_debts": "You have no cancelled debts",
         "sort_by": "Sort by:",
         "show_debts": "Show debts:",
         "active": "Active",

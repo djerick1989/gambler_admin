@@ -613,6 +613,7 @@
         "total_to_pay": "Total a Pagar",
         "next_pago": "Pago próximo",
         "no_debts": "No tienes deudas",
+        "no_cancelled_debts": "No tienes deudas canceladas",
         "sort_by": "Ordenar por:",
         "show_debts": "Mostrar deudas:",
         "active": "Activas",

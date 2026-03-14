@@ -171,6 +171,17 @@ const DebtForm = () => {
         }
     };
 
+    const handleReactiveDebt = async () => {
+        try {
+            const res = await debtService.reactiveDebt(id);
+            if (res.status) {
+                navigate('/customer/debts');
+            }
+        } catch (err) {
+            console.error(err);
+        }
+    };
+
     const formatCurrency = (amount) => {
         return new Intl.NumberFormat('en-US', {
             style: 'currency',
@@ -478,7 +489,7 @@ const DebtForm = () => {
                             </div>
                             <button 
                                 type="button"
-                                onClick={() => setFormData(prev => ({...prev, status: 'Active'}))}
+                                onClick={handleReactiveDebt}
                                 style={{ padding: '0.75rem 1.5rem', fontSize: '1rem', fontWeight: '800', borderRadius: '1rem', background: 'var(--primary)', color: 'white', border: 'none', cursor: 'pointer', boxShadow: '0 5px 15px rgba(212, 144, 0, 0.2)' }}
                             >
                                 {t('debts.reactivate_button', 'Reactivar Deuda')}

@@ -246,7 +246,7 @@ const DebtList = () => {
             {debts.length === 0 ? (
                 <div style={{ textAlign: 'center', padding: '4rem 2rem', opacity: 0.6 }}>
                     <AlertCircle size={48} style={{ marginBottom: '1rem' }} />
-                    <p style={{ fontSize: '1.25rem', fontWeight: '700' }}>{t('debts.no_debts')}</p>
+                    <p style={{ fontSize: '1.25rem', fontWeight: '700' }}>{showCancelled ? t('debts.no_cancelled_debts') : t('debts.no_debts')}</p>
                 </div>
             ) : (
                 <div style={{ 
