@@ -3,7 +3,7 @@ import { useParams, useNavigate } from 'react-router-dom';
 import ReactQuill from 'react-quill-new';
 import 'react-quill-new/dist/quill.snow.css';
 import {
-    ChevronLeft, Loader2, User, Phone, Globe, Mail,
+    ArrowLeft, Loader2, User, Phone, Globe, Mail,
     Save, Trash2, Shield, Bell, MessageSquare, Heart,
     Activity, Calendar, Info, MapPin, Languages, Edit2,
     Eye, Award
@@ -195,10 +195,10 @@ const GamblerDetail = () => {
             <div style={{ display: 'flex', alignItems: 'center', gap: '1rem', marginBottom: '2rem' }}>
                 <button
                     onClick={() => navigate('/gamblers')}
-                    className="btn"
-                    style={{ background: '#f1f5f9', color: 'var(--text-main)', padding: '0.5rem', border: '1px solid var(--stroke)' }}
+                    className="btn-back-premium"
+                    title={t('common.back', 'Volver')}
                 >
-                    <ChevronLeft size={24} />
+                    <ArrowLeft size={20} />
                 </button>
                 <div style={{ flex: 1 }}>
                     <h1 style={{ fontSize: '1.875rem', fontWeight: '800' }}>{t('gambler_mgmt.detail.title')}</h1>

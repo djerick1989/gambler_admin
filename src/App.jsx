@@ -47,6 +47,9 @@ import CustomerFormResult from './pages/CustomerForm/CustomerFormResult';
 import DebtList from './pages/CustomerDebt/DebtList';
 import DebtForm from './pages/CustomerDebt/DebtForm';
 import DebtPolicy from './pages/CustomerDebt/DebtPolicy';
+import StrategyList from './pages/CustomerStrategy/StrategyList';
+import StrategyForm from './pages/CustomerStrategy/StrategyForm';
+import StrategyVoters from './pages/CustomerStrategy/StrategyVoters';
 import MainLayout from './layouts/MainLayout';
 import { AuthProvider, useAuth } from './context/AuthContext';
 import { ChatProvider } from './context/ChatContext';
@@ -169,6 +172,11 @@ function App() {
                 <Route path="customer/debts/edit/:id" element={<DebtForm />} />
                 <Route path="customer/debts/policy" element={<DebtPolicy />} />
 
+                {/* Customer Strategies */}
+                <Route path="customer/strategies" element={<StrategyList />} />
+                <Route path="customer/strategies/new" element={<StrategyForm />} />
+                <Route path="customer/strategies/edit/:id" element={<StrategyForm />} />
+                <Route path="customer/strategies/:id/voters" element={<StrategyVoters />} />
 
               </Route>
             </Routes>

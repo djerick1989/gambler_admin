@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import {
-    ChevronLeft, Calendar, User, MessageSquare, Loader2,
+    ArrowLeft, Calendar, User, MessageSquare, Loader2,
     Send, Trash2, Globe
 } from 'lucide-react';
 import { newsService, newsCommentService } from '../services/api';
@@ -113,16 +113,11 @@ const NewsDetail = () => {
         <div style={{ maxWidth: '1000px', margin: '0 auto', paddingBottom: '5rem' }}>
             <button
                 onClick={() => navigate('/news')}
-                className="btn btn-secondary"
-                style={{
-                    display: 'flex',
-                    alignItems: 'center',
-                    gap: '0.5rem',
-                    marginBottom: '2rem',
-                    padding: '0.75rem 1.25rem'
-                }}
+                className="btn-back-premium"
+                style={{ marginBottom: '2rem' }}
+                title={t('common.back', 'Volver')}
             >
-                <ChevronLeft size={20} /> {t('common.back')}
+                <ArrowLeft size={20} />
             </button>
 
             <article className="glass-card" style={{ padding: 0, overflow: 'hidden', border: 'none', background: 'white' }}>

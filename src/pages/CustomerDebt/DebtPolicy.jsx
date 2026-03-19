@@ -1,6 +1,6 @@
 import React from 'react';
 import { useTranslation } from 'react-i18next';
-import { ChevronLeft, Info } from 'lucide-react';
+import { ArrowLeft, Info } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 
 const DebtPolicy = () => {
@@ -12,9 +12,10 @@ const DebtPolicy = () => {
             <div style={{ display: 'flex', alignItems: 'center', gap: '1rem', marginBottom: '2.5rem' }}>
                 <button 
                     onClick={() => navigate('/customer/debts')}
-                    style={{ background: 'none', border: 'none', color: 'var(--text-main)', cursor: 'pointer', padding: '0.5rem', marginLeft: '-0.5rem' }}
+                    className="btn-back-premium"
+                    title={t('common.back', 'Volver')}
                 >
-                    <ChevronLeft size={28} />
+                    <ArrowLeft size={20} />
                 </button>
                 <h1 style={{ fontSize: '1.75rem', fontWeight: '800', margin: 0, display: 'flex', alignItems: 'center', gap: '0.75rem' }}>
                     <Info size={32} color="var(--primary)" />

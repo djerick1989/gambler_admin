@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import {
-    ChevronLeft, Loader2, Save, Image as ImageIcon,
+    ArrowLeft, Loader2, Save, Image as ImageIcon,
     AlertCircle, FileText, Info
 } from 'lucide-react';
 import { formService, mediaService } from '../../services/api';
@@ -122,8 +122,12 @@ const FormForm = () => {
     return (
         <div style={{ maxWidth: '800px', margin: '0 auto', padding: '1rem' }}>
             <div style={{ display: 'flex', alignItems: 'center', gap: '1rem', marginBottom: '2rem' }}>
-                <button onClick={() => navigate('/forms')} className="btn" style={{ padding: '0.5rem' }}>
-                    <ChevronLeft size={24} />
+                <button
+                    onClick={() => navigate('/forms')}
+                    className="btn-back-premium"
+                    title={t('common.back', 'Volver')}
+                >
+                    <ArrowLeft size={20} />
                 </button>
                 <div>
                     <h1 style={{ fontSize: '1.875rem', fontWeight: '800' }}>

@@ -3,7 +3,7 @@ import { useNavigate, useParams } from 'react-router-dom';
 import ReactQuill from 'react-quill-new';
 import 'react-quill-new/dist/quill.snow.css';
 import {
-    ChevronLeft, Loader2, Image as ImageIcon,
+    ArrowLeft, Loader2, Image as ImageIcon,
     Save, X, Type, Video, Plus, Globe, Smile
 } from 'lucide-react';
 import EmojiPicker, { Theme as EmojiTheme } from 'emoji-picker-react';
@@ -330,17 +330,10 @@ const PostForm = ({ id: propId, onSuccess, autoOpenMedia }) => {
                 <div style={{ display: 'flex', alignItems: 'center', gap: '1rem', marginBottom: '2rem' }}>
                     <button
                         onClick={() => navigate('/posts')}
-                        style={{
-                            background: '#f1f5f9',
-                            border: '1px solid var(--stroke)',
-                            color: 'var(--text-main)',
-                            padding: '0.5rem',
-                            borderRadius: '0.5rem',
-                            cursor: 'pointer',
-                            display: 'flex'
-                        }}
+                        className="btn-back-premium"
+                        title={t('common.back', 'Volver')}
                     >
-                        <ChevronLeft size={24} />
+                        <ArrowLeft size={20} />
                     </button>
                     <div>
                         <h1 style={{ fontSize: '1.875rem', fontWeight: '800' }}>

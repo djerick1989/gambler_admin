@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import {
-    Plus, Edit2, Trash2, ChevronLeft, Loader2, Image as ImageIcon,
+    Plus, Edit2, Trash2, ArrowLeft, Loader2, Image as ImageIcon,
     Check, X, Globe
 } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
@@ -126,8 +126,12 @@ const FormCategoryList = () => {
         <div style={{ padding: '1rem' }}>
             <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '2rem' }}>
                 <div style={{ display: 'flex', alignItems: 'center', gap: '1rem' }}>
-                    <button onClick={() => navigate('/forms')} className="btn" style={{ padding: '0.5rem' }}>
-                        <ChevronLeft size={24} />
+                    <button
+                        onClick={() => navigate('/forms')}
+                        className="btn-back-premium"
+                        title={t('common.back', 'Volver')}
+                    >
+                        <ArrowLeft size={20} />
                     </button>
                     <div>
                         <h1 style={{ fontSize: '1.875rem', fontWeight: '800' }}>

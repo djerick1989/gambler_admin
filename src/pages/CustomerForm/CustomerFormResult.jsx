@@ -1,11 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
-import { 
-    Loader2, 
-    AlertTriangle,
-    CheckCircle2,
-    ChevronLeft
-} from 'lucide-react';
+import { ArrowLeft, Loader2, AlertTriangle, CheckCircle2 } from 'lucide-react';
 import { formResponseService } from '../../services/api';
 import { useTranslation } from 'react-i18next';
 
@@ -163,15 +158,31 @@ const CustomerFormResult = () => {
     }
 
     return (
-        <div style={{ maxWidth: '900px', margin: '0 auto', paddingBottom: '4rem' }}>
+        <div style={{ maxWidth: '1000px', margin: '0 auto', paddingBottom: '4rem' }}>
             <div style={{ display: 'flex', alignItems: 'center', gap: '1rem', marginBottom: '1.5rem' }}>
-                <button 
-                    onClick={() => navigate('/customer/forms')}
-                    style={{ background: 'none', border: 'none', color: 'var(--text-main)', cursor: 'pointer', padding: '0.5rem', marginLeft: '-0.5rem' }}
-                    title={t('common.back', 'Volver')}
-                >
-                    <ChevronLeft size={28} />
-                </button>
+                    <button 
+                        onClick={() => navigate('/customer/forms')}
+                        className="btn-icon"
+                        style={{ 
+                            background: 'white', 
+                            border: '1px solid var(--glass-border)', 
+                            borderRadius: '12px', 
+                            width: '40px', 
+                            height: '40px', 
+                            display: 'flex', 
+                            alignItems: 'center', 
+                            justifyContent: 'center', 
+                            cursor: 'pointer',
+                            color: 'var(--text-main)',
+                            boxShadow: '0 2px 8px rgba(0,0,0,0.05)',
+                            transition: 'all 0.2s ease'
+                        }}
+                        onMouseEnter={(e) => e.currentTarget.style.transform = 'translateY(-1px)'}
+                        onMouseLeave={(e) => e.currentTarget.style.transform = 'translateY(0)'}
+                        title={t('common.back', 'Volver')}
+                    >
+                        <ArrowLeft size={20} />
+                    </button>
             </div>
             
             <h1 style={{ fontSize: '1.75rem', fontWeight: '800', textAlign: 'center', marginBottom: '2.5rem' }}>{t('forms.results_title') || 'RESULTADOS'}</h1>

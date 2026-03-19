@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import {
     MessageSquare, Trash2, Loader2, ChevronLeft, ChevronRight,
-    Calendar, User, Newspaper, Search, X
+    Calendar, User, Newspaper, Search, X, ArrowLeft
 } from 'lucide-react';
 import { newsCommentService } from '../services/api';
 import { useTranslation } from 'react-i18next';
@@ -87,10 +87,10 @@ const NewsComments = ({ newsId = null, onBack = null }) => {
                     {newsId && onBack && (
                         <button
                             onClick={onBack}
-                            className="btn btn-secondary"
-                            style={{ padding: '0.5rem', display: 'flex', alignItems: 'center', justifyContent: 'center' }}
+                            className="btn-back-premium"
+                            title={t('common.back', 'Volver')}
                         >
-                            <X size={20} />
+                            <ArrowLeft size={20} />
                         </button>
                     )}
                     <div>

@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import {
-    ChevronLeft, Loader2, User, Calendar,
+    ArrowLeft, Loader2, User, Calendar,
     MessageSquare, ShieldCheck, Zap, Info,
     AlertTriangle, FileText
 } from 'lucide-react';
@@ -221,16 +221,10 @@ const FormResponseReport = () => {
             <div style={{ display: 'flex', alignItems: 'center', gap: '1.5rem', marginBottom: '3rem' }}>
                 <button
                     onClick={() => navigate(-1)}
-                    className="btn"
-                    style={{
-                        padding: '0.75rem',
-                        background: 'rgba(255,255,255,0.05)',
-                        borderRadius: '12px',
-                        border: '1px solid var(--glass-border)',
-                        color: 'var(--text-main)'
-                    }}
+                    className="btn-back-premium"
+                    title={t('common.back', 'Volver')}
                 >
-                    <ChevronLeft size={24} />
+                    <ArrowLeft size={20} />
                 </button>
                 <div>
                     <h1 style={{ fontSize: '2.5rem', fontWeight: '900', letterSpacing: '-0.025em', marginBottom: '0.25rem' }}>

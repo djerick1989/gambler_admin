@@ -58,15 +58,8 @@ const DonationLeaderboard = () => {
             <div style={{ marginBottom: '2rem', display: 'flex', alignItems: 'center', gap: '1rem' }}>
                 <button
                     onClick={() => navigate('/donations')}
-                    style={{
-                        background: 'transparent',
-                        border: 'none',
-                        cursor: 'pointer',
-                        color: 'var(--text-muted)',
-                        display: 'flex',
-                        alignItems: 'center',
-                        fontSize: '0.9rem'
-                    }}
+                    className="btn-back-premium"
+                    title={t('common.back', 'Volver')}
                 >
                     <ArrowLeft size={20} />
                 </button>

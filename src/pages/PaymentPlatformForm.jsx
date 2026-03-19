@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import {
-    ChevronLeft, Loader2, Save, X, Info
+    ArrowLeft, Loader2, Save, X, Info
 } from 'lucide-react';
 import { paymentPlatformService } from '../services/api';
 import { useTranslation } from 'react-i18next';
@@ -80,20 +80,10 @@ const PaymentPlatformForm = () => {
             <div style={{ display: 'flex', alignItems: 'center', gap: '1rem', marginBottom: '2rem' }}>
                 <button
                     onClick={() => navigate('/payment-platforms')}
-                    style={{
-                        background: 'var(--bg-light)',
-                        border: '1px solid var(--stroke)',
-                        color: 'var(--text-main)',
-                        padding: '0.5rem',
-                        borderRadius: '0.5rem',
-                        cursor: 'pointer',
-                        display: 'flex',
-                        transition: 'all 0.2s'
-                    }}
-                    onMouseOver={(e) => e.currentTarget.style.background = '#e2e8f0'}
-                    onMouseOut={(e) => e.currentTarget.style.background = 'var(--bg-light)'}
+                    className="btn-back-premium"
+                    title={t('common.back', 'Volver')}
                 >
-                    <ChevronLeft size={24} />
+                    <ArrowLeft size={20} />
                 </button>
                 <div>
                     <h1 style={{ fontSize: '1.875rem', fontWeight: '800' }}>

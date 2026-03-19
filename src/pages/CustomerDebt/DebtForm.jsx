@@ -1,17 +1,27 @@
 import React, { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
-import { 
-    ChevronLeft, Loader2, DollarSign, Calendar, 
-    Trash2, Plus, Calendar as CalendarIcon, Save,
-    CheckCircle2, X
+import {
+    AlertCircle,
+    ArrowLeft,
+    Calendar,
+    CheckCircle2,
+    ChevronRight,
+    DollarSign,
+    Loader2,
+    Plus,
+    Save,
+    Search,
+    Trash2,
+    X
 } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
 import { debtService } from '../../services/api';
 import { useAuth } from '../../context/AuthContext';
+import { getLanguageId } from '../../utils/languages';
 import { currencies } from '../../utils/currencies';
 
 const DebtForm = () => {
-    const { t } = useTranslation();
+    const { t, i18n } = useTranslation();
     const { id } = useParams();
     const navigate = useNavigate();
     const { user } = useAuth();
@@ -48,11 +58,12 @@ const DebtForm = () => {
         if (isEdit) {
             fetchDebt();
         }
-    }, [id]);
+    }, [id, i18n.language]);
 
     const fetchCurrencies = async () => {
         try {
-            const res = await debtService.getCurrencies();
+            const languageId = getLanguageId(i18n.language);
+            const res = await debtService.getCurrencies(languageId);
             if (res.status && Array.isArray(res.data)) {
                 const data = [...res.data];
                 const usdIndex = data.findIndex(c => c.code === 'USD');
@@ -69,7 +80,8 @@ const DebtForm = () => {
 
     const fetchDebt = async () => {
         try {
-            const res = await debtService.getById(id);
+            const languageId = getLanguageId(i18n.language);
+            const res = await debtService.getById(id, languageId);
             if (res.status) {
                 const d = res.data;
                 setFormData({
@@ -207,9 +219,25 @@ const DebtForm = () => {
                 <div style={{ display: 'flex', alignItems: 'center', gap: '1rem' }}>
                     <button 
                         onClick={() => navigate('/customer/debts')}
-                        style={{ background: 'none', border: 'none', color: 'var(--text-main)', cursor: 'pointer', padding: '0.5rem', marginLeft: '-0.5rem' }}
+                        className="btn-icon"
+                        style={{ 
+                            background: 'white', 
+                            border: '1px solid var(--glass-border)', 
+                            borderRadius: '12px', 
+                            width: '40px', 
+                            height: '40px', 
+                            display: 'flex', 
+                            alignItems: 'center', 
+                            justifyContent: 'center', 
+                            cursor: 'pointer',
+                            color: 'var(--text-main)',
+                            boxShadow: '0 2px 8px rgba(0,0,0,0.05)',
+                            transition: 'all 0.2s ease'
+                        }}
+                        onMouseEnter={(e) => e.currentTarget.style.transform = 'translateY(-1px)'}
+                        onMouseLeave={(e) => e.currentTarget.style.transform = 'translateY(0)'}
                     >
-                        <ChevronLeft size={28} />
+                        <ArrowLeft size={20} />
                     </button>
                     <div style={{ display: 'flex', flexDirection: 'column' }}>
                         <h1 style={{ fontSize: '1.75rem', fontWeight: '800', margin: 0 }}>

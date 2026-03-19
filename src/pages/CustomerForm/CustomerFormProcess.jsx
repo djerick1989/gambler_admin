@@ -1,11 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useParams, useNavigate, useLocation } from 'react-router-dom';
-import { 
-    ChevronLeft, 
-    Loader2, 
-    AlertTriangle,
-    CheckCircle2
-} from 'lucide-react';
+import { ArrowLeft, Loader2, AlertTriangle, CheckCircle2 } from 'lucide-react';
 import { formService, formResponseService, formAnalysisService } from '../../services/api';
 import { useTranslation } from 'react-i18next';
 
@@ -168,14 +163,30 @@ const CustomerFormProcess = () => {
     const formTitle = form.translations?.find(t => t.languageId === currentLanguageId)?.title || "Formulario";
 
     return (
-        <div style={{ maxWidth: '900px', margin: '0 auto', paddingBottom: '4rem' }}>
+        <div style={{ maxWidth: '1000px', margin: '0 auto', paddingBottom: '4rem' }}>
             <div style={{ display: 'flex', alignItems: 'center', gap: '1rem', marginBottom: '2.5rem' }}>
-                <button 
-                    onClick={() => navigate('/customer/forms')}
-                    style={{ background: 'none', border: 'none', color: 'var(--text-main)', cursor: 'pointer' }}
-                >
-                    <ChevronLeft size={28} />
-                </button>
+                    <button 
+                        onClick={() => navigate('/customer/forms')}
+                        className="btn-icon"
+                        style={{ 
+                            background: 'white', 
+                            border: '1px solid var(--glass-border)', 
+                            borderRadius: '12px', 
+                            width: '40px', 
+                            height: '40px', 
+                            display: 'flex', 
+                            alignItems: 'center', 
+                            justifyContent: 'center', 
+                            cursor: 'pointer',
+                            color: 'var(--text-main)',
+                            boxShadow: '0 2px 8px rgba(0,0,0,0.05)',
+                            transition: 'all 0.2s ease'
+                        }}
+                        onMouseEnter={(e) => e.currentTarget.style.transform = 'translateY(-1px)'}
+                        onMouseLeave={(e) => e.currentTarget.style.transform = 'translateY(0)'}
+                    >
+                        <ArrowLeft size={20} />
+                    </button>
                 <h1 style={{ fontSize: '1.75rem', fontWeight: '800' }}>{formTitle}</h1>
             </div>
 

@@ -86,7 +86,7 @@ const CustomerFormList = () => {
     })).filter(cat => cat.forms.length > 0);
 
     return (
-        <div style={{ maxWidth: '800px', margin: '0 auto' }}>
+        <div style={{ maxWidth: '1000px', margin: '0 auto' }}>
             <h1 style={{ fontSize: '2rem', fontWeight: '900', marginBottom: '2rem', textAlign: 'center', textTransform: 'uppercase', letterSpacing: '1px' }}>
                 {t('forms.title', 'Formularios')}
             </h1>

@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import {
-    ChevronLeft, Loader2, Save, ImageIcon,
+    ArrowLeft, Loader2, Save, ImageIcon,
     Plus, Trash2, Languages, Upload
 } from 'lucide-react';
 import { achievementService, languageService, mediaService } from '../../services/api';
@@ -164,10 +164,10 @@ const AchievementForm = () => {
             <div style={{ display: 'flex', alignItems: 'center', gap: '1rem', marginBottom: '2rem' }}>
                 <button
                     onClick={() => navigate('/achievements')}
-                    className="btn btn-secondary"
-                    style={{ padding: '0.5rem', display: 'flex', alignItems: 'center', justifyContent: 'center' }}
+                    className="btn-back-premium"
+                    title={t('common.back', 'Volver')}
                 >
-                    <ChevronLeft size={24} />
+                    <ArrowLeft size={20} />
                 </button>
                 <h1 style={{ fontSize: '1.875rem', fontWeight: '800' }}>
                     {isEdit ? (t('achievements.edit') || 'Edit Achievement') : (t('achievements.new') || 'New Achievement')}

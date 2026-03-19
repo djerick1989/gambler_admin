@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { Outlet, Link, useLocation, useNavigate } from 'react-router-dom';
-import { LayoutDashboard, Languages, UserCheck, LogOut, Menu, X, ChevronRight, Globe, Newspaper, MessageSquare, Image, User, FileText, Bell, Award, CreditCard, Trash2, ClipboardCheck, Wallet } from 'lucide-react';
+import { LayoutDashboard, Languages, UserCheck, Lightbulb, LogOut, Menu, X, ChevronRight, Globe, Newspaper, MessageSquare, Image, User, FileText, Bell, Award, CreditCard, Trash2, ClipboardCheck, Wallet } from 'lucide-react';
 import { useAuth } from '../context/AuthContext';
 import { useChat } from '../context/ChatContext';
 import { useNotification } from '../context/NotificationContext';
@@ -93,6 +93,7 @@ const MainLayout = () => {
         { path: '/forms', label: t('forms.title') || 'Formularios', icon: FileText, roles: [1, 2] },
         { path: '/customer/forms', label: t('forms.autodiagnosis') || 'Formularios', icon: ClipboardCheck, roles: [0] },
         { path: '/customer/debts', label: t('debts.title') || 'Deudas', icon: Wallet, roles: [0] },
+        { path: '/customer/strategies', label: t('strategies.title') || 'Estrategias', icon: Lightbulb, roles: [0] },
         { path: '/gamblers', label: t('gambler_mgmt.title'), icon: UserCheck, roles: [1, 2] },
         { path: '/data-deletion-requests', label: t('data_deletion.title') || 'Data Deletion', icon: Trash2, roles: [1, 2] },
     ];

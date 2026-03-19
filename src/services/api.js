@@ -687,16 +687,18 @@ export const formAnalysisService = {
 };
 
 export const debtService = {
-  getCurrencies: async () => {
-    const response = await apiClient.get('/api/Debt/currencies');
+  getCurrencies: async (languageId = null) => {
+    const headers = languageId ? { LanguageId: languageId } : {};
+    const response = await apiClient.get('/api/Debt/currencies', { headers });
     return response.data;
   },
   create: async (data) => {
     const response = await apiClient.post('/api/Debt', data);
     return response.data;
   },
-  getById: async (id) => {
-    const response = await apiClient.get(`/api/Debt/${id}`);
+  getById: async (id, languageId = null) => {
+    const headers = languageId ? { LanguageId: languageId } : {};
+    const response = await apiClient.get(`/api/Debt/${id}`, { headers });
     return response.data;
   },
   update: async (id, data) => {
@@ -707,8 +709,9 @@ export const debtService = {
     const response = await apiClient.delete(`/api/Debt/${id}`);
     return response.data;
   },
-  getByGamblerId: async (gamblerId) => {
-    const response = await apiClient.get(`/api/Debt/gambler/${gamblerId}`);
+  getByGamblerId: async (gamblerId, languageId = null) => {
+    const headers = languageId ? { LanguageId: languageId } : {};
+    const response = await apiClient.get(`/api/Debt/gambler/${gamblerId}`, { headers });
     return response.data;
   },
   addPayment: async (data) => {
@@ -740,6 +743,62 @@ export const dataDeletionService = {
   },
   process: async (data) => {
     const response = await apiClient.put('/api/DataDeletion/process', data);
+    return response.data;
+  }
+};
+
+export const strategyService = {
+  createStrategy: async (data, languageId = null) => {
+    const headers = languageId ? { LanguageId: languageId } : {};
+    const response = await apiClient.post('/api/Strategy', data, { headers });
+    return response.data;
+  },
+  getMyStrategies: async (gamblerId, page = 1, pageSize = 10, languageId = null) => {
+    const headers = languageId ? { LanguageId: languageId } : {};
+    const response = await apiClient.get(`/api/Strategy/my/${gamblerId}`, {
+      params: { page, pageSize },
+      headers
+    });
+    return response.data;
+  },
+  getStrategyById: async (id, languageId = null) => {
+    const headers = languageId ? { LanguageId: languageId } : {};
+    const response = await apiClient.get(`/api/Strategy/${id}`, { headers });
+    return response.data;
+  },
+  getPopularStrategies: async (page = 1, pageSize = 10, languageId = null) => {
+    const headers = languageId ? { LanguageId: languageId } : {};
+    const response = await apiClient.get('/api/Strategy/popular', {
+      params: { page, pageSize },
+      headers
+    });
+    return response.data;
+  },
+  updateStrategy: async (id, data, languageId = null) => {
+    const headers = languageId ? { LanguageId: languageId } : {};
+    const response = await apiClient.put(`/api/Strategy/${id}`, data, { headers });
+    return response.data;
+  },
+  deleteStrategy: async (id) => {
+    const response = await apiClient.delete(`/api/Strategy/${id}`);
+    return response.data;
+  },
+  voteStrategy: async (id, data) => {
+    const response = await apiClient.post(`/api/Strategy/${id}/vote`, data);
+    return response.data;
+  },
+  getStrategyVoters: async (id, isPositive, page = 1, pageSize = 10, languageId = null) => {
+    const headers = languageId ? { LanguageId: languageId } : {};
+    const response = await apiClient.get(`/api/Strategy/${id}/voters`, {
+      params: { isPositive, page, pageSize },
+      headers
+    });
+    return response.data;
+  },
+  removeVote: async (id, gamblerId) => {
+    const response = await apiClient.delete(`/api/Strategy/${id}/vote`, {
+      params: { gamblerId }
+    });
     return response.data;
   }
 };

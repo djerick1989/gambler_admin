@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import {
-    ChevronLeft, Loader2, Save, X, Plus, Trash2, Globe, Type
+    ArrowLeft, Loader2, Save, X, Plus, Trash2, Globe, Type
 } from 'lucide-react';
 import { i18nService, languageService } from '../../services/api';
 import { useTranslation } from 'react-i18next';
@@ -137,10 +137,10 @@ const KeyForm = () => {
             <div style={{ display: 'flex', alignItems: 'center', gap: '1rem', marginBottom: '2rem' }}>
                 <button
                     onClick={() => navigate(`/i18n/namespace/${namespaceId}`)}
-                    className="btn btn-secondary"
-                    style={{ padding: '0.5rem', display: 'flex', alignItems: 'center', justifyContent: 'center' }}
+                    className="btn-back-premium"
+                    title={t('common.back', 'Volver')}
                 >
-                    <ChevronLeft size={24} />
+                    <ArrowLeft size={20} />
                 </button>
                 <div>
                     <h1 style={{ fontSize: '1.875rem', fontWeight: '800' }}>

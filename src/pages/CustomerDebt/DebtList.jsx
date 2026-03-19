@@ -8,6 +8,7 @@ import {
 import { useTranslation } from 'react-i18next';
 import { debtService } from '../../services/api';
 import { useAuth } from '../../context/AuthContext';
+import { getLanguageId } from '../../utils/languages';
 
 const DebtList = () => {
     const { t, i18n } = useTranslation();
@@ -26,12 +27,13 @@ const DebtList = () => {
         } else {
             setLoading(false);
         }
-    }, [user?.gambler?.gamblerId]);
+    }, [user?.gambler?.gamblerId, i18n.language]);
 
     const fetchDebts = async () => {
         setLoading(true);
         try {
-            const res = await debtService.getByGamblerId(user.gambler.gamblerId);
+            const languageId = getLanguageId(i18n.language);
+            const res = await debtService.getByGamblerId(user.gambler.gamblerId, languageId);
             if (res.status) {
                 setData(res.data);
             }
@@ -82,33 +84,6 @@ const DebtList = () => {
 
     return (
         <div style={{ maxWidth: '1000px', margin: '0 auto', paddingBottom: '5rem' }}>
-            {/* Header */}
-            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '2rem' }}>
-                <div>
-                    <h2 style={{ fontSize: '1.5rem', fontWeight: '500', margin: 0, color: 'var(--text-muted)' }}>
-                        {t('debts.hello')}
-                    </h2>
-                    <h1 style={{ fontSize: '2.25rem', fontWeight: '900', margin: 0, color: 'var(--text-main)' }}>
-                        {user?.name}!
-                    </h1>
-                </div>
-                <div style={{ display: 'flex', gap: '0.75rem' }}>
-                    <button 
-                        onClick={() => navigate('/customer/debts/new')}
-                        className="btn-icon" 
-                        style={{ background: 'var(--primary)', color: 'white', borderRadius: '50%', width: '48px', height: '48px', display: 'flex', alignItems: 'center', justifyContent: 'center', border: 'none', cursor: 'pointer', boxShadow: '0 4px 10px rgba(212, 144, 0, 0.3)' }}
-                    >
-                        <Plus size={24} strokeWidth={3} />
-                    </button>
-                    <button 
-                        onClick={() => navigate('/customer/debts/policy')}
-                        className="btn-icon" 
-                        style={{ background: 'white', color: 'var(--primary)', borderRadius: '50%', width: '48px', height: '48px', display: 'flex', alignItems: 'center', justifyContent: 'center', border: '1px solid var(--glass-border)', cursor: 'pointer', boxShadow: '0 4px 10px rgba(0,0,0,0.05)' }}
-                    >
-                        <Info size={24} strokeWidth={3} />
-                    </button>
-                </div>
-            </div>
 
             {/* Summary Cards Container (Slider) */}
             <div style={{ position: 'relative', overflow: 'hidden', marginBottom: '2.5rem', borderRadius: '1.5rem', boxShadow: '0 15px 30px rgba(212, 144, 0, 0.25)' }}>
@@ -186,59 +161,79 @@ const DebtList = () => {
             </div>
 
             {/* Controls */}
-            <div style={{ display: 'flex', alignItems: 'center', gap: '2rem', marginBottom: '1.5rem', flexWrap: 'wrap' }}>
-                <div style={{ display: 'flex', alignItems: 'center', gap: '1rem' }}>
-                    <span style={{ fontSize: '0.9rem', fontWeight: '700', color: 'var(--text-muted)' }}>{t('debts.sort_by', 'Sort by:')}</span>
-                    <div className="glass-card" style={{ padding: '0.5rem', display: 'flex', gap: '0.5rem', borderRadius: '0.75rem' }}>
-                        <button 
-                            onClick={() => setViewMode('grid')}
-                            style={{ background: viewMode === 'grid' ? 'var(--primary)' : 'transparent', color: viewMode === 'grid' ? 'white' : 'var(--text-muted)', border: 'none', padding: '0.4rem', borderRadius: '0.5rem', cursor: 'pointer' }}
-                        >
-                            <LayoutGrid size={20} />
-                        </button>
-                        <button 
-                            onClick={() => setViewMode('list')}
-                            style={{ background: viewMode === 'list' ? 'var(--primary)' : 'transparent', color: viewMode === 'list' ? 'white' : 'var(--text-muted)', border: 'none', padding: '0.4rem', borderRadius: '0.5rem', cursor: 'pointer' }}
-                        >
-                            <ListIcon size={20} />
-                        </button>
+            <div style={{ display: 'flex', alignItems: 'center', gap: '1rem', marginBottom: '1.5rem', flexWrap: 'wrap', justifyContent: 'space-between' }}>
+                <div style={{ display: 'flex', alignItems: 'center', gap: '1rem', flexWrap: 'wrap' }}>
+                    <div style={{ display: 'flex', alignItems: 'center', gap: '1rem' }}>
+                        <span style={{ fontSize: '0.9rem', fontWeight: '700', color: 'var(--text-muted)' }}>{t('debts.sort_by', 'Sort by:')}</span>
+                        <div className="glass-card" style={{ padding: '0.5rem', display: 'flex', gap: '0.5rem', borderRadius: '0.75rem' }}>
+                            <button 
+                                onClick={() => setViewMode('grid')}
+                                style={{ background: viewMode === 'grid' ? 'var(--primary)' : 'transparent', color: viewMode === 'grid' ? 'white' : 'var(--text-muted)', border: 'none', padding: '0.4rem', borderRadius: '0.5rem', cursor: 'pointer' }}
+                            >
+                                <LayoutGrid size={20} />
+                            </button>
+                            <button 
+                                onClick={() => setViewMode('list')}
+                                style={{ background: viewMode === 'list' ? 'var(--primary)' : 'transparent', color: viewMode === 'list' ? 'white' : 'var(--text-muted)', border: 'none', padding: '0.4rem', borderRadius: '0.5rem', cursor: 'pointer' }}
+                            >
+                                <ListIcon size={20} />
+                            </button>
+                        </div>
+                    </div>
+
+                    <div style={{ display: 'flex', alignItems: 'center', gap: '1rem' }}>
+                        <span style={{ fontSize: '0.9rem', fontWeight: '700', color: 'var(--text-muted)' }}>{t('debts.show_debts', 'Mostrar deudas:')}</span>
+                        <div style={{ display: 'flex', gap: '0.5rem' }}>
+                            <button
+                                onClick={() => setShowCancelled(false)}
+                                style={{ 
+                                    padding: '0.5rem 1rem', 
+                                    borderRadius: '0.5rem', 
+                                    border: 'none', 
+                                    background: !showCancelled ? 'var(--primary)' : 'rgba(0,0,0,0.05)', 
+                                    color: !showCancelled ? 'white' : 'var(--text-muted)',
+                                    fontWeight: '700',
+                                    cursor: 'pointer',
+                                    transition: 'all 0.2s'
+                                }}
+                            >
+                                {t('debts.active', 'Activas')}
+                            </button>
+                            <button
+                                onClick={() => setShowCancelled(true)}
+                                style={{ 
+                                    padding: '0.5rem 1rem', 
+                                    borderRadius: '0.5rem', 
+                                    border: 'none', 
+                                    background: showCancelled ? 'var(--primary)' : 'rgba(0,0,0,0.05)', 
+                                    color: showCancelled ? 'white' : 'var(--text-muted)',
+                                    fontWeight: '700',
+                                    cursor: 'pointer',
+                                    transition: 'all 0.2s'
+                                }}
+                            >
+                                {t('common.cancelled', 'Canceladas')}
+                            </button>
+                        </div>
                     </div>
                 </div>
 
-                <div style={{ display: 'flex', alignItems: 'center', gap: '1rem' }}>
-                    <span style={{ fontSize: '0.9rem', fontWeight: '700', color: 'var(--text-muted)' }}>{t('debts.show_debts', 'Mostrar deudas:')}</span>
-                    <div style={{ display: 'flex', gap: '0.5rem' }}>
-                        <button
-                            onClick={() => setShowCancelled(false)}
-                            style={{ 
-                                padding: '0.5rem 1rem', 
-                                borderRadius: '0.5rem', 
-                                border: 'none', 
-                                background: !showCancelled ? 'var(--primary)' : 'rgba(0,0,0,0.05)', 
-                                color: !showCancelled ? 'white' : 'var(--text-muted)',
-                                fontWeight: '700',
-                                cursor: 'pointer',
-                                transition: 'all 0.2s'
-                            }}
-                        >
-                            {t('debts.active', 'Activas')}
-                        </button>
-                        <button
-                            onClick={() => setShowCancelled(true)}
-                            style={{ 
-                                padding: '0.5rem 1rem', 
-                                borderRadius: '0.5rem', 
-                                border: 'none', 
-                                background: showCancelled ? 'var(--primary)' : 'rgba(0,0,0,0.05)', 
-                                color: showCancelled ? 'white' : 'var(--text-muted)',
-                                fontWeight: '700',
-                                cursor: 'pointer',
-                                transition: 'all 0.2s'
-                            }}
-                        >
-                            {t('common.cancelled', 'Canceladas')}
-                        </button>
-                    </div>
+                {/* Action Buttons */}
+                <div style={{ display: 'flex', gap: '0.6rem' }}>
+                    <button 
+                        onClick={() => navigate('/customer/debts/new')}
+                        className="btn-icon" 
+                        style={{ background: 'var(--primary)', color: 'white', borderRadius: '50%', width: '42px', height: '42px', display: 'flex', alignItems: 'center', justifyContent: 'center', border: 'none', cursor: 'pointer', boxShadow: '0 4px 10px rgba(212, 144, 0, 0.3)', flexShrink: 0 }}
+                    >
+                        <Plus size={20} strokeWidth={3} />
+                    </button>
+                    <button 
+                        onClick={() => navigate('/customer/debts/policy')}
+                        className="btn-icon" 
+                        style={{ background: 'white', color: 'var(--primary)', borderRadius: '50%', width: '42px', height: '42px', display: 'flex', alignItems: 'center', justifyContent: 'center', border: '1px solid var(--glass-border)', cursor: 'pointer', boxShadow: '0 4px 10px rgba(0,0,0,0.05)', flexShrink: 0 }}
+                    >
+                        <Info size={20} strokeWidth={3} />
+                    </button>
                 </div>
             </div>
 

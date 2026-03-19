@@ -90,8 +90,8 @@ const Keys = () => {
                 <div style={{ display: 'flex', alignItems: 'center', gap: '1rem' }}>
                     <button
                         onClick={() => navigate('/i18n')}
-                        className="btn btn-secondary"
-                        style={{ padding: '0.5rem', display: 'flex', alignItems: 'center', justifyContent: 'center' }}
+                        className="btn-back-premium"
+                        title={t('common.back', 'Volver')}
                     >
                         <ArrowLeft size={20} />
                     </button>

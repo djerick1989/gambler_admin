@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
-import { Loader2, User, ChevronLeft, MessageSquare, AlertCircle, MessageCircle } from 'lucide-react';
+import { Loader2, User, ArrowLeft, MessageSquare, AlertCircle, MessageCircle } from 'lucide-react';
 import { gamblerService, postService, chatService } from '../services/api';
 import PostCard from '../components/PostCard';
 import { useTranslation } from 'react-i18next';
@@ -113,10 +113,11 @@ const UserProfileView = () => {
             <div style={{ marginBottom: '2rem' }}>
                 <button
                     onClick={() => navigate(-1)}
-                    className="btn"
-                    style={{ background: '#f1f5f9', color: 'var(--text-main)', padding: '0.5rem', marginBottom: '1.5rem', border: '1px solid var(--stroke)' }}
+                    className="btn-back-premium"
+                    style={{ marginBottom: '1.5rem' }}
+                    title={t('common.back', 'Volver')}
                 >
-                    <ChevronLeft size={24} />
+                    <ArrowLeft size={20} />
                 </button>
 
                 {/* Profile Info Card */}

@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import {
-    ChevronLeft, Loader2, Image as ImageIcon,
+    ArrowLeft, Loader2, Image as ImageIcon,
     CheckCircle, Save, X
 } from 'lucide-react';
 import { onboardingService, mediaService } from '../services/api';
@@ -119,20 +119,10 @@ const OnBoardingForm = () => {
             <div style={{ display: 'flex', alignItems: 'center', gap: '1rem', marginBottom: '2rem' }}>
                 <button
                     onClick={() => navigate('/onboarding')}
-                    style={{
-                        background: 'var(--bg-light)',
-                        border: '1px solid var(--stroke)',
-                        color: 'var(--text-main)',
-                        padding: '0.5rem',
-                        borderRadius: '0.5rem',
-                        cursor: 'pointer',
-                        display: 'flex',
-                        transition: 'all 0.2s'
-                    }}
-                    onMouseOver={(e) => e.currentTarget.style.background = '#e2e8f0'}
-                    onMouseOut={(e) => e.currentTarget.style.background = 'var(--bg-light)'}
+                    className="btn-back-premium"
+                    title={t('common.back', 'Volver')}
                 >
-                    <ChevronLeft size={24} />
+                    <ArrowLeft size={20} />
                 </button>
                 <div>
                     <h1 style={{ fontSize: '1.875rem', fontWeight: '800' }}>
