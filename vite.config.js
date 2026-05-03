@@ -7,12 +7,12 @@ export default defineConfig({
   server: {
     proxy: {
       '/api': {
-        target: 'https://2evbm9ctw5.us-east-2.awsapprunner.com',
+        target: 'https://ga-c0745f1cf0154a6cab5f8599d47e9b0c.ecs.us-east-2.on.aws',
         changeOrigin: true,
         secure: false,
       },
       '/chatHub': {
-        target: 'https://2evbm9ctw5.us-east-2.awsapprunner.com',
+        target: 'https://ga-c0745f1cf0154a6cab5f8599d47e9b0c.ecs.us-east-2.on.aws',
         changeOrigin: true,
         secure: false,
         ws: true,

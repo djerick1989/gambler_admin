@@ -81,7 +81,7 @@ const StrategyForm = () => {
 
             if (isEditMode) {
                 await strategyService.updateStrategy(id, payload);
-                addNotification('success', t('common.success', 'Operación exitosa'));
+                addToast('success', t('common.success', 'Operación exitosa'));
                 navigate('/customer/strategies');
             } else {
                 payload.gamblerId = gamblerId;
@@ -121,42 +121,28 @@ const StrategyForm = () => {
     }
 
     return (
-        <div style={{ maxWidth: '800px', margin: '0 auto', paddingBottom: '5rem' }}>
+        <div style={{ maxWidth: '800px', margin: '0 auto', paddingBottom: '5rem', paddingTop: '1rem' }}>
             {/* Header */}
-            <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '2.5rem' }}>
-                <div style={{ display: 'flex', alignItems: 'center', gap: '1rem' }}>
-                    <button 
-                        onClick={() => navigate('/customer/strategies')}
-                        className="btn-icon"
-                        style={{ 
-                            background: 'white', 
-                            border: '1px solid var(--glass-border)', 
-                            borderRadius: '12px', 
-                            width: '40px', 
-                            height: '40px', 
-                            display: 'flex', 
-                            alignItems: 'center', 
-                            justifyContent: 'center', 
-                            cursor: 'pointer',
-                            color: 'var(--text-main)',
-                            boxShadow: '0 2px 8px rgba(0,0,0,0.05)',
-                            transition: 'all 0.2s ease'
-                        }}
-                        onMouseEnter={(e) => e.currentTarget.style.transform = 'translateY(-1px)'}
-                        onMouseLeave={(e) => e.currentTarget.style.transform = 'translateY(0)'}
-                    >
-                        <ArrowLeft size={20} />
-                    </button>
-                    <h1 style={{ fontSize: '1.75rem', fontWeight: '800', margin: 0 }}>
-                        {isEditMode ? t('strategies.edit', 'Editar Estrategia') : t('strategies.add_new', 'Agregar Estrategia')}
-                    </h1>
-                </div>
+            <div style={{ position: 'relative', display: 'flex', alignItems: 'center', justifyContent: 'center', marginBottom: '2.5rem' }}>
+                <button 
+                    onClick={() => navigate('/customer/strategies')}
+                    className="btn-back-premium"
+                    title={t('common.back', 'Volver')}
+                    style={{ position: 'absolute', left: 0 }}
+                >
+                    <ArrowLeft size={20} />
+                </button>
+                <h1 style={{ fontSize: '1.75rem', fontWeight: '800', textAlign: 'center', margin: 0 }}>
+                    {isEditMode ? t('strategies.edit', 'Editar Estrategia') : t('strategies.add_new', 'Agregar Estrategia')}
+                </h1>
                 {isEditMode && (
                     <button 
                         onClick={handleDelete}
-                        style={{ background: 'rgba(239,68,68,0.1)', border: 'none', cursor: 'pointer', color: '#ef4444', padding: '0.6rem', borderRadius: '0.75rem', display: 'flex', alignItems: 'center', justifyContent: 'center' }}
+                        className="btn-back-premium"
+                        style={{ position: 'absolute', right: 0, color: '#ef4444', borderColor: 'rgba(239, 68, 68, 0.2)' }}
+                        title={t('common.delete', 'Eliminar')}
                     >
-                        <Trash2 size={22} />
+                        <Trash2 size={20} />
                     </button>
                 )}
             </div>

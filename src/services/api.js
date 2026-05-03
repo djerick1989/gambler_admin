@@ -1,6 +1,6 @@
 import axios from 'axios';
 
-const API_BASE_URL = 'https://2evbm9ctw5.us-east-2.awsapprunner.com';
+const API_BASE_URL = 'https://ga-c0745f1cf0154a6cab5f8599d47e9b0c.ecs.us-east-2.on.aws';
 
 const apiClient = axios.create({
   baseURL: API_BASE_URL,

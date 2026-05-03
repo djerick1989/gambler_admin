@@ -163,31 +163,19 @@ const CustomerFormProcess = () => {
     const formTitle = form.translations?.find(t => t.languageId === currentLanguageId)?.title || "Formulario";
 
     return (
-        <div style={{ maxWidth: '1000px', margin: '0 auto', paddingBottom: '4rem' }}>
-            <div style={{ display: 'flex', alignItems: 'center', gap: '1rem', marginBottom: '2.5rem' }}>
-                    <button 
-                        onClick={() => navigate('/customer/forms')}
-                        className="btn-icon"
-                        style={{ 
-                            background: 'white', 
-                            border: '1px solid var(--glass-border)', 
-                            borderRadius: '12px', 
-                            width: '40px', 
-                            height: '40px', 
-                            display: 'flex', 
-                            alignItems: 'center', 
-                            justifyContent: 'center', 
-                            cursor: 'pointer',
-                            color: 'var(--text-main)',
-                            boxShadow: '0 2px 8px rgba(0,0,0,0.05)',
-                            transition: 'all 0.2s ease'
-                        }}
-                        onMouseEnter={(e) => e.currentTarget.style.transform = 'translateY(-1px)'}
-                        onMouseLeave={(e) => e.currentTarget.style.transform = 'translateY(0)'}
-                    >
-                        <ArrowLeft size={20} />
-                    </button>
-                <h1 style={{ fontSize: '1.75rem', fontWeight: '800' }}>{formTitle}</h1>
+        <div style={{ maxWidth: '1000px', margin: '0 auto', paddingBottom: '4rem', paddingTop: '1rem' }}>
+            <div style={{ position: 'relative', display: 'flex', alignItems: 'center', justifyContent: 'center', marginBottom: '2.5rem' }}>
+                <button 
+                    onClick={() => navigate('/customer/forms')}
+                    className="btn-back-premium"
+                    title={t('common.back', 'Volver')}
+                    style={{ position: 'absolute', left: 0 }}
+                >
+                    <ArrowLeft size={20} />
+                </button>
+                <h1 style={{ fontSize: '1.75rem', fontWeight: '800', textAlign: 'center', margin: 0 }}>
+                    {formTitle}
+                </h1>
             </div>
 
             <div style={{ display: 'flex', flexDirection: 'column', gap: '1.5rem' }}>

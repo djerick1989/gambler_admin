@@ -2,6 +2,7 @@ import React, { createContext, useContext, useEffect, useState, useCallback, use
 import * as signalR from '@microsoft/signalr';
 import { useNotification } from './NotificationContext';
 import { useAuth } from './AuthContext';
+import { chatService } from '../services/api';
 
 const ChatContext = createContext();
 
@@ -13,13 +14,13 @@ export const useChat = () => {
     return context;
 };
 
-const HUB_URL = 'https://2evbm9ctw5.us-east-2.awsapprunner.com/chatHub';
+const HUB_URL = 'https://ga-c0745f1cf0154a6cab5f8599d47e9b0c.ecs.us-east-2.on.aws/chatHub';
 
 export const ChatProvider = ({ children }) => {
-    const [connection, setConnection] = useState(null);
     const [typingUsers, setTypingUsers] = useState({}); // { [chatId]: { [userId]: boolean } }
     const [activeChatId, setActiveChatId] = useState(null);
     const [isConnected, setIsConnected] = useState(false);
+    const [chats, setChats] = useState([]);
     const [unreadCounts, setUnreadCounts] = useState({}); // { [chatId]: number }
     const [error, setError] = useState(null);
     const { showToast } = useNotification();
@@ -38,10 +39,12 @@ export const ChatProvider = ({ children }) => {
     }, []);
 
     // Internal setter with logging
-    const handleSetActiveChatId = (id) => {
-        console.log('--- CONTEXT: setActiveChatId called ---', { old: activeChatId, new: id });
-        setActiveChatId(id);
-    };
+    const handleSetActiveChatId = useCallback((id) => {
+        setActiveChatId(prev => {
+            console.log('--- CONTEXT: setActiveChatId called ---', { old: prev, new: id });
+            return id;
+        });
+    }, []);
 
     // Ref to keep track of connection status to avoid multiple starts
     const connectingRef = useRef(false);
@@ -49,6 +52,8 @@ export const ChatProvider = ({ children }) => {
     const activeChatIdRef = useRef(activeChatId);
     const { user } = useAuth();
     const userRef = useRef(user);
+    const chatsLoadedRef = useRef(false);
+    const joinedChatIdsRef = useRef(new Set());
 
     // Keep refs in sync with state
     useEffect(() => {
@@ -59,12 +64,120 @@ export const ChatProvider = ({ children }) => {
         userRef.current = user;
     }, [user]);
 
+    const normalizeChatId = (value) => String(value || '');
+
+    const getMessageChatId = (message) => normalizeChatId(message.chatId || message.chatsId || message.ChatId);
+
+    const getMessageSender = (message) => message.sender || message.Sender || {};
+
+    const getMessageSenderId = (message) => {
+        const sender = getMessageSender(message);
+        return normalizeChatId(sender.userId || sender.UserId);
+    };
+
+    const invokeJoinChat = useCallback(async (chatId) => {
+        const normalizedChatId = normalizeChatId(chatId);
+        const hub = connectionRef.current;
+        const isReady = hub && hub.state === signalR.HubConnectionState.Connected;
+
+        console.log('--- SIGNALR INVOKE: JoinChat ---', { chatId: normalizedChatId, ready: isReady });
+
+        if (!normalizedChatId || !isReady || joinedChatIdsRef.current.has(normalizedChatId)) return;
+
+        try {
+            await hub.invoke('JoinChat', normalizedChatId);
+            joinedChatIdsRef.current.add(normalizedChatId);
+            console.log('--- SIGNALR SUCCESS: JoinChat ---', normalizedChatId);
+        } catch (err) {
+            console.error('Error joining chat:', err);
+        }
+    }, []);
+
+    const joinKnownChats = useCallback(async (chatList) => {
+        if (!Array.isArray(chatList) || chatList.length === 0) return;
+
+        await Promise.all(
+            chatList
+                .map(chat => normalizeChatId(chat?.chatsId))
+                .filter(Boolean)
+                .map(chatId => invokeJoinChat(chatId))
+        );
+    }, [invokeJoinChat]);
+
+    const sortChatsByLastMessage = useCallback((chatList) => {
+        return [...chatList].sort((a, b) => {
+            const dateA = a.lastMessageAt ? new Date(a.lastMessageAt) : new Date(0);
+            const dateB = b.lastMessageAt ? new Date(b.lastMessageAt) : new Date(0);
+            return dateB - dateA;
+        });
+    }, []);
+
+    const upsertChat = useCallback((chat) => {
+        if (!chat?.chatsId) return;
+
+        setChats(prev => {
+            const exists = prev.some(c => normalizeChatId(c.chatsId) === normalizeChatId(chat.chatsId));
+            const next = exists
+                ? prev.map(c => normalizeChatId(c.chatsId) === normalizeChatId(chat.chatsId) ? { ...c, ...chat } : c)
+                : [chat, ...prev];
+
+            return sortChatsByLastMessage(next);
+        });
+    }, [sortChatsByLastMessage]);
+
+    const refreshChats = useCallback(async () => {
+        const token = localStorage.getItem('token');
+        if (!token) {
+            chatsLoadedRef.current = false;
+            setChats([]);
+            setUnreadCounts({});
+            return [];
+        }
+
+        try {
+            const response = await chatService.getChats();
+            const chatList = sortChatsByLastMessage(response.data || []);
+            setChats(chatList);
+            chatsLoadedRef.current = true;
+            await joinKnownChats(chatList);
+            return chatList;
+        } catch (err) {
+            console.error('Error refreshing chats:', err);
+            return [];
+        }
+    }, [joinKnownChats, sortChatsByLastMessage]);
+
+    useEffect(() => {
+        if (!user) {
+            chatsLoadedRef.current = false;
+            queueMicrotask(() => {
+                setChats([]);
+                setUnreadCounts({});
+            });
+            return;
+        }
+
+        queueMicrotask(() => {
+            refreshChats();
+        });
+    }, [user, refreshChats]);
+
     useEffect(() => {
         const token = localStorage.getItem('token');
-        if (!token) return;
+        if (!token || !user) {
+            const hub = connectionRef.current;
+            if (hub) {
+                hub.stop().catch(err => console.error('Error stopping SignalR connection:', err));
+                connectionRef.current = null;
+            }
+            joinedChatIdsRef.current.clear();
+            connectingRef.current = false;
+            queueMicrotask(() => setIsConnected(false));
+            return;
+        }
 
         // Evitamos múltiples intentos simultáneos
-        if (connectingRef.current || isConnected) return;
+        if (connectingRef.current || connectionRef.current?.state === signalR.HubConnectionState.Connected) return;
         connectingRef.current = true;
 
         const startConnection = async () => {
@@ -82,6 +195,27 @@ export const ChatProvider = ({ children }) => {
                 .withAutomaticReconnect()
                 .configureLogging(signalR.LogLevel.Information)
                 .build();
+
+            hubConnection.onreconnecting((err) => {
+                console.warn('--- SIGNALR RECONNECTING ---', err);
+                setIsConnected(false);
+            });
+
+            hubConnection.onreconnected(async () => {
+                console.log('--- SIGNALR RECONNECTED ---');
+                joinedChatIdsRef.current.clear();
+                setIsConnected(true);
+                setError(null);
+                await refreshChats();
+            });
+
+            hubConnection.onclose((err) => {
+                console.warn('--- SIGNALR CLOSED ---', err);
+                connectionRef.current = null;
+                connectingRef.current = false;
+                joinedChatIdsRef.current.clear();
+                setIsConnected(false);
+            });
 
             hubConnection.on('UserTyping', (data) => {
                 // Handle both camelCase and PascalCase (common in .NET SignalR)
@@ -101,22 +235,26 @@ export const ChatProvider = ({ children }) => {
             });
 
             hubConnection.on('ReceiveMessage', (message) => {
-                const messageChatId = String(message.chatId || message.chatsId || message.ChatId || '');
-                const senderId = String(message.sender?.userId || message.sender?.UserId || '');
+                const messageChatId = getMessageChatId(message);
+                const sender = getMessageSender(message);
+                const senderId = getMessageSenderId(message);
                 const currentUserId = String(userRef.current?.userId || '');
+                const isWindowActive = document.visibilityState === 'visible' && document.hasFocus();
+                const isViewingMessageChat = String(activeChatIdRef.current) === messageChatId && isWindowActive;
 
                 console.log('--- SIGNALR MESSAGE RECEIVED ---', {
                     messageChatId,
                     activeChatId: activeChatIdRef.current,
                     senderId,
                     currentUserId,
-                    shouldNotify: senderId !== currentUserId && String(activeChatIdRef.current) !== messageChatId
+                    isWindowActive,
+                    shouldNotify: senderId !== currentUserId && !isViewingMessageChat
                 });
 
                 // Only show notification if:
                 // 1. Message is NOT from the current user
-                // 2. The chat is NOT the one currently being viewed
-                if (senderId !== currentUserId && String(activeChatIdRef.current) !== messageChatId) {
+                // 2. The chat is not being actively viewed in the focused browser tab
+                if (senderId !== currentUserId && !isViewingMessageChat) {
                     // Update unread count
                     setUnreadCounts(prev => ({
                         ...prev,
@@ -124,23 +262,46 @@ export const ChatProvider = ({ children }) => {
                     }));
 
                     showToast({
-                        title: message.sender?.nickName || message.sender?.name || 'Nuevo Mensaje',
+                        title: sender?.nickName || sender?.name || sender?.NickName || sender?.Name || 'Nuevo Mensaje',
                         message: message.content,
                         chatId: messageChatId,
-                        sender: message.sender
+                        sender
                     });
                 }
 
+                setChats(prev => {
+                    const exists = prev.some(c => normalizeChatId(c.chatsId) === messageChatId);
+                    if (!exists) {
+                        if (chatsLoadedRef.current) {
+                            refreshChats();
+                        }
+                        return prev;
+                    }
+
+                    return sortChatsByLastMessage(prev.map(c =>
+                        normalizeChatId(c.chatsId) === messageChatId
+                            ? { ...c, lastMessage: message, lastMessageAt: message.createdAt || new Date().toISOString() }
+                            : c
+                    ));
+                });
+
                 window.dispatchEvent(new CustomEvent('new_chat_message', { detail: message }));
+            });
+
+            hubConnection.on('ChatCreated', async (data) => {
+                const chatId = normalizeChatId(data?.chatId || data?.ChatId);
+                console.log('--- SIGNALR CHAT CREATED ---', { chatId });
+                await refreshChats();
             });
 
             try {
                 await hubConnection.start();
                 console.log('--- SIGNALR CONNECTED !!! ---');
                 connectionRef.current = hubConnection;
-                setConnection(hubConnection);
+                connectingRef.current = false;
                 setIsConnected(true);
                 setError(null);
+                await refreshChats();
             } catch (err) {
                 console.error('--- SIGNALR FAILED ---');
                 console.group('Diagnostic Detail');
@@ -163,23 +324,11 @@ export const ChatProvider = ({ children }) => {
         return () => {
             // No detenemos la conexión aquí en desarrollo para evitar cortes por re-renders
         };
-    }, []); // Array vacío: Solo se ejecuta al montar el componente globalmente
+    }, [joinKnownChats, refreshChats, user]);
 
     const joinChat = useCallback(async (chatId) => {
-        const hub = connectionRef.current;
-        const isReady = hub && hub.state === signalR.HubConnectionState.Connected;
-
-        console.log('--- SIGNALR INVOKE: JoinChat ---', { chatId, ready: isReady });
-
-        if (isReady) {
-            try {
-                await hub.invoke('JoinChat', String(chatId));
-                console.log('--- SIGNALR SUCCESS: JoinChat ---', chatId);
-            } catch (err) {
-                console.error('Error joining chat:', err);
-            }
-        }
-    }, []);
+        await invokeJoinChat(chatId);
+    }, [invokeJoinChat]);
 
     const leaveChat = useCallback(async (chatId) => {
         const hub = connectionRef.current;
@@ -190,6 +339,7 @@ export const ChatProvider = ({ children }) => {
         if (isReady) {
             try {
                 await hub.invoke('LeaveChat', String(chatId));
+                joinedChatIdsRef.current.delete(normalizeChatId(chatId));
                 console.log('--- SIGNALR SUCCESS: LeaveChat ---', chatId);
             } catch (err) {
                 console.error('Error leaving chat:', err);
@@ -216,12 +366,15 @@ export const ChatProvider = ({ children }) => {
     const value = {
         isConnected,
         error,
+        chats,
         typingUsers,
         unreadCounts,
         totalUnreadCount,
         activeChatId,
         setActiveChatId: handleSetActiveChatId,
         markAsRead,
+        refreshChats,
+        upsertChat,
         joinChat,
         leaveChat,
         sendTypingStatus

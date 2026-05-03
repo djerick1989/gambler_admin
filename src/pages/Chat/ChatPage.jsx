@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useCallback } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import { chatService, authService } from '../../services/api';
@@ -13,9 +13,8 @@ const ChatPage = () => {
     const { chatId } = useParams();
     const navigate = useNavigate();
     const { t } = useTranslation();
-    const { joinChat, leaveChat, setActiveChatId, isConnected, unreadCounts, markAsRead } = useChat();
+    const { joinChat, setActiveChatId, isConnected, unreadCounts, markAsRead, chats, refreshChats, upsertChat } = useChat();
 
-    const [chats, setChats] = useState([]);
     const [messages, setMessages] = useState([]);
     const [currentUser, setCurrentUser] = useState(null);
     const [loading, setLoading] = useState(true);
@@ -25,12 +24,11 @@ const ChatPage = () => {
     useEffect(() => {
         const fetchData = async () => {
             try {
-                const [userData, chatsData] = await Promise.all([
+                const [userData] = await Promise.all([
                     authService.getUserInformation(),
-                    chatService.getChats()
+                    refreshChats()
                 ]);
                 setCurrentUser(userData.data);
-                setChats(chatsData.data || []);
             } catch (err) {
                 console.error('Error fetching chat data:', err);
             } finally {
@@ -38,7 +36,7 @@ const ChatPage = () => {
             }
         };
         fetchData();
-    }, []);
+    }, [refreshChats]);
 
     // Sync active chat metadata when chats list or chatId changes
     useEffect(() => {
@@ -72,17 +70,12 @@ const ChatPage = () => {
 
             if (isConnected) {
                 joinChat(chatId);
-                return () => {
-                    if (isConnected) {
-                        leaveChat(chatId);
-                    }
-                };
             }
         } else {
             setActiveChat(null);
             setMessages([]);
         }
-    }, [chatId, joinChat, leaveChat, isConnected]);
+    }, [chatId, joinChat, isConnected]);
 
     const fetchMessages = async (id) => {
         try {
@@ -113,14 +106,15 @@ const ChatPage = () => {
                 });
 
                 // Update last message in the list
-                setChats(prev => {
-                    const newChats = prev.map(c =>
-                        String(c.chatsId) === String(chatId)
-                            ? { ...c, lastMessage: newMessage, lastMessageAt: newMessage.createdAt || new Date().toISOString() }
-                            : c
-                    );
-                    return newChats;
-                });
+                if (activeChat) {
+                    upsertChat({
+                        ...activeChat,
+                        lastMessage: newMessage,
+                        lastMessageAt: newMessage.createdAt || new Date().toISOString()
+                    });
+                } else {
+                    refreshChats();
+                }
             }
         } catch (err) {
             console.error('Error sending message:', err);
@@ -159,16 +153,6 @@ const ChatPage = () => {
                     return [...prev, newMessage];
                 });
             }
-
-            // Update the last message preview in the sidebar for ALL chats
-            setChats(prev => {
-                const targetChatId = String(newMessage.chatId || newMessage.chatsId);
-                return prev.map(c =>
-                    String(c.chatsId) === targetChatId
-                        ? { ...c, lastMessage: newMessage, lastMessageAt: newMessage.createdAt || new Date().toISOString() }
-                        : c
-                );
-            });
         };
 
         window.addEventListener('new_chat_message', handleNewMessage);
