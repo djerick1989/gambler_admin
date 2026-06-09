@@ -5,21 +5,27 @@ import {
     FileText, 
     Loader2, 
     AlertCircle,
-    ClipboardCheck
+    ClipboardCheck,
+    Lock
 } from 'lucide-react';
 import { formService, formResponseService } from '../../services/api';
 import { useTranslation } from 'react-i18next';
 import { useAuth } from '../../context/AuthContext';
+import { useNotification } from '../../context/NotificationContext';
+import SubscriptionGate from '../../components/SubscriptionGate';
+import { getApiErrorMessage, isFreeForm, isSubscriptionRequiredError } from '../../utils/subscription';
 
 const CustomerFormList = () => {
     const { t, i18n } = useTranslation();
     const navigate = useNavigate();
-    const { user } = useAuth();
+    const { user, isSubscribed } = useAuth();
+    const { addToast } = useNotification();
     
     const [categories, setCategories] = useState([]);
     const [forms, setForms] = useState([]);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
+    const [subscriptionGate, setSubscriptionGate] = useState({ open: false, message: '' });
 
     const LANGUAGE_IDS = {
         en: '11e8ba3a-b290-4a2c-9dad-0f40e457f72c',
@@ -53,21 +59,29 @@ const CustomerFormList = () => {
         }
     };
 
-    const handleStartForm = async (formId) => {
+    const handleStartForm = async (form) => {
+        if (!isSubscribed && !isFreeForm(form)) {
+            setSubscriptionGate({ open: true, message: t('subscriptions.form_locked') });
+            return;
+        }
         try {
             const res = await formResponseService.startFormResponse({
                 userId: user.userId,
-                formId: formId
+                formId: form.formId
             }, currentLanguageId);
 
             if (res.status) {
-                navigate(`/customer/forms/process/${formId}`, { 
+                navigate(`/customer/forms/process/${form.formId}`, { 
                     state: { userFormResponseId: res.data } 
                 });
             }
         } catch (err) {
             console.error(err);
-            alert('No se pudo iniciar el formulario');
+            if (isSubscriptionRequiredError(err)) {
+                setSubscriptionGate({ open: true, message: getApiErrorMessage(err, t('subscriptions.form_locked')) });
+            } else {
+                addToast('error', t('forms.start_error', 'No se pudo iniciar el formulario'));
+            }
         }
     };
 
@@ -86,8 +100,8 @@ const CustomerFormList = () => {
     })).filter(cat => cat.forms.length > 0);
 
     return (
-        <div style={{ maxWidth: '1000px', margin: '0 auto' }}>
-            <h1 style={{ fontSize: '2rem', fontWeight: '900', marginBottom: '2rem', textAlign: 'center', textTransform: 'uppercase', letterSpacing: '1px' }}>
+        <div>
+            <h1 style={{ fontSize: '1.875rem', fontWeight: '800', marginBottom: '1rem', textAlign: 'left', letterSpacing: 0 }}>
                 {t('forms.title', 'Formularios')}
             </h1>
 
@@ -104,8 +118,7 @@ const CustomerFormList = () => {
                                 display: 'flex', 
                                 alignItems: 'center', 
                                 gap: '1rem', 
-                                marginBottom: '1.5rem',
-                                marginTop: '0.5rem'
+                                marginBottom: '1.5rem'
                             }}>
                                 <h3 style={{ 
                                     fontSize: '0.85rem', 
@@ -123,16 +136,21 @@ const CustomerFormList = () => {
                                 {group.forms.map(form => {
                                     const translation = form.translations?.find(t => t.languageId === currentLanguageId);
                                     const isGold = !!form.userFormResponseId;
+                                    const isLocked = !isSubscribed && !isFreeForm(form);
                                     const color = isGold ? 'var(--primary)' : '#888';
                                     
                                     return (
                                         <div 
                                             key={form.formId}
                                             onClick={() => {
+                                                if (isLocked) {
+                                                    setSubscriptionGate({ open: true, message: t('subscriptions.form_locked') });
+                                                    return;
+                                                }
                                                 if (form.userFormResponseId) {
                                                     navigate(`/customer/forms/result/${form.userFormResponseId}`);
                                                 } else {
-                                                    handleStartForm(form.formId);
+                                                    handleStartForm(form);
                                                 }
                                             }}
                                             className="glass-card"
@@ -142,8 +160,9 @@ const CustomerFormList = () => {
                                                 gap: '1.5rem', 
                                                 padding: '1.5rem', 
                                                 cursor: 'pointer',
+                                                opacity: isLocked ? 0.65 : 1,
                                                 transition: 'all 0.2s ease',
-                                                border: isGold ? '1px solid rgba(212, 144, 0, 0.2)' : '1px solid var(--glass-border)'
+                                                border: isLocked ? '1px solid var(--stroke)' : isGold ? '1px solid rgba(212, 144, 0, 0.2)' : '1px solid var(--glass-border)'
                                             }}
                                             onMouseEnter={(e) => e.currentTarget.style.transform = 'translateY(-2px)'}
                                             onMouseLeave={(e) => e.currentTarget.style.transform = 'translateY(0)'}
@@ -152,14 +171,16 @@ const CustomerFormList = () => {
                                                 width: '60px', 
                                                 height: '60px', 
                                                 borderRadius: '12px', 
-                                                background: isGold ? 'rgba(212, 144, 0, 0.1)' : 'rgba(255,255,255,0.05)',
+                                                background: isLocked ? '#f3f4f6' : isGold ? 'rgba(212, 144, 0, 0.1)' : 'rgba(255,255,255,0.05)',
                                                 display: 'flex',
                                                 alignItems: 'center',
                                                 justifyContent: 'center',
                                                 flexShrink: 0,
                                                 overflow: 'hidden'
                                             }}>
-                                                {translation?.icon ? (
+                                                {isLocked ? (
+                                                    <Lock size={30} color="var(--text-muted)" />
+                                                ) : translation?.icon ? (
                                                     <img 
                                                         src={translation.icon} 
                                                         alt="" 
@@ -196,7 +217,13 @@ const CustomerFormList = () => {
                                                 </p>
                                             </div>
 
-                                            <ChevronRight size={24} color="var(--text-muted)" style={{ opacity: 0.5 }} />
+                                            {isLocked ? (
+                                                <span style={{ color: 'var(--primary)', fontWeight: 800, fontSize: '0.85rem' }}>
+                                                    {t('subscriptions.premium')}
+                                                </span>
+                                            ) : (
+                                                <ChevronRight size={24} color="var(--text-muted)" style={{ opacity: 0.5 }} />
+                                            )}
                                         </div>
                                     );
                                 })}
@@ -205,6 +232,11 @@ const CustomerFormList = () => {
                     ))}
                 </div>
             )}
+            <SubscriptionGate
+                isOpen={subscriptionGate.open}
+                onClose={() => setSubscriptionGate({ open: false, message: '' })}
+                message={subscriptionGate.message}
+            />
         </div>
     );
 };

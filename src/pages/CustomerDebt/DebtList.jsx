@@ -83,7 +83,7 @@ const DebtList = () => {
     const debts = allDebts.filter(debt => showCancelled ? debt.status === 'Cancelled' : debt.status === 'Active');
 
     return (
-        <div style={{ maxWidth: '1000px', margin: '0 auto', paddingBottom: '5rem' }}>
+        <div style={{ paddingBottom: '5rem' }}>
 
             {/* Summary Cards Container (Slider) */}
             <div style={{ position: 'relative', overflow: 'hidden', marginBottom: '2.5rem', borderRadius: '1.5rem', boxShadow: '0 15px 30px rgba(212, 144, 0, 0.25)' }}>

@@ -72,7 +72,7 @@ const GamblerList = () => {
     };
 
     return (
-        <div style={{ padding: '1rem' }}>
+        <div style={{ padding: '0 1rem 1rem' }}>
             <div style={{ display: 'flex', flexDirection: 'column', gap: '1rem', marginBottom: '2rem' }}>
                 <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: '1rem' }}>
                     <div>

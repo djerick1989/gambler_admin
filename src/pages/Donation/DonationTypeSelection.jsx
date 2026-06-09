@@ -1,7 +1,7 @@
 import React from 'react';
 import { useTranslation } from 'react-i18next';
 import { useNavigate } from 'react-router-dom';
-import { Users, User, Building2 } from 'lucide-react';
+import { Trophy, User, Building2 } from 'lucide-react';
 import UserDonationList from './UserDonationList';
 
 const DonationTypeSelection = () => {
@@ -13,7 +13,7 @@ const DonationTypeSelection = () => {
             id: 'COMMUNITY',
             title: t('donations.community.title'),
             subtitle: t('donations.community.subtitle'),
-            icon: Users,
+            icon: Trophy,
             color: '#D49000'
         },
         {
@@ -36,7 +36,7 @@ const DonationTypeSelection = () => {
         <div className="animate-fade-in">
             <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '2rem' }}>
                 <div>
-                    <h1 style={{ fontSize: '2rem', fontWeight: '800', marginBottom: '0.5rem' }}>{t('donations.title')}</h1>
+                    <h1 style={{ fontSize: '1.875rem', fontWeight: '800', marginBottom: '0.5rem' }}>{t('donations.title')}</h1>
                     <p style={{ color: 'var(--text-muted)' }}>{t('donations.subtitle')}</p>
                 </div>
                 <button
@@ -58,8 +58,8 @@ const DonationTypeSelection = () => {
                     onMouseOver={(e) => e.currentTarget.style.background = 'rgba(212, 144, 0, 0.2)'}
                     onMouseOut={(e) => e.currentTarget.style.background = 'rgba(212, 144, 0, 0.1)'}
                 >
-                    <Users size={18} />
-                    {t('donations.view_all_donations') || 'Community Donations'}
+                    <Trophy size={18} />
+                    {t('donations.leaderboard.title') || 'Community Impact'}
                 </button>
             </div>
 

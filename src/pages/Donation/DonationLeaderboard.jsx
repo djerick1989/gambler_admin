@@ -63,13 +63,28 @@ const DonationLeaderboard = () => {
                 >
                     <ArrowLeft size={20} />
                 </button>
-                <div>
-                    <h1 style={{ fontSize: '2rem', fontWeight: '800', marginBottom: '0.5rem' }}>
+                <div style={{ display: 'flex', alignItems: 'center', gap: '1rem' }}>
+                    <div style={{
+                        width: '48px',
+                        height: '48px',
+                        borderRadius: '0.75rem',
+                        background: 'rgba(212, 144, 0, 0.1)',
+                        color: '#D49000',
+                        display: 'flex',
+                        alignItems: 'center',
+                        justifyContent: 'center',
+                        flexShrink: 0
+                    }}>
+                        <Trophy size={24} />
+                    </div>
+                    <div>
+                    <h1 style={{ fontSize: '1.875rem', fontWeight: '800', marginBottom: '0.5rem' }}>
                         {t('donations.leaderboard.title')}
                     </h1>
                     <p style={{ color: 'var(--text-muted)' }}>
                         {t('donations.leaderboard.subtitle')}
                     </p>
+                    </div>
                 </div>
             </div>
 

@@ -62,7 +62,7 @@ const StoryReactionsModal = ({ isOpen, onClose, statusId }) => {
                                     {!user.avatar && <UserIcon size={20} color="white" />}
                                 </div>
                                 <div>
-                                    <div style={{ fontWeight: '600', color: 'white' }}>{user.name}</div>
+                                    <div style={{ fontWeight: '700', color: 'var(--text-main)' }}>{user.name || user.nickName}</div>
                                     <div style={{ fontSize: '12px', color: 'var(--text-muted)' }}>@{user.nickName}</div>
                                 </div>
                             </div>

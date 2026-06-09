@@ -26,6 +26,8 @@ import { CSS } from '@dnd-kit/utilities';
 import { postService, mediaService } from '../services/api';
 import { useAuth } from '../context/AuthContext';
 import { useTranslation } from 'react-i18next';
+import { useNotification } from '../context/NotificationContext';
+import { getApiErrorMessage, isSubscriptionRequiredError } from '../utils/subscription';
 
 const LANGUAGE_IDS = {
     en: '11e8ba3a-b290-4a2c-9dad-0f40e457f72c',
@@ -93,6 +95,7 @@ const PostForm = ({ id: propId, onSuccess, autoOpenMedia }) => {
     const navigate = useNavigate();
     const { id: paramId } = useParams();
     const { user } = useAuth();
+    const { addToast } = useNotification();
     const quillRef = useRef(null);
 
     const id = propId || paramId;
@@ -306,7 +309,12 @@ const PostForm = ({ id: propId, onSuccess, autoOpenMedia }) => {
             }
         } catch (err) {
             console.error("Error saving post:", err);
-            alert("Error saving post");
+            const message = getApiErrorMessage(err, t('posts.save_error', 'Error saving post'));
+            if (isSubscriptionRequiredError(err)) {
+                addToast('error', message);
+            } else {
+                alert(message);
+            }
         } finally {
             setSaving(false);
         }

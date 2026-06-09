@@ -27,6 +27,14 @@ body {
   -webkit-font-smoothing: antialiased;
 }
 
+h1 {
+  font-size: 1.875rem !important;
+  line-height: 1.2 !important;
+  font-weight: 800 !important;
+  letter-spacing: 0 !important;
+  text-transform: none !important;
+}
+
 .glass-card {
   background: var(--bg-white);
   border: 1px solid var(--stroke);

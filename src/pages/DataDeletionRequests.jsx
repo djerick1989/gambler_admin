@@ -84,7 +84,7 @@ const DataDeletionRequests = () => {
     };
 
     return (
-        <div style={{ padding: '1rem' }}>
+        <div style={{ padding: '0 1rem 1rem' }}>
             <div style={{ marginBottom: '2rem' }}>
                 <h1 style={{ fontSize: '1.875rem', fontWeight: '800', marginBottom: '0.5rem', display: 'flex', alignItems: 'center', gap: '0.75rem' }}>
                     <Trash2 /> {t('data_deletion.title')}

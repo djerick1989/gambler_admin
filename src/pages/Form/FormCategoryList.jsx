@@ -123,7 +123,7 @@ const FormCategoryList = () => {
     };
 
     return (
-        <div style={{ padding: '1rem' }}>
+        <div style={{ padding: '0 1rem 1rem' }}>
             <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '2rem' }}>
                 <div style={{ display: 'flex', alignItems: 'center', gap: '1rem' }}>
                     <button

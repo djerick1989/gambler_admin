@@ -50,6 +50,19 @@ import DebtPolicy from './pages/CustomerDebt/DebtPolicy';
 import StrategyList from './pages/CustomerStrategy/StrategyList';
 import StrategyForm from './pages/CustomerStrategy/StrategyForm';
 import StrategyVoters from './pages/CustomerStrategy/StrategyVoters';
+import DopamineList from './pages/CustomerDopamine/DopamineList';
+import DopamineDetail from './pages/CustomerDopamine/DopamineDetail';
+import DopamineControl from './pages/CustomerDopamine/DopamineControl';
+import CustomerAssistance from './pages/CustomerAssistance/CustomerAssistance';
+import CustomerHelpSupport from './pages/HelpSupport/CustomerHelpSupport';
+import CustomerFAQ from './pages/HelpSupport/CustomerFAQ';
+import AdminFeedbackList from './pages/HelpSupport/AdminFeedbackList';
+import AdminDopamineList from './pages/AdminDopamine/AdminDopamineList';
+import AdminDopamineForm from './pages/AdminDopamine/AdminDopamineForm';
+import RelapseList from './pages/CustomerRelapse/RelapseList';
+import RelapseForm from './pages/CustomerRelapse/RelapseForm';
+import RelapseConclusion from './pages/CustomerRelapse/RelapseConclusion';
+import SubscriptionPage from './pages/SubscriptionPage';
 import MainLayout from './layouts/MainLayout';
 import { AuthProvider, useAuth } from './context/AuthContext';
 import { ChatProvider } from './context/ChatContext';
@@ -150,6 +163,7 @@ function App() {
                 <Route path="donations" element={<DonationList />} />
                 <Route path="donations/leaderboard" element={<DonationLeaderboard />} />
                 <Route path="donations/new/:type" element={<DonationForm />} />
+                <Route path="subscriptions" element={<SubscriptionPage />} />
 
                 {/* Forms Module */}
                 <Route path="forms" element={<AdminRoute><FormList /></AdminRoute>} />
@@ -160,6 +174,11 @@ function App() {
                 <Route path="forms/:id/responses" element={<AdminRoute><FormResponseList /></AdminRoute>} />
                 <Route path="forms/response/:id" element={<AdminRoute><FormResponseDetail /></AdminRoute>} />
                 <Route path="forms/response/:id/report" element={<AdminRoute><FormResponseReport /></AdminRoute>} />
+
+                {/* Dopamine Admin Module */}
+                <Route path="dopamine" element={<AdminRoute><AdminDopamineList /></AdminRoute>} />
+                <Route path="dopamine/type/:type" element={<AdminRoute><AdminDopamineForm /></AdminRoute>} />
+                <Route path="support-feedback" element={<AdminRoute><AdminFeedbackList /></AdminRoute>} />
 
                 {/* Customer Forms */}
                 <Route path="customer/forms" element={<CustomerFormList />} />
@@ -177,6 +196,20 @@ function App() {
                 <Route path="customer/strategies/new" element={<StrategyForm />} />
                 <Route path="customer/strategies/edit/:id" element={<StrategyForm />} />
                 <Route path="customer/strategies/:id/voters" element={<StrategyVoters />} />
+
+                {/* Customer Dopamine */}
+                <Route path="customer/dopamine" element={<DopamineList />} />
+                <Route path="customer/dopamine/content/:id" element={<DopamineDetail />} />
+                <Route path="customer/dopamine/control" element={<DopamineControl />} />
+
+                {/* Customer Assistance */}
+                <Route path="customer/assistance" element={<CustomerAssistance />} />
+                <Route path="customer/help-support" element={<CustomerHelpSupport />} />
+                <Route path="customer/help-support/faq" element={<CustomerFAQ />} />
+                <Route path="customer/relapses" element={<RelapseList />} />
+                <Route path="customer/relapses/new" element={<RelapseForm />} />
+                <Route path="customer/relapses/edit/:id" element={<RelapseForm />} />
+                <Route path="customer/relapses/:id/conclusion" element={<RelapseConclusion />} />
 
               </Route>
             </Routes>

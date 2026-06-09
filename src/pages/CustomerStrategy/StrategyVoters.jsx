@@ -124,7 +124,7 @@ const StrategyVoters = () => {
     };
 
     return (
-        <div style={{ maxWidth: '1200px', margin: '0 auto', padding: '2.5rem 1.5rem', paddingBottom: '6rem' }}>
+        <div style={{ padding: '0 1.5rem 6rem' }}>
             
             {/* Horizontal Header for Web */}
             <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '3rem', flexWrap: 'wrap', gap: '1.5rem' }}>
@@ -149,7 +149,7 @@ const StrategyVoters = () => {
                         <ArrowLeft size={20} />
                     </button>
                     <div>
-                        <h1 style={{ margin: 0, fontSize: '1.75rem', fontWeight: '800', color: 'var(--text-main)', letterSpacing: '-0.5px' }}>
+                        <h1 style={{ margin: 0, fontSize: '1.875rem', fontWeight: '800', color: 'var(--text-main)', letterSpacing: 0 }}>
                             {t('strategies.voters_title', 'Personas que reaccionaron')}
                         </h1>
                         <p style={{ margin: 0, color: 'var(--text-muted)', fontSize: '0.95rem', fontWeight: '500' }}>

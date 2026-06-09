@@ -32,6 +32,7 @@
         "delete_confirm": "Are you sure you want to delete this item?",
         "profile": "My Profile",
         "chat": "Chat",
+        "assistance": "Assistance",
         "notifications": "Notifications",
         "not_read": "Unread Messages",
         "create": "Create",
@@ -42,6 +43,7 @@
         "save_changes": "Save Changes",
         "back_to_donations": "Back to Donations",
         "back": "Back",
+        "next": "Next",
         "error_loading": "Error loading data",
         "deleted_success": "Deleted successfully",
         "confirm_action": "Are you sure you want to proceed?",
@@ -328,6 +330,7 @@
         "reactions_title": "Reactions",
         "no_reactions": "No reactions yet",
         "delete_confirm": "Are you sure you want to delete this story?",
+        "delete_button": "Delete story",
         "viewed": "Viewed",
         "add_story": "Create story"
     },
@@ -397,6 +400,247 @@
         "pending_one": "1 pending message",
         "pending_many": "{{count}} pending messages",
         "new_message": "New message received."
+    },
+    "assistance": {
+        "title": "Assistance",
+        "team_name": "Gambler Team",
+        "health_agent_welcome": "Hi, I am your emotional support assistant. I can guide you with validated information and help you organize what you are going through. Write your question briefly and clearly.",
+        "active": "Active",
+        "new_conversation": "New conversation",
+        "no_sessions": "You do not have assistant conversations yet.",
+        "empty_title": "Start a conversation with your digital assistant",
+        "start_conversation": "New conversation",
+        "message_placeholder": "Write a message",
+        "sessions_error": "Your conversations could not be loaded",
+        "conversation_error": "The conversation could not be loaded",
+        "start_error": "The conversation could not be started",
+        "send_error": "The message could not be sent"
+    },
+    "help_support": {
+        "title": "Help and Support",
+        "admin_menu": "Support",
+        "customer_module": "Help center",
+        "hero_text": "Find quick answers or tell us what you need so our team can review your case.",
+        "faq_stat": "Did you know many questions are solved in frequently asked questions?",
+        "faq_hint": "Check the quick answers first.",
+        "go_to_faq": "Go to FAQ",
+        "problem_title": "Was your problem not solved?",
+        "problem_text": "Leave us a clear comment with the help you need. Our team will review your case from the admin inbox.",
+        "reason_technical": "Technical problems or platform errors.",
+        "reason_account": "Questions about your account or settings.",
+        "reason_recovery": "Help using the recovery tools better.",
+        "comment_label": "Comment",
+        "comment_placeholder": "Write a comment",
+        "submit": "Send",
+        "sent": "Sent",
+        "confirmation_title": "We received your comment",
+        "confirmation_text": "Thank you for telling us what is happening. Our team will review your message and contact you soon if we need more information or to follow up.",
+        "confirmation_step_review": "Team review",
+        "confirmation_step_contact": "Next contact",
+        "send_another": "Send another comment",
+        "submit_success": "Comment sent successfully",
+        "submit_error": "The comment could not be sent",
+        "admin_title": "User feedback",
+        "admin_subtitle": "Review help and support comments sent by users.",
+        "admin_load_error": "Feedback could not be loaded",
+        "admin_review_success": "Feedback marked as reviewed",
+        "admin_review_error": "The feedback status could not be updated",
+        "unknown_user": "Unknown user",
+        "pending": "Pending",
+        "reviewed": "Reviewed",
+        "mark_reviewed": "Mark reviewed",
+        "no_feedbacks": "No feedback found for this filter.",
+        "filters": {
+            "pending": "Pending",
+            "reviewed": "Reviewed",
+            "all": "All"
+        },
+        "faq": {
+            "title": "Frequently Asked Questions",
+            "index_title": "Help topics",
+            "sections": [
+                {
+                    "id": "gambling-addiction",
+                    "icon": "🧠",
+                    "title": "About gambling addiction",
+                    "questions": [
+                        {
+                            "number": 1,
+                            "question": "What is gambling addiction?",
+                            "answer": "Gambling addiction is an impulse control disorder where a person cannot resist the need to gamble, even when it negatively affects their personal, work, family, or financial life."
+                        },
+                        {
+                            "number": 2,
+                            "question": "What are the most common signs that I have a gambling problem?",
+                            "answer": [
+                                "Betting more money than you can afford to lose.",
+                                "Lying to family or friends about the time or money spent gambling.",
+                                "Trying to stop gambling without success.",
+                                "Using gambling as an escape from problems, sadness, or stress.",
+                                "Going into debt or borrowing money to keep gambling."
+                            ]
+                        },
+                        {
+                            "number": 3,
+                            "question": "Can gambling addiction be cured?",
+                            "answer": "Gambling addiction is a disorder that can be controlled with professional help, personal commitment, and the right support. Many people are able to stop gambling and live a full life."
+                        },
+                        {
+                            "number": 4,
+                            "question": "What should I do if a family member or friend has gambling addiction?",
+                            "answer": "The best approach is to support them without judgment, encourage them to seek help, and avoid lending them money to gamble. You can also guide them to use the application or contact a specialist."
+                        }
+                    ]
+                },
+                {
+                    "id": "application",
+                    "icon": "📱",
+                    "title": "About the application",
+                    "questions": [
+                        {
+                            "number": 5,
+                            "question": "Does the application replace professional help?",
+                            "answer": "No. The app is a support, reflection, and accompaniment tool, but it does not replace psychological or medical therapy. We always recommend reaching out to health professionals."
+                        },
+                        {
+                            "number": 6,
+                            "question": "What resources will I find inside the app?",
+                            "answer": [
+                                "Self-assessment tools.",
+                                "Practical tips to reduce relapses.",
+                                "Motivation and wellness exercises.",
+                                "Strategies that have helped others stop gambling.",
+                                "A community where you can find stories and experiences from people who have also faced gambling addiction.",
+                                "Support line and specialist contacts."
+                            ]
+                        },
+                        {
+                            "number": 7,
+                            "question": "What should I do if I have an emergency and feel like I am going to relapse?",
+                            "answer": "The app includes an “assistance” section with immediate advice, support contacts, and reminders of your goals. We also recommend calling a family member or a help line."
+                        },
+                        {
+                            "number": 8,
+                            "question": "Can I use the application if I do not have gambling addiction?",
+                            "answer": "Yes. The app is also useful if you want to learn about gambling addiction, support a loved one, or prevent risky behavior."
+                        },
+                        {
+                            "number": 9,
+                            "question": "What happens if I relapse?",
+                            "answer": "A relapse does not mean failure. It is part of the recovery process. The app will allow you to record the experience, reflect on it, and receive guidance to get back on track."
+                        }
+                    ]
+                },
+                {
+                    "id": "privacy",
+                    "icon": "🔒",
+                    "title": "About privacy and security",
+                    "questions": [
+                        {
+                            "number": 10,
+                            "question": "Will my personal data be safe?",
+                            "answer": "Yes. The application protects your information with security systems and does not share your data with third parties without your consent."
+                        },
+                        {
+                            "number": 11,
+                            "question": "Does the app track my location or movements?",
+                            "answer": "No, unless you authorize it for specific features, such as locating nearby help groups. Privacy is always a priority."
+                        },
+                        {
+                            "number": 12,
+                            "question": "Who can see my information inside the app?",
+                            "answer": "Only you can see your evaluation, commitment, and chat information. If you decide to share stories or strategies with the community, other users will be able to see that information."
+                        }
+                    ]
+                },
+                {
+                    "id": "costs-support",
+                    "icon": "💰",
+                    "title": "About costs and support",
+                    "questions": [
+                        {
+                            "number": 13,
+                            "question": "Is the application free?",
+                            "answer": [
+                                "The app has a free version with basic resources.",
+                                "There is also a premium version with additional tracking and support tools."
+                            ]
+                        },
+                        {
+                            "number": 14,
+                            "question": "How can I access the premium version?",
+                            "answer": "You can subscribe from the app using a credit card, debit card, or secure digital wallet."
+                        },
+                        {
+                            "number": 15,
+                            "question": "What should I do if I have a technical problem with the application?",
+                            "answer": "In the “Help and Support” section you will find a contact form or email to report errors and receive assistance."
+                        },
+                        {
+                            "number": 16,
+                            "question": "Where can I find more help outside the application?",
+                            "answer": "The app includes a directory of emergency numbers, local and international support groups, and professionals specialized in gambling addiction."
+                        }
+                    ]
+                }
+            ]
+        }
+    },
+    "relapses": {
+        "title": "Relapses",
+        "add": "Add relapse",
+        "add_title": "Add relapse",
+        "edit_title": "Edit relapse",
+        "conclusion_title": "Relapse conclusions",
+        "summary_title": "Learn from each relapse",
+        "summary_text": "Record what happened to recognize patterns, reinforce your commitment, and refocus on your recovery.",
+        "count_title": "History",
+        "count_text": "{{count}} relapses recorded",
+        "empty": "Click the + icon to add a relapse.",
+        "commitment_required": "To add a relapse, you need to have a commitment.",
+        "make_commitment": "Make Commitment",
+        "date": "Date",
+        "approximate_time": "Approximate time",
+        "amount_spent": "Amount spent",
+        "financing_method": "Financing method",
+        "emotion": "Main emotion before gambling",
+        "trigger": "Triggering situation",
+        "shared_with_someone": "Did you tell someone?",
+        "reflection": "Reflection",
+        "select": "Select",
+        "yes": "Yes",
+        "no": "No",
+        "conclusions": "Conclusions:",
+        "accept": "Accept",
+        "no_advice": "There are no conclusions available for this relapse yet.",
+        "not_found": "Relapse not found",
+        "load_error": "Relapses could not be loaded",
+        "create_success": "Relapse recorded successfully",
+        "create_error": "The relapse could not be recorded",
+        "update_success": "Relapse updated successfully",
+        "update_error": "The relapse could not be updated",
+        "financing_options": {
+            "savings": "Savings",
+            "cash": "Cash",
+            "borrowed_money": "Borrowed money",
+            "credit_card": "Credit card"
+        },
+        "emotion_options": {
+            "anxiety": "Anxiety",
+            "sadness": "Sadness",
+            "boredom": "Boredom",
+            "anger": "Anger",
+            "stress": "Stress",
+            "loneliness": "Loneliness"
+        },
+        "trigger_options": {
+            "family_problems": "Family problems",
+            "money_available": "Money available",
+            "being_alone": "Being alone",
+            "social_pressure": "Social pressure",
+            "stress": "Stress",
+            "advertising": "Advertising or promotions"
+        }
     },
     "achievements": {
         "title": "My Achievements",
@@ -555,6 +799,10 @@
         "required": "Required",
         "icon": "Icon",
         "category": "Category",
+        "access": "Access",
+        "free": "Free",
+        "free_access": "Free form",
+        "free_access_help": "Free users will be able to start this form.",
         "types": {
             "SELF_ASSESSMENT": "Self-diagnosis",
             "GAMBLING_PROBLEM": "Gambling Problems",
@@ -604,7 +852,50 @@
         "finish": "Finish",
         "review": "Review",
         "autodiagnosis": "Forms",
-        "open_placeholder": "Write your answer here..."
+        "open_placeholder": "Write your answer here...",
+        "start_error": "The form could not be started"
+    },
+    "subscriptions": {
+        "title": "Subscription",
+        "subtitle": "Activate full access to every feature in the system.",
+        "required_title": "Subscription required",
+        "upgrade_title": "Upgrade your plan",
+        "required_message": "This action requires an active subscription.",
+        "free": "Free",
+        "premium": "Premium",
+        "expires": "Expires",
+        "days": "days",
+        "subscribe": "Subscribe",
+        "plans_error": "Subscription plans could not be loaded.",
+        "purchase_success": "Subscription activated successfully.",
+        "purchase_error": "The subscription could not be activated.",
+        "posts_limit": "Your free plan allows up to {{count}} posts. Subscribe to publish more.",
+        "assistance_conversation_limit": "Your free plan allows one assistance conversation. Subscribe to start more conversations.",
+        "assistance_message_limit": "Your free plan allows up to {{count}} user messages in the assistance conversation. Subscribe to continue.",
+        "commitments_limit": "Your free plan allows {{count}} commitment. Subscribe to create more commitments.",
+        "relapses_limit": "Your free plan allows {{count}} relapse. Subscribe to register more relapses.",
+        "strategies_locked": "Only subscribed users can create strategies. You can view strategies with your free plan.",
+        "form_locked": "This form is available only for subscribed users.",
+        "benefits_title": "What will you get?",
+        "benefit_alerts": "Personalized alerts to help you stop gambling.",
+        "benefit_balance": "Full access to your control and tracking tools.",
+        "benefit_mentors": "Communication with our mentors.",
+        "benefit_support": "24/7 assistance.",
+        "benefit_finances": "Tips for managing your finances.",
+        "select_plan": "Select your plan",
+        "plan_monthly": "Monthly",
+        "plan_quarterly": "Quarterly",
+        "plan_semiannual": "Semiannual",
+        "plan_annual": "Annual",
+        "month": "month",
+        "quarter": "quarter",
+        "semester": "semester",
+        "year": "year",
+        "save_5": "Save 5%",
+        "save_10": "Save 10%",
+        "save_20": "Save 20%",
+        "free_trial": "7-day free trial of the premium version included",
+        "cancel_anytime": "No commitment. Cancel whenever you want."
     },
     "debts": {
         "title": "Debts",
@@ -672,6 +963,163 @@
         "voters_count": "total interactions",
         "likes": "LIKES",
         "dislikes": "DISLIKES"
+    },
+    "dopamine": {
+        "title": "Dopamine",
+        "customer_module": "Customer Module",
+        "subtitle": "Understand how casinos use stimuli, expectation, and variable rewards to keep you playing, then create a personal commitment to regain control.",
+        "control_title": "Control Your Dopamine",
+        "control_card_desc": "Identify games, record motivations, and sign a personal commitment.",
+        "empty_content": "The requested content was not found.",
+        "next_steps": "Continue",
+        "start_control": "CONTROL YOUR DOPAMINE",
+        "card_titles": {
+            "0": "WHAT IS DOPAMINE",
+            "1": "WHAT IS ADRENALINE",
+            "2": "REWARD SYSTEM",
+            "3": "CONTROL YOUR DOPAMINE"
+        },
+        "card_title_parts": {
+            "0": {
+                "first": "WHAT IS",
+                "highlight": "DOPAMINE"
+            },
+            "1": {
+                "first": "WHAT IS",
+                "highlight": "ADRENALINE"
+            },
+            "2": {
+                "first": "REWARD",
+                "highlight": "SYSTEM"
+            },
+            "3": {
+                "first": "CONTROL YOUR",
+                "highlight": "DOPAMINE"
+            }
+        },
+        "card_descriptions": {
+            "0": "Learn what it is, how it activates, and how it influences motivation.",
+            "1": "Understand the action hormone that intensifies emotion, energy, and risk.",
+            "2": "Discover why intermittent reinforcement keeps the gambling cycle alive.",
+            "3": "Build a personal path to stop chasing the next attempt."
+        },
+        "flow_steps": {
+            "addiction": "Addiction",
+            "learn": "Learn",
+            "reflect": "Reflect",
+            "commitment": "Commitment"
+        },
+        "which_games": "Which of these games do you usually play at casinos or betting houses?",
+        "addiction_label": "Addiction",
+        "lost_money_games": "Which games have made you lose the most money? Type the game name or describe the machine you use to play.",
+        "add_game_option": "Add \"{{name}}\"",
+        "remove_game": "Remove {{name}}",
+        "no_games_available": "No games available",
+        "game_create_error": "The game could not be created",
+        "what_motivates": "What motivates you to play these games",
+        "commitment_invite": "Would you like to make a commitment to stop playing these games?",
+        "process_intro": "If you continue with the process,",
+        "process_notifications": "We will send personalized notifications that help you leave your addiction.",
+        "process_report": "We will study your case based on the information you provide and send you a report with solutions to improve your life.",
+        "subscription_note": "Subscribed users will be our priority. We will also handle all cases, although response times will be slower for free users.",
+        "make_commitment": "Make Commitment",
+        "commitment_text_intro": "I, <strong>{{name}}</strong>, recognize that casino gambling has created negative consequences in my life: financial, emotional, family, and personal.",
+        "commitment_date_intro": "For this reason, I commit to stop playing in casinos starting on:",
+        "user_name_placeholder": "name",
+        "personal_reasons": "My commitment is based on the following personal reasons:",
+        "actions_intro": "To fulfill it, I will take the following actions:",
+        "action_avoid": "I will avoid physical places or online pages related to casinos.",
+        "action_support": "I will seek support from family, friends, or the GAMBLER community.",
+        "constructive_activities": "I will spend my time on healthy and constructive activities such as:",
+        "help_when_tempted": "If I feel tempted, I will seek immediate help from a friend, family member, or the GAMBLER community.",
+        "signature_statement": "I sign this commitment with full awareness and will, with the goal of regaining control of my life and building a better future.",
+        "signature": "Sign here",
+        "sign": "Sign",
+        "sign_here": "Sign Here",
+        "commitment_agree": "I agree with the Commitment",
+        "commitment_success": "Commitment created successfully",
+        "commitment_error": "The commitment could not be created",
+        "signed_flows_title": "Flows and contracts",
+        "no_signed_flows": "You do not have signed flows or contracts yet.",
+        "signed_status": "Signed",
+        "pending_status": "In progress",
+        "more_games": "+{{count}} more",
+        "constructive_activities_short": "Activities",
+        "personal_reasons_short": "Reasons",
+        "contracts_first_title": "Your signed contracts",
+        "contracts_first_subtitle": "Before starting another flow, review the commitments you already made and the decisions you took in the past.",
+        "create_another_flow": "Make another flow",
+        "view_flow": "View flow",
+        "readonly_mode": "Read-only mode: review this flow without changing it.",
+        "exit_readonly": "Close review",
+        "delete_flow_confirm": "Do you want to delete this flow? Only incomplete flows can be deleted.",
+        "flow_deleted_success": "Flow deleted successfully",
+        "flow_delete_error": "The flow could not be deleted",
+        "flow_error": "The dopamine flow could not be updated"
+    },
+    "dopamine_admin": {
+        "title": "Dopamine Management",
+        "subtitle": "Manage the educational content shown in the customer dopamine module by type and language.",
+        "create": "Create",
+        "edit": "Edit",
+        "delete": "Delete",
+        "save": "Save",
+        "cancel": "Cancel",
+        "not_configured": "Not configured",
+        "no_video": "No video configured",
+        "delete_confirm": "Are you sure you want to delete this dopamine option?",
+        "delete_error": "The dopamine option could not be deleted",
+        "save_error": "The dopamine option could not be saved",
+        "upload_error": "The image could not be uploaded",
+        "video_upload_error": "The video could not be uploaded",
+        "video_only": "Only video files can be uploaded",
+        "upload_video": "Upload video",
+        "clear_video": "Clear video",
+        "video_preview": "Video preview",
+        "required_title": "Title is required",
+        "refresh": "Refresh",
+        "search": "Search",
+        "catalog_save_error": "The catalog item could not be saved",
+        "tabs": {
+            "content": "Content",
+            "addictions": "Addictions",
+            "games": "Games",
+            "flows": "Dopamine Flows"
+        },
+        "add_addiction": "Add Addiction",
+        "edit_addiction": "Edit Addiction",
+        "delete_addiction_confirm": "Are you sure you want to delete this addiction?",
+        "add_game": "Add Game",
+        "edit_game": "Edit Game",
+        "delete_game_confirm": "Are you sure you want to delete this game?",
+        "delete_flow_confirm": "Are you sure you want to delete this flow?",
+        "code": "Code",
+        "name": "Name",
+        "select_addiction": "Select addiction",
+        "flow_lookup": "Find flows by gambler",
+        "gambler_id": "Gambler ID",
+        "create_flow": "Create flow",
+        "update_flow": "Update flow",
+        "select_flow": "Select flow",
+        "motivation": "Motivation",
+        "completed": "Completed",
+        "active": "Active",
+        "no_motivation": "No motivation registered",
+        "flow_search_error": "The dopamine flows could not be loaded",
+        "flow_save_error": "The dopamine flow could not be saved",
+        "form_title": "{{type}}",
+        "form_subtitle": "Edit the title, video, and HTML content for the selected language.",
+        "types": {
+            "0": "Dopamine",
+            "1": "Adrenaline",
+            "2": "Reward System"
+        },
+        "fields": {
+            "title": "Title",
+            "title_placeholder": "Enter the content title...",
+            "description": "Description",
+            "video_url": "Video URL"
+        }
     },
     "DebtPolicy": {
         "title": "Debt Information",

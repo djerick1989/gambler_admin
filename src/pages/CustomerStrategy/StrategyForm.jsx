@@ -6,12 +6,13 @@ import { strategyService } from '../../services/api';
 import { useAuth } from '../../context/AuthContext';
 import { useNotification } from '../../context/NotificationContext';
 import { getLanguageId } from '../../utils/languages';
+import { getApiErrorMessage, isSubscriptionRequiredError } from '../../utils/subscription';
 
 const StrategyForm = () => {
     const { t, i18n } = useTranslation();
     const navigate = useNavigate();
     const { id } = useParams();
-    const { user } = useAuth();
+    const { user, isSubscribed } = useAuth();
     const { addToast } = useNotification();
     const isEditMode = !!id;
 
@@ -27,10 +28,15 @@ const StrategyForm = () => {
     const gamblerId = user?.gambler?.gamblerId;
 
     useEffect(() => {
+        if (!isEditMode && !isSubscribed) {
+            addToast('error', t('subscriptions.strategies_locked'));
+            navigate('/customer/strategies');
+            return;
+        }
         if (isEditMode) {
             fetchStrategy();
         }
-    }, [isEditMode, i18n.language]);
+    }, [isEditMode, i18n.language, isSubscribed]);
 
     const fetchStrategy = async () => {
         try {
@@ -91,7 +97,9 @@ const StrategyForm = () => {
             }
         } catch (err) {
             console.error(err);
-            addToast('error', t('common.error_default', 'Error'));
+            addToast('error', isSubscriptionRequiredError(err)
+                ? getApiErrorMessage(err, t('subscriptions.strategies_locked'))
+                : t('common.error_default', 'Error'));
         } finally {
             setSaving(false);
         }
@@ -121,7 +129,7 @@ const StrategyForm = () => {
     }
 
     return (
-        <div style={{ maxWidth: '800px', margin: '0 auto', paddingBottom: '5rem', paddingTop: '1rem' }}>
+        <div style={{ paddingBottom: '5rem' }}>
             {/* Header */}
             <div style={{ position: 'relative', display: 'flex', alignItems: 'center', justifyContent: 'center', marginBottom: '2.5rem' }}>
                 <button 
@@ -132,7 +140,7 @@ const StrategyForm = () => {
                 >
                     <ArrowLeft size={20} />
                 </button>
-                <h1 style={{ fontSize: '1.75rem', fontWeight: '800', textAlign: 'center', margin: 0 }}>
+                <h1 style={{ fontSize: '1.875rem', fontWeight: '800', textAlign: 'center', margin: 0 }}>
                     {isEditMode ? t('strategies.edit', 'Editar Estrategia') : t('strategies.add_new', 'Agregar Estrategia')}
                 </h1>
                 {isEditMode && (

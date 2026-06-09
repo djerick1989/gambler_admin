@@ -87,7 +87,7 @@ const DonationAdminList = () => {
     return (
         <div className="animate-fade-in">
             <div style={{ marginBottom: '2rem' }}>
-                <h1 style={{ fontSize: '2rem', fontWeight: '800', marginBottom: '0.5rem' }}>
+                <h1 style={{ fontSize: '1.875rem', fontWeight: '800', marginBottom: '0.5rem' }}>
                     {t('donations.admin.title')}
                 </h1>
                 <p style={{ color: 'var(--text-muted)' }}>{t('donations.admin.subtitle')}</p>

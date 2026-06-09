@@ -60,9 +60,9 @@ const NewsGallery = () => {
     };
 
     return (
-        <div style={{ padding: '1rem' }}>
+        <div>
             <div style={{ marginBottom: '3rem' }}>
-                <h1 style={{ fontSize: '2.5rem', fontWeight: '900', color: 'var(--text-main)', marginBottom: '0.5rem' }}>
+                <h1 style={{ fontSize: '1.875rem', fontWeight: '800', color: 'var(--text-main)', marginBottom: '0.5rem' }}>
                     {t('news.gallery.title') || 'Latest News'}
                 </h1>
                 <p style={{ color: 'var(--text-muted)', fontSize: '1.1rem' }}>

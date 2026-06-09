@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { Outlet, Link, useLocation, useNavigate } from 'react-router-dom';
-import { LayoutDashboard, Languages, UserCheck, Lightbulb, LogOut, Menu, X, ChevronRight, Globe, Newspaper, MessageSquare, Image, User, FileText, Bell, Award, CreditCard, Trash2, ClipboardCheck, Wallet } from 'lucide-react';
+import { LayoutDashboard, Languages, UserCheck, Lightbulb, LogOut, Menu, X, ChevronRight, Globe, Newspaper, MessageSquare, Image, User, FileText, Bell, Award, CreditCard, Trash2, ClipboardCheck, Wallet, Brain, LifeBuoy, RefreshCcw } from 'lucide-react';
 import { useAuth } from '../context/AuthContext';
 import { useChat } from '../context/ChatContext';
 import { useNotification } from '../context/NotificationContext';
@@ -14,13 +14,13 @@ const SidebarLink = ({ to, icon: Icon, label, active, onClick, badge }) => (
         style={{
             display: 'flex',
             alignItems: 'center',
-            padding: '0.75rem 1rem',
+            padding: '0.68rem 1rem',
             color: active ? 'white' : 'var(--text-muted)',
             textDecoration: 'none',
             borderRadius: '0.5rem',
             backgroundColor: active ? 'var(--primary)' : 'transparent',
             transition: 'all 0.2s',
-            marginBottom: '0.5rem',
+            marginBottom: '0.35rem',
             position: 'relative'
         }}
     >
@@ -91,7 +91,14 @@ const MainLayout = () => {
         { path: '/donations', label: t('donations.title') || 'Donations', icon: CreditCard },
         { path: '/payment-platforms', label: t('payment_platforms.title') || 'Payment Platforms', icon: CreditCard, roles: [1, 2] },
         { path: '/forms', label: t('forms.title') || 'Formularios', icon: FileText, roles: [1, 2] },
+        { path: '/support-feedback', label: t('help_support.admin_menu') || 'Soporte', icon: LifeBuoy, roles: [1, 2] },
+        { path: '/dopamine', label: t('dopamine.title') || 'Dopamine', icon: Brain, roles: [1, 2] },
         { path: '/customer/forms', label: t('forms.autodiagnosis') || 'Formularios', icon: ClipboardCheck, roles: [0] },
+        { path: '/subscriptions', label: t('subscriptions.title') || 'Suscripción', icon: CreditCard, roles: [0] },
+        { path: '/customer/assistance', label: t('common.assistance') || 'Asistencia', icon: LifeBuoy, roles: [0] },
+        { path: '/customer/help-support', label: t('help_support.title') || 'Ayuda y Soporte', icon: LifeBuoy, roles: [0] },
+        { path: '/customer/relapses', label: t('relapses.title') || 'Recaídas', icon: RefreshCcw, roles: [0] },
+        { path: '/customer/dopamine', label: t('dopamine.title') || 'Dopamina', icon: Brain, roles: [0] },
         { path: '/customer/debts', label: t('debts.title') || 'Deudas', icon: Wallet, roles: [0] },
         { path: '/customer/strategies', label: t('strategies.title') || 'Estrategias', icon: Lightbulb, roles: [0] },
         { path: '/gamblers', label: t('gambler_mgmt.title'), icon: UserCheck, roles: [1, 2] },
@@ -120,16 +127,16 @@ const MainLayout = () => {
                 top: 0,
                 height: '100vh'
             }}>
-                <div style={{ padding: '2rem 1.5rem', display: 'flex', alignItems: 'center', gap: '0.75rem' }}>
+                <div style={{ padding: '1rem 1.5rem 0.75rem', display: 'flex', alignItems: 'center', gap: '0.75rem' }}>
                     <img
                         src="https://s3.us-east-2.amazonaws.com/ludopata.org/logo_gambler.png"
                         alt="Logo"
                         style={{ width: '40px', height: '40px', objectFit: 'contain' }}
                     />
-                    <span style={{ fontSize: '1.25rem', fontWeight: '800', color: 'var(--text-main)' }}>{t('sidebar.title')}</span>
+                    <span style={{ fontSize: '1.25rem', fontWeight: '800', color: 'var(--text-main)' }}>The Gambler</span>
                 </div>
 
-                <nav className="sidebar-nav" style={{ flex: 1, padding: '1rem', overflowY: 'auto' }}>
+                <nav className="sidebar-nav" style={{ flex: 1, padding: '0.6rem 1rem 1rem', overflowY: 'auto' }}>
                     <style>{`
                         .sidebar-nav::-webkit-scrollbar {
                             width: 4px;
@@ -160,7 +167,7 @@ const MainLayout = () => {
                             key={item.path}
                             {...item}
                             to={item.path}
-                            active={location.pathname === item.path}
+                            active={item.path === '/' ? location.pathname === '/' : location.pathname === item.path || location.pathname.startsWith(`${item.path}/`)}
                             badge={item.path === '/chat' ? totalUnreadCount : null}
                         />
                     ))}

@@ -64,6 +64,21 @@ export const authService = {
   }
 };
 
+export const subscriptionService = {
+  getPlans: async () => {
+    const response = await apiClient.get('/api/Subscription/plans');
+    return response.data;
+  },
+  getStatus: async (userId) => {
+    const response = await apiClient.get(`/api/Subscription/status/${userId}`);
+    return response.data;
+  },
+  purchasePlan: async ({ userId, planId }) => {
+    const response = await apiClient.post('/api/Subscription/purchase', { userId, planId });
+    return response.data;
+  }
+};
+
 export const languageService = {
   getAll: async () => {
     const response = await apiClient.get('/api/Language/GetAll');
@@ -462,6 +477,94 @@ export const chatService = {
   }
 };
 
+export const chatbotService = {
+  start: async (data) => {
+    const response = await apiClient.post('/api/Chatbot/start', data);
+    return response.data;
+  },
+  sendMessage: async (data) => {
+    const response = await apiClient.post('/api/Chatbot/message', data);
+    return response.data;
+  },
+  getConversation: async (conversationId) => {
+    const response = await apiClient.get(`/api/Chatbot/conversation/${conversationId}`);
+    return response.data;
+  },
+  getSessions: async () => {
+    const response = await apiClient.get('/api/Chatbot/sessions');
+    return response.data;
+  }
+};
+
+export const healthAgentService = {
+  createConversation: async (conversationId) => {
+    const response = await apiClient.post('/api/health-agent/conversations', { conversationId });
+    return response.data;
+  },
+  getConversations: async () => {
+    const response = await apiClient.get('/api/health-agent/conversations');
+    return response.data;
+  },
+  getConversation: async (conversationId) => {
+    const response = await apiClient.get(`/api/health-agent/conversations/${conversationId}`);
+    return response.data;
+  },
+  sendMessage: async (data) => {
+    const response = await apiClient.post('/api/health-agent/chat/message', data);
+    return response.data;
+  },
+  closeConversation: async (conversationId) => {
+    const response = await apiClient.patch(`/api/health-agent/conversations/${conversationId}/close`);
+    return response.data;
+  },
+  archiveConversation: async (conversationId) => {
+    const response = await apiClient.patch(`/api/health-agent/conversations/${conversationId}/archive`);
+    return response.data;
+  },
+  summarizeConversation: async (conversationId) => {
+    const response = await apiClient.post(`/api/health-agent/conversations/${conversationId}/summary`);
+    return response.data;
+  }
+};
+
+export const userFeedbackService = {
+  create: async (data) => {
+    const response = await apiClient.post('/api/UserFeedback', data);
+    return response.data;
+  },
+  getAll: async ({ page = 1, pageSize = 10, isReviewed = null } = {}) => {
+    const params = { page, pageSize };
+    if (isReviewed !== null && isReviewed !== undefined) params.isReviewed = isReviewed;
+    const response = await apiClient.get('/api/UserFeedback', { params });
+    return response.data;
+  },
+  markReviewed: async (feedbackId) => {
+    const response = await apiClient.put(`/api/UserFeedback/${feedbackId}/review`);
+    return response.data;
+  }
+};
+
+export const relapseService = {
+  create: async (data, languageId = null) => {
+    const headers = languageId ? { LanguageId: languageId, languageId } : {};
+    const response = await apiClient.post('/api/Relapse', data, { headers });
+    return response.data;
+  },
+  getMy: async ({ page = 1, pageSize = 10, languageId = null } = {}) => {
+    const headers = languageId ? { LanguageId: languageId, languageId } : {};
+    const response = await apiClient.get('/api/Relapse/my', {
+      params: { page, pageSize },
+      headers
+    });
+    return response.data;
+  },
+  update: async (relapseId, data, languageId = null) => {
+    const headers = languageId ? { LanguageId: languageId, languageId } : {};
+    const response = await apiClient.put(`/api/Relapse/${relapseId}`, data, { headers });
+    return response.data;
+  }
+};
+
 export const achievementService = {
   createAchievement: async (data) => {
     const response = await apiClient.post('/api/Achievement/createAchievement', data);
@@ -799,6 +902,147 @@ export const strategyService = {
     const response = await apiClient.delete(`/api/Strategy/${id}/vote`, {
       params: { gamblerId }
     });
+    return response.data;
+  }
+};
+
+export const dopamineService = {
+  getAll: async () => {
+    const response = await apiClient.get('/api/Dopamine');
+    return response.data;
+  },
+  getById: async (id) => {
+    const response = await apiClient.get(`/api/Dopamine/${id}`);
+    return response.data;
+  },
+  getByType: async (type) => {
+    const response = await apiClient.get(`/api/Dopamine/type/${type}`);
+    return response.data;
+  },
+  create: async (data) => {
+    const headers = data?.languageId ? { languageId: data.languageId, LanguageId: data.languageId } : {};
+    const response = await apiClient.post('/api/Dopamine', data, { headers });
+    return response.data;
+  },
+  update: async (id, data) => {
+    const headers = data?.languageId ? { languageId: data.languageId, LanguageId: data.languageId } : {};
+    const response = await apiClient.put(`/api/Dopamine/${id}`, data, { headers });
+    return response.data;
+  },
+  delete: async (id, languageId = null) => {
+    const headers = languageId ? { languageId, LanguageId: languageId } : {};
+    const response = await apiClient.delete(`/api/Dopamine/${id}`, { headers });
+    return response.data;
+  }
+};
+
+export const addictionService = {
+  getAll: async () => {
+    const response = await apiClient.get('/api/Addiction');
+    return response.data;
+  },
+  getById: async (id) => {
+    const response = await apiClient.get(`/api/Addiction/${id}`);
+    return response.data;
+  },
+  getByCode: async (code) => {
+    const response = await apiClient.get(`/api/Addiction/code/${code}`);
+    return response.data;
+  },
+  create: async (data) => {
+    const headers = data?.languageId ? { languageId: data.languageId, LanguageId: data.languageId } : {};
+    const response = await apiClient.post('/api/Addiction', data, { headers });
+    return response.data;
+  },
+  update: async (id, data) => {
+    const headers = data?.languageId ? { languageId: data.languageId, LanguageId: data.languageId } : {};
+    const response = await apiClient.put(`/api/Addiction/${id}`, data, { headers });
+    return response.data;
+  },
+  delete: async (id, languageId = null) => {
+    const headers = languageId ? { languageId, LanguageId: languageId } : {};
+    const response = await apiClient.delete(`/api/Addiction/${id}`, { headers });
+    return response.data;
+  }
+};
+
+export const gameService = {
+  getAll: async () => {
+    const response = await apiClient.get('/api/Game');
+    return response.data;
+  },
+  getByAddiction: async (addictionId) => {
+    const response = await apiClient.get(`/api/Game/addiction/${addictionId}`);
+    return response.data;
+  },
+  search: async (addictionId, name) => {
+    const response = await apiClient.get('/api/Game/search', {
+      params: { addictionId, name }
+    });
+    return response.data;
+  },
+  create: async (data) => {
+    const headers = data?.languageId ? { languageId: data.languageId, LanguageId: data.languageId } : {};
+    const response = await apiClient.post('/api/Game', data, { headers });
+    return response.data;
+  },
+  update: async (id, data) => {
+    const headers = data?.languageId ? { languageId: data.languageId, LanguageId: data.languageId } : {};
+    const response = await apiClient.put(`/api/Game/${id}`, data, { headers });
+    return response.data;
+  },
+  delete: async (id) => {
+    const response = await apiClient.delete(`/api/Game/${id}`);
+    return response.data;
+  }
+};
+
+export const dopamineFlowService = {
+  create: async (data) => {
+    const response = await apiClient.post('/api/DopamineFlow', data);
+    return response.data;
+  },
+  updateMotivationAndGames: async (id, data) => {
+    const response = await apiClient.put(`/api/DopamineFlow/${id}`, data);
+    return response.data;
+  },
+  getById: async (id) => {
+    const response = await apiClient.get(`/api/DopamineFlow/${id}`);
+    return response.data;
+  },
+  getActiveByGamblerId: async (gamblerId) => {
+    const response = await apiClient.get(`/api/DopamineFlow/gambler/${gamblerId}/active`);
+    return response.data;
+  },
+  getByGamblerId: async (gamblerId) => {
+    const response = await apiClient.get(`/api/DopamineFlow/gambler/${gamblerId}`);
+    return response.data;
+  },
+  complete: async (id) => {
+    const response = await apiClient.post(`/api/DopamineFlow/${id}/complete`);
+    return response.data;
+  },
+  delete: async (id) => {
+    const response = await apiClient.delete(`/api/DopamineFlow/${id}`);
+    return response.data;
+  }
+};
+
+export const dopamineCommitmentService = {
+  create: async (data) => {
+    const response = await apiClient.post('/api/DopamineCommitment', data);
+    return response.data;
+  },
+  getById: async (id) => {
+    const response = await apiClient.get(`/api/DopamineCommitment/${id}`);
+    return response.data;
+  },
+  getByFlowId: async (flowId) => {
+    const response = await apiClient.get(`/api/DopamineCommitment/flow/${flowId}`);
+    return response.data;
+  },
+  getByGamblerId: async (gamblerId) => {
+    const response = await apiClient.get(`/api/DopamineCommitment/gambler/${gamblerId}`);
     return response.data;
   }
 };

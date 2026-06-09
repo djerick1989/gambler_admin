@@ -9,11 +9,12 @@ import { strategyService } from '../../services/api';
 import { useAuth } from '../../context/AuthContext';
 import { useNotification } from '../../context/NotificationContext';
 import { getLanguageId } from '../../utils/languages';
+import SubscriptionGate from '../../components/SubscriptionGate';
 
 const StrategyList = () => {
     const { t, i18n } = useTranslation();
     const navigate = useNavigate();
-    const { user } = useAuth();
+    const { user, isSubscribed } = useAuth();
     const { addToast } = useNotification();
     
     const [strategies, setStrategies] = useState([]);
@@ -23,6 +24,7 @@ const StrategyList = () => {
     const [hasMore, setHasMore] = useState(false);
     const [ownTotal, setOwnTotal] = useState(0);
     const [popularTotal, setPopularTotal] = useState(0);
+    const [subscriptionGateOpen, setSubscriptionGateOpen] = useState(false);
 
     const gamblerId = user?.gambler?.gamblerId;
 
@@ -119,7 +121,7 @@ const StrategyList = () => {
     }
 
     return (
-        <div style={{ maxWidth: '1000px', margin: '0 auto', paddingBottom: '5rem' }}>
+        <div style={{ paddingBottom: '5rem' }}>
 
             {/* Hero Banner */}
             <div style={{ 
@@ -137,7 +139,13 @@ const StrategyList = () => {
                             {t('strategies.title', 'Estrategias')}
                         </h3>
                         <button
-                            onClick={() => navigate('/customer/strategies/new')}
+                            onClick={() => {
+                                if (!isSubscribed) {
+                                    setSubscriptionGateOpen(true);
+                                    return;
+                                }
+                                navigate('/customer/strategies/new');
+                            }}
                             style={{ background: 'rgba(0,0,0,0.15)', color: 'var(--text-main)', borderRadius: '50%', width: '42px', height: '42px', display: 'flex', alignItems: 'center', justifyContent: 'center', border: 'none', cursor: 'pointer', flexShrink: 0, backdropFilter: 'blur(4px)' }}
                         >
                             <Plus size={22} strokeWidth={3} />
@@ -340,6 +348,12 @@ const StrategyList = () => {
                     )}
                 </div>
             )}
+
+            <SubscriptionGate
+                isOpen={subscriptionGateOpen}
+                onClose={() => setSubscriptionGateOpen(false)}
+                message={t('subscriptions.strategies_locked')}
+            />
         </div>
     );
 };

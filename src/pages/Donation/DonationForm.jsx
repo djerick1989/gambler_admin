@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
-import { DollarSign, ArrowLeft, Loader2, Users, User, Building2, Search, Plus, Trash2 } from 'lucide-react';
+import { ArrowLeft, Loader2, Trophy, User, Building2, Search, Trash2 } from 'lucide-react';
 import { donationService, gamblerService } from '../../services/api';
 import { useAuth } from '../../context/AuthContext';
 import { useNotification } from '../../context/NotificationContext';
@@ -125,7 +125,7 @@ const DonationForm = () => {
     };
 
     const getIcon = () => {
-        if (isCommunityDonation) return <Users size={32} />;
+        if (isCommunityDonation) return <Trophy size={32} />;
         if (isPersonDonation) return <User size={32} />;
         return <Building2 size={32} />;
     };
@@ -135,26 +135,19 @@ const DonationForm = () => {
     };
 
     return (
-        <div className="animate-fade-in" style={{ maxWidth: '800px', margin: '0 auto' }}>
-            <button
-                onClick={() => navigate('/donations')}
-                style={{
-                    display: 'flex',
-                    alignItems: 'center',
-                    gap: '0.5rem',
-                    background: 'transparent',
-                    border: 'none',
-                    color: 'var(--text-muted)',
-                    cursor: 'pointer',
-                    marginBottom: '1.5rem',
-                    padding: 0
-                }}
-            >
-                <ArrowLeft size={20} />
-            </button>
+        <div className="animate-fade-in">
+            <div className="glass-card" style={{ padding: '2.5rem', position: 'relative' }}>
+                <button
+                    onClick={() => navigate('/donations')}
+                    className="btn-back-premium"
+                    style={{ position: 'absolute', top: '2.5rem', right: '2.5rem' }}
+                    title={t('common.back', 'Volver')}
+                    aria-label={t('common.back', 'Volver')}
+                >
+                    <ArrowLeft size={20} />
+                </button>
 
-            <div className="glass-card" style={{ padding: '2.5rem' }}>
-                <div style={{ display: 'flex', alignItems: 'center', gap: '1.5rem', marginBottom: '2rem' }}>
+                <div style={{ display: 'flex', alignItems: 'center', gap: '1.5rem', marginBottom: '2rem', paddingRight: '4rem' }}>
                     <div style={{
                         width: '64px',
                         height: '64px',
@@ -168,7 +161,7 @@ const DonationForm = () => {
                         {getIcon()}
                     </div>
                     <div>
-                        <h1 style={{ fontSize: '1.75rem', fontWeight: '800' }}>{t(`donations.${type.toLowerCase()}.title`)}</h1>
+                        <h1 style={{ fontSize: '1.875rem', fontWeight: '800' }}>{t(`donations.${type.toLowerCase()}.title`)}</h1>
                         <p style={{ color: 'var(--text-muted)' }}>{t(`donations.${type.toLowerCase()}.subtitle`)}</p>
                     </div>
                 </div>

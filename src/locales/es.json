@@ -32,6 +32,7 @@
         "delete_confirm": "¿Estás seguro de que deseas eliminar este elemento?",
         "profile": "Mi Perfil",
         "chat": "Chat",
+        "assistance": "Asistencia",
         "notifications": "Notificaciones",
         "not_read": "Mensajes No Leídos",
         "create": "Crear",
@@ -42,6 +43,7 @@
         "save_changes": "Guardar Cambios",
         "back_to_donations": "Volver a Donaciones",
         "back": "Volver",
+        "next": "Siguiente",
         "error_loading": "Error al cargar los datos",
         "deleted_success": "Eliminado con éxito",
         "confirm_action": "¿Estás seguro de que deseas proceder?",
@@ -328,6 +330,7 @@
         "reactions_title": "Reactions",
         "no_reactions": "No hay reacciones aún",
         "delete_confirm": "¿Estás seguro de que quieres borrar esta historia?",
+        "delete_button": "Eliminar historia",
         "viewed": "Visto",
         "add_story": "Crear historia"
     },
@@ -397,6 +400,247 @@
         "pending_one": "1 mensaje pendiente",
         "pending_many": "{{count}} mensajes pendientes",
         "new_message": "Nuevo mensaje recibido."
+    },
+    "assistance": {
+        "title": "Asistencia",
+        "team_name": "Gambler Team",
+        "health_agent_welcome": "Hola, soy tu asistente de apoyo emocional. Puedo orientarte con informacion validada y ayudarte a ordenar lo que estas viviendo. Escribe tu consulta de forma breve y clara.",
+        "active": "Activo",
+        "new_conversation": "Nueva conversación",
+        "no_sessions": "Aún no tienes conversaciones con el asistente.",
+        "empty_title": "Inicia una conversación con tu asistente digital",
+        "start_conversation": "Nueva conversación",
+        "message_placeholder": "Escribe un mensaje",
+        "sessions_error": "No se pudieron cargar tus conversaciones",
+        "conversation_error": "No se pudo cargar la conversación",
+        "start_error": "No se pudo iniciar la conversación",
+        "send_error": "No se pudo enviar el mensaje"
+    },
+    "help_support": {
+        "title": "Ayuda y Soporte",
+        "admin_menu": "Soporte",
+        "customer_module": "Centro de ayuda",
+        "hero_text": "Encuentra respuestas rápidas o cuéntanos qué necesitas para que podamos revisar tu caso.",
+        "faq_stat": "¿Sabías que muchas dudas se resuelven en preguntas frecuentes?",
+        "faq_hint": "Revisa primero las respuestas rápidas.",
+        "go_to_faq": "Ir a preguntas frecuentes",
+        "problem_title": "¿No se ha resuelto tu problema?",
+        "problem_text": "Déjanos un comentario claro con la ayuda que necesitas. Nuestro equipo revisará tu caso desde la bandeja administrativa.",
+        "reason_technical": "Problemas técnicos o errores de la plataforma.",
+        "reason_account": "Dudas relacionadas con tu cuenta o configuración.",
+        "reason_recovery": "Ayuda para usar mejor las herramientas de recuperación.",
+        "comment_label": "Comentario",
+        "comment_placeholder": "Escribe un comentario",
+        "submit": "Enviar",
+        "sent": "Enviado",
+        "confirmation_title": "Recibimos tu comentario",
+        "confirmation_text": "Gracias por contarnos lo que ocurre. Nuestro equipo revisará tu mensaje y pronto nos comunicaremos contigo si necesitamos más información o para darte seguimiento.",
+        "confirmation_step_review": "Revisión del equipo",
+        "confirmation_step_contact": "Próximo contacto",
+        "send_another": "Enviar otro comentario",
+        "submit_success": "Comentario enviado con éxito",
+        "submit_error": "No se pudo enviar el comentario",
+        "admin_title": "Feedback de usuarios",
+        "admin_subtitle": "Revisa los comentarios de ayuda y soporte enviados por los usuarios.",
+        "admin_load_error": "No se pudieron cargar los feedbacks",
+        "admin_review_success": "Feedback marcado como revisado",
+        "admin_review_error": "No se pudo actualizar el estado del feedback",
+        "unknown_user": "Usuario desconocido",
+        "pending": "Pendiente",
+        "reviewed": "Revisado",
+        "mark_reviewed": "Marcar revisado",
+        "no_feedbacks": "No hay feedbacks para este filtro.",
+        "filters": {
+            "pending": "Pendientes",
+            "reviewed": "Revisados",
+            "all": "Todos"
+        },
+        "faq": {
+            "title": "Preguntas Frecuentes",
+            "index_title": "Temas de ayuda",
+            "sections": [
+                {
+                    "id": "ludopatia",
+                    "icon": "🧠",
+                    "title": "Sobre la ludopatía",
+                    "questions": [
+                        {
+                            "number": 1,
+                            "question": "¿Qué es la ludopatía?",
+                            "answer": "La ludopatía es un trastorno del control de los impulsos en el que la persona no puede resistir la necesidad de jugar, incluso cuando eso afecta negativamente su vida personal, laboral, familiar o económica."
+                        },
+                        {
+                            "number": 2,
+                            "question": "¿Cuáles son las señales más comunes de que tengo un problema con el juego?",
+                            "answer": [
+                                "Apostar más dinero del que puedes permitirte perder.",
+                                "Mentir a familiares o amigos sobre el tiempo o dinero gastado en el juego.",
+                                "Intentar dejar de jugar sin éxito.",
+                                "Usar el juego como escape de problemas, tristeza o estrés.",
+                                "Endeudarte o pedir dinero prestado para seguir apostando."
+                            ]
+                        },
+                        {
+                            "number": 3,
+                            "question": "¿La ludopatía tiene cura?",
+                            "answer": "La ludopatía es un trastorno que puede controlarse con ayuda profesional, compromiso personal y apoyo adecuado. Muchas personas logran dejar de jugar y llevar una vida plena."
+                        },
+                        {
+                            "number": 4,
+                            "question": "¿Qué hago si un familiar o amigo es ludópata?",
+                            "answer": "Lo más recomendable es apoyarlo sin juzgar, invitarlo a buscar ayuda y evitar prestarle dinero para apostar. También puedes orientarlo a usar la aplicación o a contactar con un especialista."
+                        }
+                    ]
+                },
+                {
+                    "id": "aplicacion",
+                    "icon": "📱",
+                    "title": "Sobre la aplicación",
+                    "questions": [
+                        {
+                            "number": 5,
+                            "question": "¿La aplicación sustituye la ayuda profesional?",
+                            "answer": "No. La app es una herramienta de apoyo, reflexión y acompañamiento, pero no reemplaza la terapia psicológica ni médica. Siempre recomendamos acudir a profesionales de la salud."
+                        },
+                        {
+                            "number": 6,
+                            "question": "¿Qué recursos encontraré dentro de la app?",
+                            "answer": [
+                                "Herramientas de autoevaluación.",
+                                "Consejos prácticos para reducir recaídas.",
+                                "Ejercicios de motivación y bienestar.",
+                                "Estrategias que le han funcionado a otros para dejar de apostar.",
+                                "Una comunidad en donde podrás encontrar anécdotas y experiencias de personas que también fueron ludópatas.",
+                                "Contactos de líneas de apoyo y especialistas."
+                            ]
+                        },
+                        {
+                            "number": 7,
+                            "question": "¿Qué hago si tengo una urgencia y siento que voy a recaer?",
+                            "answer": "La app cuenta con una sección de “asistencia” con consejos inmediatos, contactos de apoyo y recordatorios de tus objetivos. También se recomienda llamar a un familiar o a una línea de ayuda."
+                        },
+                        {
+                            "number": 8,
+                            "question": "¿Puedo usar la aplicación si no soy ludópata?",
+                            "answer": "Sí. La app también es útil si quieres aprender sobre la ludopatía, apoyar a un ser querido o prevenir conductas de riesgo."
+                        },
+                        {
+                            "number": 9,
+                            "question": "¿Qué pasa si recaigo?",
+                            "answer": "Una recaída no significa fracaso. Es parte del proceso de recuperación. La app te permitirá registrar la experiencia, reflexionar sobre ella y darte consejos para retomar tu camino."
+                        }
+                    ]
+                },
+                {
+                    "id": "privacidad",
+                    "icon": "🔒",
+                    "title": "Sobre privacidad y seguridad",
+                    "questions": [
+                        {
+                            "number": 10,
+                            "question": "¿Mis datos personales estarán seguros?",
+                            "answer": "Sí. La aplicación protege tu información con sistemas de seguridad y no comparte tus datos con terceros sin tu consentimiento."
+                        },
+                        {
+                            "number": 11,
+                            "question": "¿La app registra mi ubicación o mis movimientos?",
+                            "answer": "No, salvo que tú lo autorices en funciones específicas (ejemplo: localizar grupos de ayuda cercanos). La privacidad siempre es prioritaria."
+                        },
+                        {
+                            "number": 12,
+                            "question": "¿Quién puede ver mi información dentro de la app?",
+                            "answer": "Tu información de evaluaciones, compromiso y chats, únicamente podrás verlos tú. Si decides compartir con la comunidad historias o estrategias, esta información la podrán ver otros usuarios."
+                        }
+                    ]
+                },
+                {
+                    "id": "costos-soporte",
+                    "icon": "💰",
+                    "title": "Sobre costos y soporte",
+                    "questions": [
+                        {
+                            "number": 13,
+                            "question": "¿La aplicación es gratuita?",
+                            "answer": [
+                                "La app tiene una versión gratuita con recursos básicos.",
+                                "También existe una versión premium con herramientas adicionales de seguimiento y apoyo."
+                            ]
+                        },
+                        {
+                            "number": 14,
+                            "question": "¿Cómo puedo acceder a la versión premium?",
+                            "answer": "Puedes suscribirte desde la misma app mediante tarjeta de crédito, débito o billeteras digitales seguras."
+                        },
+                        {
+                            "number": 15,
+                            "question": "¿Qué hago si tengo un problema técnico con la aplicación?",
+                            "answer": "En la sección “Ayuda y Soporte” encontrarás un formulario de contacto o correo electrónico para reportar errores y recibir asistencia."
+                        },
+                        {
+                            "number": 16,
+                            "question": "¿Dónde puedo encontrar más ayuda fuera de la aplicación?",
+                            "answer": "La app incluye un directorio de números de emergencia, grupos de apoyo locales e internacionales, y profesionales especializados en adicciones al juego."
+                        }
+                    ]
+                }
+            ]
+        }
+    },
+    "relapses": {
+        "title": "Recaídas",
+        "add": "Agregar recaída",
+        "add_title": "Agregar recaída",
+        "edit_title": "Editar recaída",
+        "conclusion_title": "Conclusiones recaída",
+        "summary_title": "Aprender de cada recaída",
+        "summary_text": "Registra lo que pasó para reconocer patrones, reforzar tu compromiso y volver a enfocarte en tu recuperación.",
+        "count_title": "Historial",
+        "count_text": "{{count}} recaídas registradas",
+        "empty": "Haz click en el ícono + para agregar una recaída.",
+        "commitment_required": "Para poder agregar una recaída es necesario tener un compromiso.",
+        "make_commitment": "Hacer Compromiso",
+        "date": "Fecha",
+        "approximate_time": "Hora aproximada",
+        "amount_spent": "Monto gastado",
+        "financing_method": "Método de financiamiento",
+        "emotion": "Emoción principal antes de jugar",
+        "trigger": "Situación detonante",
+        "shared_with_someone": "¿Lo comentaste con alguien?",
+        "reflection": "Reflexión",
+        "select": "Seleccionar",
+        "yes": "Sí",
+        "no": "No",
+        "conclusions": "Conclusiones:",
+        "accept": "Aceptar",
+        "no_advice": "Aún no hay conclusiones disponibles para esta recaída.",
+        "not_found": "No se encontró la recaída",
+        "load_error": "No se pudieron cargar las recaídas",
+        "create_success": "Recaída registrada con éxito",
+        "create_error": "No se pudo registrar la recaída",
+        "update_success": "Recaída actualizada con éxito",
+        "update_error": "No se pudo actualizar la recaída",
+        "financing_options": {
+            "savings": "Ahorros",
+            "cash": "Efectivo",
+            "borrowed_money": "Dinero prestado",
+            "credit_card": "Tarjeta de crédito"
+        },
+        "emotion_options": {
+            "anxiety": "Ansiedad",
+            "sadness": "Tristeza",
+            "boredom": "Aburrimiento",
+            "anger": "Enojo",
+            "stress": "Estrés",
+            "loneliness": "Soledad"
+        },
+        "trigger_options": {
+            "family_problems": "Problemas familiares",
+            "money_available": "Dinero disponible",
+            "being_alone": "Estar solo",
+            "social_pressure": "Presión social",
+            "stress": "Estrés",
+            "advertising": "Publicidad o promociones"
+        }
     },
     "achievements": {
         "title": "Mis Logros",
@@ -556,6 +800,10 @@
         "required": "Obligatorio",
         "icon": "Icono",
         "category": "Categoría",
+        "access": "Acceso",
+        "free": "Libre",
+        "free_access": "Formulario libre",
+        "free_access_help": "Los usuarios gratuitos podrán iniciar este formulario.",
         "types": {
             "SELF_ASSESSMENT": "Autodiagnóstico",
             "GAMBLING_PROBLEM": "Problemas de Juego",
@@ -605,7 +853,50 @@
         "finish": "Finalizar",
         "review": "Revisar",
         "autodiagnosis": "Formularios",
-        "open_placeholder": "Escribe tu respuesta aquí..."
+        "open_placeholder": "Escribe tu respuesta aquí...",
+        "start_error": "No se pudo iniciar el formulario"
+    },
+    "subscriptions": {
+        "title": "Suscripción",
+        "subtitle": "Activa el acceso completo a todas las funciones del sistema.",
+        "required_title": "Suscripción requerida",
+        "upgrade_title": "Actualiza tu plan",
+        "required_message": "Esta acción requiere una suscripción activa.",
+        "free": "Gratis",
+        "premium": "Premium",
+        "expires": "Vence",
+        "days": "días",
+        "subscribe": "Suscribirme",
+        "plans_error": "No se pudieron cargar los planes de suscripción.",
+        "purchase_success": "Suscripción activada correctamente.",
+        "purchase_error": "No se pudo activar la suscripción.",
+        "posts_limit": "Tu plan gratuito permite publicar hasta {{count}} posts. Suscríbete para publicar más.",
+        "assistance_conversation_limit": "Tu plan gratuito permite una conversación con la asistencia. Suscríbete para iniciar más conversaciones.",
+        "assistance_message_limit": "Tu plan gratuito permite hasta {{count}} mensajes en la conversación de asistencia. Suscríbete para continuar.",
+        "commitments_limit": "Tu plan gratuito permite {{count}} compromiso. Suscríbete para crear más compromisos.",
+        "relapses_limit": "Tu plan gratuito permite registrar {{count}} recaída. Suscríbete para registrar más recaídas.",
+        "strategies_locked": "Solo los usuarios suscritos pueden crear estrategias. Puedes visualizar estrategias con tu plan gratuito.",
+        "form_locked": "Este formulario está disponible solo para usuarios suscritos.",
+        "benefits_title": "¿Qué obtendrás?",
+        "benefit_alerts": "Alertas personalizadas que te ayudarán a dejar el hábito de jugar.",
+        "benefit_balance": "Acceso completo a tus herramientas de control y seguimiento.",
+        "benefit_mentors": "Comunicación con nuestros mentores.",
+        "benefit_support": "Asistencia 24/7.",
+        "benefit_finances": "Tips para manejo de tus finanzas.",
+        "select_plan": "Selecciona tu plan",
+        "plan_monthly": "Mensual",
+        "plan_quarterly": "Trimestral",
+        "plan_semiannual": "Semestral",
+        "plan_annual": "Anual",
+        "month": "mes",
+        "quarter": "trimestre",
+        "semester": "semestre",
+        "year": "año",
+        "save_5": "Ahorra 5%",
+        "save_10": "Ahorra 10%",
+        "save_20": "Ahorra 20%",
+        "free_trial": "Prueba gratuita de 7 días de la versión premium incluida",
+        "cancel_anytime": "Sin compromiso. Cancela cuando quieras."
     },
     "debts": {
         "title": "Deudas",
@@ -673,6 +964,163 @@
         "voters_count": "interacciones totales",
         "likes": "LES GUSTA",
         "dislikes": "NO LES GUSTA"
+    },
+    "dopamine": {
+        "title": "Dopamina",
+        "customer_module": "Módulo Customer",
+        "subtitle": "Comprende cómo el casino usa estímulos, expectativa y recompensas variables para mantenerte jugando, y crea un compromiso personal para recuperar control.",
+        "control_title": "Controla tu Dopamina",
+        "control_card_desc": "Identifica juegos, registra motivaciones y firma un compromiso personal.",
+        "empty_content": "No se encontró el contenido solicitado.",
+        "next_steps": "Continuar",
+        "start_control": "CONTROLA TU DOPAMINA",
+        "card_titles": {
+            "0": "QUE ES LA DOPAMINA",
+            "1": "QUE ES LA ADRENALINA",
+            "2": "SISTEMA DE RECOMPENSAS",
+            "3": "CONTROLA TU DOPAMINA"
+        },
+        "card_title_parts": {
+            "0": {
+                "first": "QUE ES LA",
+                "highlight": "DOPAMINA"
+            },
+            "1": {
+                "first": "QUE ES LA",
+                "highlight": "ADRENALINA"
+            },
+            "2": {
+                "first": "SISTEMA DE",
+                "highlight": "RECOMPENSAS"
+            },
+            "3": {
+                "first": "CONTROLA TU",
+                "highlight": "DOPAMINA"
+            }
+        },
+        "card_descriptions": {
+            "0": "Aprende qué es, cómo se activa y cómo influye en la motivación.",
+            "1": "Conoce la hormona de acción que intensifica emoción, energía y riesgo.",
+            "2": "Descubre por qué el refuerzo intermitente sostiene el ciclo de juego.",
+            "3": "Construye una ruta personal para dejar de perseguir el siguiente intento."
+        },
+        "flow_steps": {
+            "addiction": "Adicción",
+            "learn": "Aprender",
+            "reflect": "Reflexionar",
+            "commitment": "Compromiso"
+        },
+        "which_games": "¿Cuál de estos juegos sueles jugar en el casino o casa de apuestas?",
+        "addiction_label": "Adicción",
+        "lost_money_games": "Cuáles son los juegos que más te han hecho perder dinero. Escribe el nombre del juego o describe la máquina que usas para jugar.",
+        "add_game_option": "Agregar \"{{name}}\"",
+        "remove_game": "Quitar {{name}}",
+        "no_games_available": "No hay juegos disponibles",
+        "game_create_error": "No se pudo crear el juego",
+        "what_motivates": "Qué te motiva a jugar estos juegos",
+        "commitment_invite": "Te gustaría hacer un compromiso para dejar de jugar estos juegos.",
+        "process_intro": "En caso de que sigas con el proceso,",
+        "process_notifications": "Te enviaremos notificaciones personalizadas que te ayudarán a dejar tu adicción.",
+        "process_report": "Estudiaremos tu caso en base a la información que nos proporciones y te enviaremos un informe con soluciones para mejorar tu vida.",
+        "subscription_note": "Los usuarios suscritos serán nuestra prioridad. También atenderemos todos los casos, aunque los tiempos de respuesta serán más lentos para usuarios gratuitos.",
+        "make_commitment": "Hacer Compromiso",
+        "commitment_text_intro": "Yo, <strong>{{name}}</strong>, reconozco que el juego en los casinos me ha generado consecuencias negativas en mi vida, en lo económico, emocional, familiar y personal.",
+        "commitment_date_intro": "Por esta razón, me comprometo a dejar de jugar en los casinos a partir de la fecha:",
+        "user_name_placeholder": "nombre",
+        "personal_reasons": "Mi compromiso se basa en los siguientes motivos personales:",
+        "actions_intro": "Para cumplirlo, tomaré las siguientes acciones:",
+        "action_avoid": "Evitaré lugares físicos o páginas en línea relacionados con casinos.",
+        "action_support": "Buscaré apoyo en familiares, amigos o dentro de la comunidad GAMBLER.",
+        "constructive_activities": "Ocuparé mi tiempo en actividades sanas y constructivas como:",
+        "help_when_tempted": "En caso de sentir la tentación, buscaré ayuda inmediata con un amigo, un familiar o la comunidad GAMBLER.",
+        "signature_statement": "Firmo este compromiso con plena conciencia y voluntad, con el objetivo de recuperar el control de mi vida y construir un futuro mejor.",
+        "signature": "Firma aquí",
+        "sign": "Firmar",
+        "sign_here": "Firma aquí",
+        "commitment_agree": "Estoy de acuerdo con el Compromiso",
+        "commitment_success": "Compromiso creado con éxito",
+        "commitment_error": "No se pudo crear el compromiso",
+        "signed_flows_title": "Flujos y contratos",
+        "no_signed_flows": "Aún no tienes flujos o contratos firmados.",
+        "signed_status": "Firmado",
+        "pending_status": "En proceso",
+        "more_games": "+{{count}} más",
+        "constructive_activities_short": "Actividades",
+        "personal_reasons_short": "Motivos",
+        "contracts_first_title": "Tus contratos firmados",
+        "contracts_first_subtitle": "Antes de iniciar otro flujo, revisa los compromisos que ya hiciste y las decisiones que tomaste en el pasado.",
+        "create_another_flow": "Hacer otro flujo",
+        "view_flow": "Ver flujo",
+        "readonly_mode": "Modo lectura: revisa este flujo sin modificarlo.",
+        "exit_readonly": "Cerrar lectura",
+        "delete_flow_confirm": "¿Deseas eliminar este flujo? Solo se pueden eliminar flujos que no estén completados.",
+        "flow_deleted_success": "Flujo eliminado con éxito",
+        "flow_delete_error": "No se pudo eliminar el flujo",
+        "flow_error": "No se pudo actualizar el flujo de dopamina"
+    },
+    "dopamine_admin": {
+        "title": "Gestión de Dopamina",
+        "subtitle": "Administra el contenido educativo que se muestra en el módulo de dopamina del cliente por tipo e idioma.",
+        "create": "Crear",
+        "edit": "Editar",
+        "delete": "Eliminar",
+        "save": "Guardar",
+        "cancel": "Cancelar",
+        "not_configured": "Sin configurar",
+        "no_video": "Sin video configurado",
+        "delete_confirm": "¿Estás seguro de que deseas eliminar esta opción de dopamina?",
+        "delete_error": "No se pudo eliminar la opción de dopamina",
+        "save_error": "No se pudo guardar la opción de dopamina",
+        "upload_error": "No se pudo subir la imagen",
+        "video_upload_error": "No se pudo subir el video",
+        "video_only": "Solo se pueden subir archivos de video",
+        "upload_video": "Subir video",
+        "clear_video": "Limpiar video",
+        "video_preview": "Vista previa del video",
+        "required_title": "El título es requerido",
+        "refresh": "Refrescar",
+        "search": "Buscar",
+        "catalog_save_error": "No se pudo guardar el elemento del catálogo",
+        "tabs": {
+            "content": "Contenido",
+            "addictions": "Adicciones",
+            "games": "Juegos",
+            "flows": "Flujos de dopamina"
+        },
+        "add_addiction": "Agregar adicción",
+        "edit_addiction": "Editar adicción",
+        "delete_addiction_confirm": "¿Estás seguro de que deseas eliminar esta adicción?",
+        "add_game": "Agregar juego",
+        "edit_game": "Editar juego",
+        "delete_game_confirm": "¿Estás seguro de que deseas eliminar este juego?",
+        "delete_flow_confirm": "¿Estás seguro de que deseas eliminar este flujo?",
+        "code": "Código",
+        "name": "Nombre",
+        "select_addiction": "Selecciona una adicción",
+        "flow_lookup": "Buscar flujos por gambler",
+        "gambler_id": "ID del gambler",
+        "create_flow": "Crear flujo",
+        "update_flow": "Actualizar flujo",
+        "select_flow": "Selecciona un flujo",
+        "motivation": "Motivación",
+        "completed": "Completado",
+        "active": "Activo",
+        "no_motivation": "Sin motivación registrada",
+        "flow_search_error": "No se pudieron cargar los flujos de dopamina",
+        "flow_save_error": "No se pudo guardar el flujo de dopamina",
+        "form_title": "{{type}}",
+        "form_subtitle": "Edita el título, video y contenido HTML para el idioma seleccionado.",
+        "types": {
+            "0": "Dopamina",
+            "1": "Adrenalina",
+            "2": "Sistema de recompensas"
+        },
+        "fields": {
+            "title": "Título",
+            "title_placeholder": "Ingresa el título del contenido...",
+            "description": "Descripción",
+            "video_url": "URL del video"
+        }
     },
     "DebtPolicy": {
         "title": "Información de Deudas",

@@ -6,6 +6,7 @@ import {
 } from 'lucide-react';
 import { formService } from '../../services/api';
 import { useTranslation } from 'react-i18next';
+import { isFreeForm } from '../../utils/subscription';
 
 const LANGUAGE_IDS = {
     en: '11e8ba3a-b290-4a2c-9dad-0f40e457f72c',
@@ -72,7 +73,7 @@ const FormList = () => {
     });
 
     return (
-        <div style={{ padding: '1rem' }}>
+        <div style={{ padding: '0 1rem 1rem' }}>
             <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: '1.5rem', marginBottom: '2rem' }}>
                 <div>
                     <h1 style={{ fontSize: '1.875rem', fontWeight: '800', marginBottom: '0.5rem', display: 'flex', alignItems: 'center', gap: '0.75rem' }}>
@@ -136,6 +137,7 @@ const FormList = () => {
                             <tr style={{ borderBottom: '1px solid var(--glass-border)', background: 'rgba(255,255,255,0.02)' }}>
                                 <th style={{ padding: '1.25rem 1.5rem', color: 'var(--text-muted)', fontWeight: '600' }}>{t('common.title')}</th>
                                 <th style={{ padding: '1.25rem 1.5rem', color: 'var(--text-muted)', fontWeight: '600' }}>{t('forms.form_type')}</th>
+                                <th style={{ padding: '1.25rem 1.5rem', color: 'var(--text-muted)', fontWeight: '600' }}>{t('forms.access')}</th>
                                 <th style={{ padding: '1.25rem 1.5rem', color: 'var(--text-muted)', fontWeight: '600' }}>{t('common.status')}</th>
                                 <th style={{ padding: '1.25rem 1.5rem', color: 'var(--text-muted)', fontWeight: '600' }}>{t('common.date')}</th>
                                 <th style={{ padding: '1.25rem 1.5rem', color: 'var(--text-muted)', fontWeight: '600', textAlign: 'right' }}>{t('common.actions')}</th>
@@ -146,6 +148,7 @@ const FormList = () => {
                                 const langCode = i18n.language.substring(0, 2).toLowerCase();
                                 const langId = LANGUAGE_IDS[langCode] || LANGUAGE_IDS.en;
                                 const mainTranslation = form.translations?.find(tr => tr.languageId === langId) || form.translations?.[0] || {};
+                                const freeForm = isFreeForm(form);
                                 return (
                                     <tr key={form.formId} style={{ borderBottom: '1px solid var(--glass-border)', transition: 'background 0.2s' }}>
                                         <td style={{ padding: '1.25rem 1.5rem' }}>
@@ -164,6 +167,18 @@ const FormList = () => {
                                                     </div>
                                                 </div>
                                             </div>
+                                        </td>
+                                        <td style={{ padding: '1.25rem 1.5rem' }}>
+                                            <span style={{
+                                                padding: '0.4rem 0.8rem',
+                                                borderRadius: '0.5rem',
+                                                fontSize: '0.75rem',
+                                                fontWeight: '700',
+                                                background: freeForm ? 'rgba(16, 185, 129, 0.1)' : 'rgba(212, 144, 0, 0.12)',
+                                                color: freeForm ? '#047857' : 'var(--primary)'
+                                            }}>
+                                                {freeForm ? t('forms.free') : t('subscriptions.premium')}
+                                            </span>
                                         </td>
                                         <td style={{ padding: '1.25rem 1.5rem' }}>
                                             <span style={{

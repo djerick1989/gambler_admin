@@ -1,13 +1,16 @@
 import React, { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { ArrowLeft, Loader2, AlertTriangle, CheckCircle2 } from 'lucide-react';
-import { formResponseService } from '../../services/api';
+import { formResponseService, formService } from '../../services/api';
 import { useTranslation } from 'react-i18next';
+import { useAuth } from '../../context/AuthContext';
+import { isFreeForm } from '../../utils/subscription';
 
 const CustomerFormResult = () => {
     const { t, i18n } = useTranslation();
     const { id: userFormResponseId } = useParams();
     const navigate = useNavigate();
+    const { isSubscribed } = useAuth();
 
     const [analysis, setAnalysis] = useState(null);
     const [loading, setLoading] = useState(true);
@@ -26,6 +29,16 @@ const CustomerFormResult = () => {
     const fetchResult = async () => {
         setLoading(true);
         try {
+            if (!isSubscribed) {
+                const responseData = await formResponseService.getFormResponseById(userFormResponseId, currentLanguageId);
+                const response = responseData?.data;
+                const form = response?.form || (response?.formId ? (await formService.getFormById(response.formId, currentLanguageId))?.data : null);
+                if (form && !isFreeForm(form)) {
+                    navigate('/subscriptions');
+                    return;
+                }
+            }
+
             const res = await formResponseService.getFormAnalysis(userFormResponseId, currentLanguageId);
             if (res.status) {
                 const rawData = res.data;
@@ -158,7 +171,7 @@ const CustomerFormResult = () => {
     }
 
     return (
-        <div style={{ maxWidth: '1000px', margin: '0 auto', paddingBottom: '4rem', paddingTop: '1rem' }}>
+        <div style={{ paddingBottom: '4rem' }}>
             <div style={{ position: 'relative', display: 'flex', alignItems: 'center', justifyContent: 'center', marginBottom: '2.5rem' }}>
                 <button 
                     onClick={() => navigate('/customer/forms')}
@@ -168,7 +181,7 @@ const CustomerFormResult = () => {
                 >
                     <ArrowLeft size={20} />
                 </button>
-                <h1 style={{ fontSize: '1.75rem', fontWeight: '800', margin: 0, textAlign: 'center' }}>
+                <h1 style={{ fontSize: '1.875rem', fontWeight: '800', margin: 0, textAlign: 'center' }}>
                     {t('forms.results_title') || 'RESULTADOS'}
                 </h1>
             </div>

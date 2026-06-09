@@ -110,7 +110,7 @@ const NewsDetail = () => {
     const mainTranslation = news.translations?.[0] || { title: 'Untitled', contentHtml: '' };
 
     return (
-        <div style={{ maxWidth: '1000px', margin: '0 auto', paddingBottom: '5rem' }}>
+        <div style={{ paddingBottom: '5rem' }}>
             <button
                 onClick={() => navigate('/news')}
                 className="btn-back-premium"
@@ -143,8 +143,8 @@ const NewsDetail = () => {
                     </div>
 
                     <h1 style={{
-                        fontSize: '2.5rem',
-                        fontWeight: '900',
+                        fontSize: '1.875rem',
+                        fontWeight: '800',
                         lineHeight: '1.2',
                         marginBottom: '2rem',
                         color: 'var(--text-main)'

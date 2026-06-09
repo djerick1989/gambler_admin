@@ -95,7 +95,7 @@ const UserProfileView = () => {
 
     if (!gambler) {
         return (
-            <div style={{ maxWidth: '800px', margin: '2rem auto' }} className="glass-card">
+            <div style={{ margin: '2rem 0' }} className="glass-card">
                 <div style={{ padding: '3rem', textAlign: 'center' }}>
                     <AlertCircle size={48} color="#ef4444" style={{ marginBottom: '1rem' }} />
                     <h3 style={{ color: 'var(--text-main)' }}>Profile not found</h3>
@@ -108,7 +108,7 @@ const UserProfileView = () => {
     }
 
     return (
-        <div style={{ maxWidth: '800px', margin: '0 auto' }} className="animate-fade-in">
+        <div className="animate-fade-in">
             {/* Header / Back Button */}
             <div style={{ marginBottom: '2rem' }}>
                 <button
@@ -136,7 +136,7 @@ const UserProfileView = () => {
                         {!gambler.user?.avatar && <User size={48} color="var(--text-muted)" />}
                     </div>
                     <div>
-                        <h1 style={{ fontSize: '2rem', fontWeight: '800', marginBottom: '0.25rem', color: 'var(--text-main)' }}>
+                        <h1 style={{ fontSize: '1.875rem', fontWeight: '800', marginBottom: '0.25rem', color: 'var(--text-main)' }}>
                             {gambler.user?.name || 'User'}
                         </h1>
                         <p style={{ color: 'var(--primary)', fontWeight: '700', fontSize: '1.1rem', marginBottom: '1rem' }}>

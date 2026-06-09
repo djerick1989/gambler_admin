@@ -42,7 +42,7 @@ const UserAchievements = () => {
     }
 
     return (
-        <div style={{ padding: '1rem' }}>
+        <div>
             <div style={{ marginBottom: '2rem' }}>
                 <h1 style={{ fontSize: '1.875rem', fontWeight: '800', marginBottom: '0.5rem' }}>
                     {t('achievements.user_title') || 'My Achievements'}

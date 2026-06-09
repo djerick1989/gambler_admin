@@ -8,7 +8,7 @@ const DebtPolicy = () => {
     const navigate = useNavigate();
 
     return (
-        <div style={{ maxWidth: '800px', margin: '0 auto', padding: '1.5rem', paddingBottom: '4rem' }}>
+        <div style={{ padding: '0 0 4rem' }}>
             <div style={{ display: 'flex', alignItems: 'center', gap: '1rem', marginBottom: '2.5rem' }}>
                 <button 
                     onClick={() => navigate('/customer/debts')}
@@ -17,7 +17,7 @@ const DebtPolicy = () => {
                 >
                     <ArrowLeft size={20} />
                 </button>
-                <h1 style={{ fontSize: '1.75rem', fontWeight: '800', margin: 0, display: 'flex', alignItems: 'center', gap: '0.75rem' }}>
+                <h1 style={{ fontSize: '1.875rem', fontWeight: '800', margin: 0, display: 'flex', alignItems: 'center', gap: '0.75rem' }}>
                     <Info size={32} color="var(--primary)" />
                     {t('DebtPolicy.title')}
                 </h1>

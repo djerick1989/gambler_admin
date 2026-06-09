@@ -1,0 +1,427 @@
+.relapse-page {
+    padding-bottom: 4rem;
+    color: var(--text-main);
+}
+
+.relapse-topbar {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1rem;
+    margin-bottom: 1.5rem;
+}
+
+.relapse-title {
+    display: flex;
+    align-items: center;
+    gap: 0.9rem;
+}
+
+.relapse-title h1 {
+    margin: 0;
+    font-size: 1.875rem;
+    font-weight: 800;
+    letter-spacing: 0;
+}
+
+.relapse-icon-button,
+.relapse-back-button {
+    width: 46px;
+    height: 46px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 12px;
+    border: 1px solid var(--glass-border);
+    background: #fff;
+    color: var(--text-main);
+    cursor: pointer;
+    transition: transform 0.2s, box-shadow 0.2s;
+}
+
+.relapse-icon-button:hover,
+.relapse-back-button:hover {
+    transform: translateY(-1px);
+    box-shadow: 0 10px 22px rgba(15, 23, 42, 0.08);
+}
+
+.relapse-actions {
+    display: flex;
+    align-items: center;
+    gap: 0.65rem;
+}
+
+.relapse-primary-icon {
+    background: var(--primary);
+    color: #fff;
+    border-color: var(--primary);
+}
+
+.relapse-hero {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) 280px;
+    gap: 1rem;
+    align-items: stretch;
+    margin-bottom: 1.5rem;
+}
+
+.relapse-summary {
+    border-radius: 8px;
+    background: linear-gradient(135deg, #fbbf24 0%, #d49000 100%);
+    padding: 1.35rem;
+    color: #111827;
+    box-shadow: 0 16px 32px rgba(212, 144, 0, 0.22);
+}
+
+.relapse-summary h2,
+.relapse-info-card h2 {
+    margin: 0 0 0.4rem;
+    font-size: 1.15rem;
+    font-weight: 900;
+}
+
+.relapse-summary p,
+.relapse-info-card p {
+    margin: 0;
+    line-height: 1.55;
+    font-weight: 600;
+}
+
+.relapse-info-card {
+    border: 1px solid var(--glass-border);
+    border-radius: 8px;
+    padding: 1.25rem;
+    background: #fff;
+}
+
+.relapse-empty {
+    min-height: 48vh;
+    display: grid;
+    place-items: center;
+    text-align: center;
+    color: var(--text-muted);
+    font-size: 1.2rem;
+    font-weight: 800;
+}
+
+.relapse-list {
+    display: grid;
+    gap: 1rem;
+}
+
+.relapse-card {
+    border: 1px solid #f0d99f;
+    background: #f8e9bf;
+    border-radius: 8px;
+    padding: 1.25rem;
+    cursor: pointer;
+    transition: transform 0.2s, box-shadow 0.2s;
+}
+
+.relapse-card:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 14px 30px rgba(120, 79, 0, 0.12);
+}
+
+.relapse-card-head {
+    display: grid;
+    grid-template-columns: 72px minmax(0, 1fr) auto;
+    align-items: start;
+    gap: 1rem;
+    margin-bottom: 0.7rem;
+}
+
+.relapse-card-number {
+    font-size: 3.2rem;
+    line-height: 0.9;
+    font-weight: 900;
+}
+
+.relapse-card h3 {
+    margin: 0;
+    font-size: 1.35rem;
+    font-weight: 900;
+    text-align: center;
+}
+
+.relapse-card-date {
+    font-weight: 700;
+    color: #2f2f2f;
+    white-space: nowrap;
+}
+
+.relapse-card p {
+    margin: 0;
+    font-size: 1.05rem;
+    line-height: 1.6;
+    color: #111827;
+}
+
+.relapse-card-more {
+    display: flex;
+    justify-content: flex-end;
+    margin-top: 0.4rem;
+    font-weight: 900;
+}
+
+.relapse-load-more {
+    width: 100%;
+    margin-top: 1rem;
+    padding: 0.95rem 1rem;
+    border: 0;
+    border-radius: 8px;
+    background: rgba(0, 0, 0, 0.05);
+    color: var(--text-main);
+    font-weight: 800;
+    cursor: pointer;
+}
+
+.relapse-modal-backdrop {
+    position: fixed;
+    inset: 0;
+    z-index: 200;
+    display: grid;
+    place-items: center;
+    background: rgba(15, 23, 42, 0.28);
+    padding: 1rem;
+}
+
+.relapse-commitment-modal {
+    width: min(560px, 100%);
+    position: relative;
+    border: 1px solid var(--primary);
+    border-radius: 8px;
+    background: #fff;
+    padding: 2.2rem 2rem;
+    text-align: center;
+    box-shadow: 0 20px 50px rgba(15, 23, 42, 0.18);
+}
+
+.relapse-commitment-modal h2 {
+    margin: 0 auto 1.5rem;
+    max-width: 430px;
+    font-size: clamp(1.6rem, 3vw, 2.5rem);
+    line-height: 1.2;
+    font-weight: 500;
+}
+
+.relapse-close {
+    position: absolute;
+    top: 0.8rem;
+    right: 0.8rem;
+    width: 38px;
+    height: 38px;
+    border: 0;
+    background: transparent;
+    cursor: pointer;
+    color: var(--text-main);
+}
+
+.relapse-primary-action {
+    min-height: 54px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.6rem;
+    border: 0;
+    border-radius: 999px;
+    background: var(--primary);
+    color: #fff;
+    font-size: 1rem;
+    font-weight: 900;
+    padding: 0.8rem 2rem;
+    cursor: pointer;
+    box-shadow: 0 10px 24px rgba(212, 144, 0, 0.25);
+}
+
+.relapse-primary-action:disabled {
+    opacity: 0.55;
+    cursor: not-allowed;
+}
+
+.relapse-form-card,
+.relapse-conclusion-card {
+    border: 1px solid var(--glass-border);
+    border-radius: 8px;
+    background: #fff;
+    padding: 1.5rem;
+}
+
+.relapse-form-grid {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 1.1rem 1.25rem;
+}
+
+.relapse-field {
+    display: flex;
+    flex-direction: column;
+    gap: 0.45rem;
+}
+
+.relapse-field.full {
+    grid-column: 1 / -1;
+}
+
+.relapse-field label,
+.relapse-share-label {
+    font-size: 1rem;
+    font-weight: 900;
+}
+
+.relapse-field input,
+.relapse-field select,
+.relapse-field textarea {
+    width: 100%;
+    border: 1px solid #c7c7c7;
+    border-radius: 999px;
+    background: #f1f1f1;
+    color: var(--text-main);
+    padding: 0.9rem 1rem;
+    font-size: 1rem;
+    font-weight: 800;
+    outline: none;
+}
+
+.relapse-field textarea {
+    min-height: 220px;
+    resize: vertical;
+    border-radius: 8px;
+    line-height: 1.55;
+}
+
+.relapse-money-field {
+    position: relative;
+}
+
+.relapse-money-field span {
+    position: absolute;
+    left: 1rem;
+    top: 50%;
+    transform: translateY(-50%);
+    font-weight: 900;
+}
+
+.relapse-money-field input {
+    padding-left: 2rem;
+}
+
+.relapse-share-row {
+    grid-column: 1 / -1;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1rem;
+    padding: 0.4rem 0;
+}
+
+.relapse-switch {
+    width: 86px;
+    height: 44px;
+    border: 0;
+    border-radius: 999px;
+    background: #d8d8d8;
+    padding: 4px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: flex-start;
+    transition: background 0.2s;
+}
+
+.relapse-switch.on {
+    background: var(--primary);
+    justify-content: flex-end;
+}
+
+.relapse-switch span {
+    width: 36px;
+    height: 36px;
+    display: grid;
+    place-items: center;
+    border-radius: 50%;
+    background: #fff;
+    color: var(--primary);
+    font-size: 0.8rem;
+    font-weight: 900;
+}
+
+.relapse-form-actions {
+    grid-column: 1 / -1;
+    display: flex;
+    justify-content: flex-end;
+    margin-top: 0.5rem;
+}
+
+.relapse-form-actions .relapse-primary-action {
+    width: min(420px, 100%);
+}
+
+.relapse-conclusion-card {
+    max-width: 900px;
+    margin: 0 auto;
+}
+
+.relapse-conclusion-card h2 {
+    margin: 0 0 1.25rem;
+    font-size: 1.5rem;
+    font-weight: 900;
+}
+
+.relapse-advice {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+    font-size: 1.08rem;
+    line-height: 1.8;
+}
+
+.relapse-advice p {
+    margin: 0;
+}
+
+.relapse-conclusion-actions {
+    display: flex;
+    justify-content: flex-end;
+    margin-top: 2rem;
+}
+
+@media (max-width: 900px) {
+    .relapse-hero,
+    .relapse-form-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .relapse-card-head {
+        grid-template-columns: 54px minmax(0, 1fr);
+    }
+
+    .relapse-card-date {
+        grid-column: 2;
+        justify-self: start;
+    }
+}
+
+@media (max-width: 640px) {
+    .relapse-topbar {
+        align-items: flex-start;
+    }
+
+    .relapse-title h1 {
+        font-size: 1.65rem;
+    }
+
+    .relapse-card {
+        padding: 1rem;
+    }
+
+    .relapse-card h3 {
+        text-align: left;
+        font-size: 1.1rem;
+    }
+
+    .relapse-share-row {
+        align-items: flex-start;
+        flex-direction: column;
+    }
+}

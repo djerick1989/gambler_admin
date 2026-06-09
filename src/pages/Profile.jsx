@@ -193,7 +193,7 @@ const Profile = () => {
     if (!gambler) return <div style={{ color: 'var(--text-main)' }}>Profile not found</div>;
 
     return (
-        <div style={{ maxWidth: '1200px', margin: '0 auto' }} className="animate-fade-in">
+        <div className="animate-fade-in">
             {/* Header */}
             <div style={{ marginBottom: '2rem' }}>
                 <h1 style={{ fontSize: '1.875rem', fontWeight: '800', marginBottom: '0.5rem' }}>{t('profile.title')}</h1>

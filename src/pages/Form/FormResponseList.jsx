@@ -54,7 +54,7 @@ const FormResponseList = () => {
     }
 
     return (
-        <div style={{ padding: '1rem' }}>
+        <div style={{ padding: '0 1rem 1rem' }}>
             <div style={{ display: 'flex', alignItems: 'center', gap: '1rem', marginBottom: '2rem' }}>
                 <button
                     onClick={() => navigate('/forms')}

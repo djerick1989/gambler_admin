@@ -216,7 +216,7 @@ const FormResponseReport = () => {
     }
 
     return (
-        <div style={{ padding: '2rem', maxWidth: '1000px', margin: '0 auto' }}>
+        <div style={{ padding: '0 2rem 2rem' }}>
             {/* Header */}
             <div style={{ display: 'flex', alignItems: 'center', gap: '1.5rem', marginBottom: '3rem' }}>
                 <button
@@ -227,7 +227,7 @@ const FormResponseReport = () => {
                     <ArrowLeft size={20} />
                 </button>
                 <div>
-                    <h1 style={{ fontSize: '2.5rem', fontWeight: '900', letterSpacing: '-0.025em', marginBottom: '0.25rem' }}>
+                    <h1 style={{ fontSize: '1.875rem', fontWeight: '800', letterSpacing: 0, marginBottom: '0.25rem' }}>
                         {t('forms.analysis_report')}
                     </h1>
                     <div style={{ display: 'flex', alignItems: 'center', gap: '1.5rem', color: 'var(--text-muted)' }}>

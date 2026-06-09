@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { createPortal } from 'react-dom';
-import { X, Heart, MessageCircle, Trash2, Users, Loader2, ChevronUp, ChevronDown } from 'lucide-react';
+import { X, Heart, Trash2, Users, ChevronDown } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
 import { statusService } from '../services/api';
 import { useAuth } from '../context/AuthContext';
@@ -9,6 +9,7 @@ import StoryReactionsModal from './StoryReactionsModal';
 const StoryViewer = ({ isOpen, onClose, initialStatus, allStatuses, onDeleteSuccess }) => {
     const { t } = useTranslation();
     const { user: currentUser } = useAuth();
+    const isAdmin = currentUser?.role === 1 || currentUser?.role === 2;
     const [statuses, setStatuses] = useState([]);
     const [currentIndex, setCurrentIndex] = useState(0);
     const [showReactions, setShowReactions] = useState(false);
@@ -85,6 +86,45 @@ const StoryViewer = ({ isOpen, onClose, initialStatus, allStatuses, onDeleteSucc
         }
     };
 
+    const goToStory = (nextIndex) => {
+        if (!containerRef.current || nextIndex < 0 || nextIndex >= statuses.length) return;
+
+        const element = containerRef.current.children[nextIndex];
+        if (!element) return;
+
+        isProgrammaticScroll.current = true;
+        setCurrentIndex(nextIndex);
+        element.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        setTimeout(() => {
+            isProgrammaticScroll.current = false;
+        }, 350);
+    };
+
+    const goNext = () => goToStory(currentIndex + 1);
+    const goPrevious = () => goToStory(currentIndex - 1);
+
+    useEffect(() => {
+        if (!isOpen) return;
+
+        const handleKeyDown = (event) => {
+            if (event.key === 'ArrowRight' || event.key === 'ArrowDown') {
+                event.preventDefault();
+                goNext();
+            }
+            if (event.key === 'ArrowLeft' || event.key === 'ArrowUp') {
+                event.preventDefault();
+                goPrevious();
+            }
+            if (event.key === 'Escape') {
+                event.preventDefault();
+                onClose();
+            }
+        };
+
+        window.addEventListener('keydown', handleKeyDown);
+        return () => window.removeEventListener('keydown', handleKeyDown);
+    }, [isOpen, currentIndex, statuses.length]);
+
     const handleReact = async (statusId) => {
         try {
             const response = await statusService.reactToStatus(statusId, 0); // HEART
@@ -141,7 +181,19 @@ const StoryViewer = ({ isOpen, onClose, initialStatus, allStatuses, onDeleteSucc
             flexDirection: 'column'
         }}>
             {/* Close Button */}
-            <style>{`div::-webkit-scrollbar { display: none; }`}</style>
+            <style>{`
+                div::-webkit-scrollbar { display: none; }
+                @keyframes story-bounce-down {
+                    0%, 100% {
+                        opacity: 0.45;
+                        transform: translate(-50%, 0);
+                    }
+                    50% {
+                        opacity: 1;
+                        transform: translate(-50%, 12px);
+                    }
+                }
+            `}</style>
             <button
                 onClick={onClose}
                 style={{
@@ -217,6 +269,31 @@ const StoryViewer = ({ isOpen, onClose, initialStatus, allStatuses, onDeleteSucc
                         </div>
 
                         {/* Overlays */}
+                        {index === 0 && statuses.length > 1 && (
+                            <div
+                                aria-hidden="true"
+                                style={{
+                                    position: 'absolute',
+                                    left: '50%',
+                                    bottom: '24px',
+                                    zIndex: 10001,
+                                    width: '42px',
+                                    height: '42px',
+                                    borderRadius: '50%',
+                                    background: 'rgba(0,0,0,0.35)',
+                                    color: 'white',
+                                    display: 'flex',
+                                    alignItems: 'center',
+                                    justifyContent: 'center',
+                                    pointerEvents: 'none',
+                                    backdropFilter: 'blur(6px)',
+                                    animation: 'story-bounce-down 1.4s ease-in-out infinite'
+                                }}
+                            >
+                                <ChevronDown size={28} />
+                            </div>
+                        )}
+
                         <div style={{
                             position: 'absolute',
                             left: '20px',
@@ -280,9 +357,11 @@ const StoryViewer = ({ isOpen, onClose, initialStatus, allStatuses, onDeleteSucc
                                 <span style={{ color: 'white', fontSize: '14px', fontWeight: '600' }}>{t('stories.viewed')}</span>
                             </div>
 
-                            {status.userId === currentUser?.userId && (
+                            {(status.userId === currentUser?.userId || isAdmin) && (
                                 <button
                                     onClick={() => handleDeleteStatus(status.statusId)}
+                                    aria-label={t('stories.delete_button')}
+                                    title={t('stories.delete_button')}
                                     style={{
                                         background: 'transparent',
                                         border: 'none',

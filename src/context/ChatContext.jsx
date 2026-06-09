@@ -54,6 +54,10 @@ export const ChatProvider = ({ children }) => {
     const userRef = useRef(user);
     const chatsLoadedRef = useRef(false);
     const joinedChatIdsRef = useRef(new Set());
+    const baseDocumentTitleRef = useRef(null);
+    const baseFaviconHrefRef = useRef(null);
+    const audioContextRef = useRef(null);
+    const canPlayNotificationSoundRef = useRef(false);
 
     // Keep refs in sync with state
     useEffect(() => {
@@ -63,6 +67,100 @@ export const ChatProvider = ({ children }) => {
     useEffect(() => {
         userRef.current = user;
     }, [user]);
+
+    useEffect(() => {
+        baseDocumentTitleRef.current = document.title || 'gambler_admin';
+        const favicon = document.querySelector("link[rel~='icon']");
+        baseFaviconHrefRef.current = favicon?.href || null;
+    }, []);
+
+    useEffect(() => {
+        const enableNotificationSound = () => {
+            canPlayNotificationSoundRef.current = true;
+        };
+
+        window.addEventListener('pointerdown', enableNotificationSound, { once: true });
+        window.addEventListener('keydown', enableNotificationSound, { once: true });
+
+        return () => {
+            window.removeEventListener('pointerdown', enableNotificationSound);
+            window.removeEventListener('keydown', enableNotificationSound);
+        };
+    }, []);
+
+    const getFaviconLink = () => {
+        let favicon = document.querySelector("link[rel~='icon']");
+        if (!favicon) {
+            favicon = document.createElement('link');
+            favicon.rel = 'icon';
+            document.head.appendChild(favicon);
+        }
+        return favicon;
+    };
+
+    const createUnreadFavicon = (count) => {
+        const label = count > 9 ? '9+' : String(count);
+        const svg = `
+            <svg xmlns="http://www.w3.org/2000/svg" width="64" height="64" viewBox="0 0 64 64">
+                <rect width="64" height="64" rx="14" fill="#111827"/>
+                <text x="18" y="43" font-family="Arial, sans-serif" font-size="34" font-weight="700" fill="#ffffff">L</text>
+                <circle cx="47" cy="17" r="15" fill="#ef4444"/>
+                <text x="47" y="22" text-anchor="middle" font-family="Arial, sans-serif" font-size="16" font-weight="700" fill="#ffffff">${label}</text>
+            </svg>
+        `;
+        return `data:image/svg+xml,${encodeURIComponent(svg)}`;
+    };
+
+    const playNotificationSound = useCallback(() => {
+        if (!canPlayNotificationSoundRef.current) return;
+
+        try {
+            const AudioContext = window.AudioContext || window.webkitAudioContext;
+            if (!AudioContext) return;
+
+            const audioContext = audioContextRef.current || new AudioContext();
+            audioContextRef.current = audioContext;
+
+            if (audioContext.state === 'suspended') {
+                audioContext.resume().catch(() => { });
+            }
+
+            const now = audioContext.currentTime;
+            const gain = audioContext.createGain();
+            gain.gain.setValueAtTime(0.0001, now);
+            gain.gain.exponentialRampToValueAtTime(0.08, now + 0.02);
+            gain.gain.exponentialRampToValueAtTime(0.0001, now + 0.35);
+            gain.connect(audioContext.destination);
+
+            [880, 1175].forEach((frequency, index) => {
+                const oscillator = audioContext.createOscillator();
+                oscillator.type = 'sine';
+                oscillator.frequency.setValueAtTime(frequency, now + index * 0.08);
+                oscillator.connect(gain);
+                oscillator.start(now + index * 0.08);
+                oscillator.stop(now + index * 0.08 + 0.18);
+            });
+        } catch (err) {
+            console.warn('Notification sound could not be played:', err);
+        }
+    }, []);
+
+    useEffect(() => {
+        const baseTitle = baseDocumentTitleRef.current || 'gambler_admin';
+        const favicon = getFaviconLink();
+
+        if (totalUnreadCount > 0) {
+            const messageLabel = totalUnreadCount === 1 ? 'Nuevo mensaje' : 'Nuevos mensajes';
+            document.title = `(${totalUnreadCount}) ${messageLabel} - ${baseTitle}`;
+            favicon.href = createUnreadFavicon(totalUnreadCount);
+            return;
+        }
+
+        document.title = baseTitle;
+        if (baseFaviconHrefRef.current) {
+            favicon.href = baseFaviconHrefRef.current;
+        }
+    }, [totalUnreadCount]);
 
     const normalizeChatId = (value) => String(value || '');
 
@@ -267,6 +365,7 @@ export const ChatProvider = ({ children }) => {
                         chatId: messageChatId,
                         sender
                     });
+                    playNotificationSound();
                 }
 
                 setChats(prev => {
@@ -324,7 +423,7 @@ export const ChatProvider = ({ children }) => {
         return () => {
             // No detenemos la conexión aquí en desarrollo para evitar cortes por re-renders
         };
-    }, [joinKnownChats, refreshChats, user]);
+    }, [joinKnownChats, playNotificationSound, refreshChats, user]);
 
     const joinChat = useCallback(async (chatId) => {
         await invokeJoinChat(chatId);

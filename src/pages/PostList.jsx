@@ -11,6 +11,9 @@ import { useTranslation } from 'react-i18next';
 import StoryCarousel from '../components/StoryCarousel';
 import CreateStoryModal from '../components/CreateStoryModal';
 import StoryViewer from '../components/StoryViewer';
+import SubscriptionGate from '../components/SubscriptionGate';
+import { FREE_LIMITS } from '../utils/subscription';
+import { useNotification } from '../context/NotificationContext';
 
 const LANGUAGE_IDS = {
     en: '11e8ba3a-b290-4a2c-9dad-0f40e457f72c',
@@ -20,7 +23,8 @@ const LANGUAGE_IDS = {
 const PostList = () => {
     const { t, i18n } = useTranslation();
     const navigate = useNavigate();
-    const { user } = useAuth();
+    const { user, isSubscribed } = useAuth();
+    const { addToast } = useNotification();
 
     const [posts, setPosts] = useState([]);
     const [loading, setLoading] = useState(true);
@@ -39,6 +43,8 @@ const PostList = () => {
     const [allStories, setAllStories] = useState([]);
     const [isStoryViewerOpen, setIsStoryViewerOpen] = useState(false);
     const [loadingStories, setLoadingStories] = useState(true);
+    const [ownPostCount, setOwnPostCount] = useState(0);
+    const [subscriptionGateOpen, setSubscriptionGateOpen] = useState(false);
 
     const isAdmin = user?.role === 1 || user?.role === 2;
 
@@ -46,8 +52,30 @@ const PostList = () => {
         if (user?.userId) {
             fetchPosts(1, true);
             fetchStories();
+            fetchOwnPostCount();
         }
     }, [user?.userId, i18n.language]);
+
+    const fetchOwnPostCount = async () => {
+        if (!user?.userId || isAdmin) return;
+        try {
+            const response = await postService.getPostsByUserId(user.userId, 1, 1);
+            if (response?.status) {
+                setOwnPostCount(response.data?.totalRecords || response.data?.posts?.length || 0);
+            }
+        } catch (error) {
+            console.error("Error fetching own post count:", error);
+        }
+    };
+
+    const openCreatePost = (openMedia = false) => {
+        if (!isSubscribed && ownPostCount >= FREE_LIMITS.posts) {
+            setSubscriptionGateOpen(true);
+            return;
+        }
+        setShouldAutoOpenMedia(openMedia);
+        setIsCreateModalOpen(true);
+    };
 
     const fetchStories = async () => {
         setLoadingStories(true);
@@ -131,14 +159,8 @@ const PostList = () => {
         <div style={{ maxWidth: '800px', margin: '0 auto' }}>
             {!isAdmin && (
                 <CreatePostSection
-                    onClick={() => {
-                        setShouldAutoOpenMedia(false);
-                        setIsCreateModalOpen(true);
-                    }}
-                    onMediaClick={() => {
-                        setShouldAutoOpenMedia(true);
-                        setIsCreateModalOpen(true);
-                    }}
+                    onClick={() => openCreatePost(false)}
+                    onMediaClick={() => openCreatePost(true)}
                 />
             )}
 
@@ -186,9 +208,16 @@ const PostList = () => {
                         setIsCreateModalOpen(false);
                         setShouldAutoOpenMedia(false);
                         fetchPosts(1, true);
+                        fetchOwnPostCount();
                     }}
                 />
             </Modal>
+
+            <SubscriptionGate
+                isOpen={subscriptionGateOpen}
+                onClose={() => setSubscriptionGateOpen(false)}
+                message={t('subscriptions.posts_limit', { count: FREE_LIMITS.posts })}
+            />
 
             {error && (
                 <div className="glass-card" style={{ padding: '1.5rem', marginBottom: '2rem', display: 'flex', alignItems: 'center', gap: '1rem', borderColor: 'var(--danger)' }}>

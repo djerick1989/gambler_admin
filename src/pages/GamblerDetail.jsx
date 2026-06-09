@@ -190,7 +190,7 @@ const GamblerDetail = () => {
     if (!gambler) return <div>Gambler not found</div>;
 
     return (
-        <div style={{ maxWidth: '1200px', margin: '0 auto' }}>
+        <div>
             {/* Header */}
             <div style={{ display: 'flex', alignItems: 'center', gap: '1rem', marginBottom: '2rem' }}>
                 <button

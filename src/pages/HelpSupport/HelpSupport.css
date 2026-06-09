@@ -1,0 +1,670 @@
+.help-support-page,
+.feedback-admin-page,
+.faq-page {
+    color: #0f172a;
+}
+
+.help-support-hero {
+    display: grid;
+    grid-template-columns: minmax(0, 1.2fr) 340px;
+    gap: 1.5rem;
+    align-items: stretch;
+    margin-bottom: 1.5rem;
+}
+
+.help-support-copy,
+.help-support-visual,
+.help-support-info,
+.help-support-form,
+.feedback-card,
+.feedback-admin-header {
+    background: #fff;
+    border: 1px solid var(--stroke);
+    border-radius: 8px;
+}
+
+.help-support-copy {
+    padding: 2rem;
+}
+
+.help-support-eyebrow {
+    display: inline-flex;
+    border-radius: 999px;
+    background: rgba(212, 144, 0, 0.12);
+    color: #8a5d00;
+    padding: 0.25rem 0.65rem;
+    font-size: 0.78rem;
+    font-weight: 950;
+    text-transform: uppercase;
+    margin-bottom: 1rem;
+}
+
+.help-support-copy h1 {
+    margin: 0;
+    color: #0f172a;
+    font-size: 1.875rem;
+    line-height: 1.2;
+    font-weight: 800;
+}
+
+.help-support-copy p {
+    margin: 1rem 0 0;
+    color: #64748b;
+    font-size: 1.05rem;
+    line-height: 1.6;
+    max-width: 720px;
+}
+
+.help-support-faq {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.45rem;
+    color: #d69400;
+    text-decoration: none;
+    font-weight: 950;
+    margin-top: 1.35rem;
+}
+
+.help-support-visual {
+    padding: 1.5rem;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+}
+
+.help-support-visual img {
+    width: 104px;
+    height: 104px;
+    object-fit: contain;
+    margin-bottom: 1rem;
+}
+
+.help-support-visual strong {
+    display: block;
+    color: #475569;
+    font-size: 1.25rem;
+    line-height: 1.35;
+    font-weight: 950;
+}
+
+.help-support-visual span {
+    display: block;
+    color: #94a3b8;
+    margin-top: 0.5rem;
+    font-weight: 800;
+}
+
+.help-support-grid {
+    display: grid;
+    grid-template-columns: 360px minmax(0, 1fr);
+    gap: 1.5rem;
+    align-items: start;
+}
+
+.help-support-info,
+.help-support-form {
+    padding: 1.5rem;
+}
+
+.help-support-info-icon {
+    width: 54px;
+    height: 54px;
+    border-radius: 8px;
+    background: rgba(212, 144, 0, 0.12);
+    color: #8a5d00;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: 1rem;
+}
+
+.help-support-info h2 {
+    margin: 0;
+    color: #d69400;
+    font-size: 1.45rem;
+    line-height: 1.2;
+    font-weight: 950;
+}
+
+.help-support-info p,
+.help-support-info li {
+    color: #64748b;
+    line-height: 1.55;
+}
+
+.help-support-info p {
+    margin: 0.85rem 0 1rem;
+}
+
+.help-support-info ul {
+    margin: 0;
+    padding-left: 1.1rem;
+}
+
+.help-support-info li {
+    margin-bottom: 0.45rem;
+}
+
+.help-support-form {
+    display: grid;
+    gap: 0.85rem;
+}
+
+.help-support-confirmation {
+    background: #fff;
+    border: 1px solid rgba(22, 163, 74, 0.24);
+    border-radius: 8px;
+    padding: 2rem;
+    min-height: 360px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+}
+
+.help-support-confirmation-icon {
+    width: 84px;
+    height: 84px;
+    border-radius: 50%;
+    background: rgba(22, 163, 74, 0.12);
+    color: #166534;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: 1rem;
+}
+
+.help-support-confirmation h2 {
+    margin: 0;
+    color: #0f172a;
+    font-size: 1.75rem;
+    line-height: 1.2;
+    font-weight: 950;
+}
+
+.help-support-confirmation p {
+    margin: 0.85rem 0 0;
+    color: #64748b;
+    max-width: 620px;
+    font-size: 1.05rem;
+    line-height: 1.6;
+}
+
+.help-support-confirmation-steps {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 0.75rem;
+    margin: 1.3rem 0;
+}
+
+.help-support-confirmation-steps span {
+    border: 1px solid #e5e7eb;
+    border-radius: 999px;
+    background: #f8fafc;
+    color: #334155;
+    min-height: 38px;
+    padding: 0 0.85rem;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.4rem;
+    font-weight: 900;
+}
+
+.help-support-confirmation button {
+    border: 1px solid rgba(212, 144, 0, 0.4);
+    border-radius: 999px;
+    background: #fff;
+    color: #8a5d00;
+    min-height: 44px;
+    padding: 0 1rem;
+    font: inherit;
+    font-weight: 950;
+    cursor: pointer;
+}
+
+.help-support-confirmation button:hover {
+    background: rgba(212, 144, 0, 0.08);
+}
+
+.help-support-form label {
+    color: #0f172a;
+    font-weight: 950;
+}
+
+.help-support-form textarea {
+    min-height: 260px;
+    width: 100%;
+    resize: vertical;
+    border: 1px solid #cbd5e1;
+    border-radius: 8px;
+    padding: 1rem;
+    color: #0f172a;
+    font: inherit;
+    line-height: 1.55;
+}
+
+.help-support-form textarea::placeholder {
+    color: #cbd5e1;
+}
+
+.help-support-form textarea:focus {
+    outline: none;
+    border-color: rgba(212, 144, 0, 0.65);
+    box-shadow: 0 0 0 3px rgba(212, 144, 0, 0.12);
+}
+
+.help-support-form button,
+.feedback-refresh,
+.feedback-card-actions button,
+.feedback-pagination button {
+    border: 0;
+    border-radius: 999px;
+    background: var(--primary);
+    color: #fff;
+    min-height: 48px;
+    padding: 0 1.25rem;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+    font: inherit;
+    font-weight: 950;
+    cursor: pointer;
+}
+
+.help-support-form button {
+    width: min(360px, 100%);
+    justify-self: end;
+}
+
+.help-support-form button:disabled,
+.feedback-refresh:disabled,
+.feedback-card-actions button:disabled,
+.feedback-pagination button:disabled {
+    opacity: 0.58;
+    cursor: not-allowed;
+}
+
+.feedback-admin-header {
+    padding: 1.5rem;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1rem;
+    margin-bottom: 1rem;
+}
+
+.feedback-admin-header span {
+    display: inline-flex;
+    color: #8a5d00;
+    font-size: 0.8rem;
+    font-weight: 950;
+    text-transform: uppercase;
+    margin-bottom: 0.35rem;
+}
+
+.feedback-admin-header h1 {
+    margin: 0;
+    font-size: 1.875rem;
+    line-height: 1.2;
+    font-weight: 800;
+}
+
+.feedback-admin-header p {
+    margin: 0.5rem 0 0;
+    color: #64748b;
+}
+
+.feedback-refresh {
+    flex: 0 0 auto;
+    min-height: 42px;
+    border-radius: 8px;
+}
+
+.feedback-admin-filters {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.6rem;
+    margin-bottom: 1rem;
+}
+
+.feedback-admin-filters button {
+    border: 1px solid #e5e7eb;
+    border-radius: 999px;
+    background: #fff;
+    color: #64748b;
+    min-height: 38px;
+    padding: 0 0.9rem;
+    font: inherit;
+    font-weight: 900;
+    cursor: pointer;
+}
+
+.feedback-admin-filters button.active {
+    background: rgba(212, 144, 0, 0.12);
+    border-color: rgba(212, 144, 0, 0.4);
+    color: #8a5d00;
+}
+
+.feedback-list {
+    display: grid;
+    gap: 0.9rem;
+}
+
+.feedback-card {
+    padding: 1rem;
+}
+
+.feedback-card-head {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 1rem;
+    margin-bottom: 0.8rem;
+}
+
+.feedback-card-head strong {
+    display: block;
+    color: #0f172a;
+    font-weight: 950;
+}
+
+.feedback-card-head span {
+    color: #64748b;
+    font-size: 0.84rem;
+    font-weight: 800;
+}
+
+.feedback-status {
+    border-radius: 999px;
+    padding: 0.25rem 0.55rem;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.3rem;
+    font-size: 0.76rem;
+    line-height: 1.2;
+    font-weight: 950;
+    white-space: nowrap;
+}
+
+.feedback-status.pending {
+    background: rgba(212, 144, 0, 0.14);
+    color: #8a5d00;
+}
+
+.feedback-status.reviewed {
+    background: rgba(22, 163, 74, 0.12);
+    color: #166534;
+}
+
+.feedback-card p {
+    margin: 0;
+    color: #334155;
+    line-height: 1.55;
+    white-space: pre-wrap;
+}
+
+.feedback-card-actions {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1rem;
+    border-top: 1px solid #e5e7eb;
+    margin-top: 1rem;
+    padding-top: 0.8rem;
+}
+
+.feedback-card-actions span {
+    min-width: 0;
+    color: #94a3b8;
+    font-size: 0.78rem;
+    overflow-wrap: anywhere;
+}
+
+.feedback-card-actions button {
+    flex: 0 0 auto;
+    min-height: 36px;
+    border-radius: 8px;
+    padding: 0 0.8rem;
+}
+
+.feedback-loading,
+.feedback-empty {
+    min-height: 240px;
+    border: 1px dashed #cbd5e1;
+    border-radius: 8px;
+    background: #fff;
+    color: #64748b;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+    gap: 0.75rem;
+    text-align: center;
+}
+
+.feedback-empty p {
+    margin: 0;
+    font-weight: 900;
+}
+
+.feedback-pagination {
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    gap: 0.75rem;
+    margin-top: 1rem;
+}
+
+.feedback-pagination button {
+    min-height: 38px;
+    border-radius: 8px;
+    background: #fff;
+    color: #0f172a;
+    border: 1px solid #e5e7eb;
+}
+
+.feedback-pagination span {
+    color: #64748b;
+    font-weight: 900;
+}
+
+.faq-header {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    margin-bottom: 1.5rem;
+}
+
+.faq-header button {
+    width: 48px;
+    height: 48px;
+    border: 1px solid var(--stroke);
+    border-radius: 8px;
+    background: #fff;
+    color: #0f172a;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+}
+
+.faq-header span {
+    display: block;
+    color: #8a5d00;
+    font-size: 0.78rem;
+    font-weight: 950;
+    text-transform: uppercase;
+    margin-bottom: 0.25rem;
+}
+
+.faq-header h1 {
+    margin: 0;
+    color: #0f172a;
+    font-size: 1.875rem;
+    line-height: 1.2;
+    font-weight: 800;
+}
+
+.faq-layout {
+    display: grid;
+    grid-template-columns: 300px minmax(0, 1fr);
+    gap: 1.5rem;
+    align-items: start;
+}
+
+.faq-index {
+    position: sticky;
+    top: 92px;
+}
+
+.faq-index-card {
+    background: #fff;
+    border: 1px solid var(--stroke);
+    border-radius: 8px;
+    padding: 1rem;
+}
+
+.faq-index-card > svg {
+    color: #8a5d00;
+    margin-bottom: 0.65rem;
+}
+
+.faq-index-card strong {
+    display: block;
+    color: #0f172a;
+    font-size: 1rem;
+    font-weight: 950;
+    margin-bottom: 0.75rem;
+}
+
+.faq-index-card nav {
+    display: grid;
+    gap: 0.45rem;
+}
+
+.faq-index-card a {
+    border: 1px solid #e5e7eb;
+    border-radius: 8px;
+    color: #334155;
+    background: #fff;
+    text-decoration: none;
+    padding: 0.65rem 0.75rem;
+    font-weight: 900;
+    line-height: 1.25;
+}
+
+.faq-index-card a:hover {
+    border-color: rgba(212, 144, 0, 0.45);
+    color: #8a5d00;
+    background: rgba(212, 144, 0, 0.06);
+}
+
+.faq-content {
+    display: grid;
+    gap: 1rem;
+}
+
+.faq-section {
+    background: #fff;
+    border: 1px solid var(--stroke);
+    border-radius: 8px;
+    padding: 1.25rem;
+    scroll-margin-top: 96px;
+}
+
+.faq-section h2 {
+    margin: 0 0 1rem;
+    color: #0f172a;
+    font-size: 1.25rem;
+    line-height: 1.25;
+    font-weight: 950;
+}
+
+.faq-question-list {
+    display: grid;
+    gap: 1rem;
+}
+
+.faq-question {
+    border-top: 1px solid #e5e7eb;
+    padding-top: 1rem;
+}
+
+.faq-question:first-child {
+    border-top: 0;
+    padding-top: 0;
+}
+
+.faq-question h3 {
+    margin: 0 0 0.55rem;
+    color: #0f172a;
+    font-size: 1rem;
+    line-height: 1.35;
+    font-weight: 950;
+}
+
+.faq-question p,
+.faq-question li {
+    color: #334155;
+    font-size: 0.96rem;
+    line-height: 1.55;
+}
+
+.faq-question p {
+    margin: 0;
+}
+
+.faq-question ul {
+    margin: 0.25rem 0 0;
+    padding-left: 1.25rem;
+}
+
+.faq-question li {
+    margin-bottom: 0.55rem;
+}
+
+@media (max-width: 980px) {
+    .help-support-hero,
+    .help-support-grid,
+    .faq-layout {
+        grid-template-columns: 1fr;
+    }
+
+    .faq-index {
+        position: static;
+    }
+
+    .help-support-form button {
+        justify-self: stretch;
+        width: 100%;
+    }
+}
+
+@media (max-width: 720px) {
+    .help-support-copy,
+    .help-support-visual,
+    .help-support-info,
+    .help-support-form,
+    .feedback-admin-header,
+    .feedback-card {
+        padding: 1rem;
+    }
+
+    .help-support-copy h1,
+    .feedback-admin-header h1,
+    .faq-header h1 {
+        font-size: 1.55rem;
+    }
+
+    .feedback-admin-header,
+    .feedback-card-head,
+    .feedback-card-actions {
+        flex-direction: column;
+        align-items: stretch;
+    }
+}

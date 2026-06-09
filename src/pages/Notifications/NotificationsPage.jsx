@@ -46,7 +46,7 @@ const NotificationsPage = () => {
     }
 
     return (
-        <div style={{ maxWidth: '800px', margin: '0 auto', padding: '1rem' }}>
+        <div style={{ padding: '0 1rem 1rem' }}>
             <div style={{ display: 'flex', alignItems: 'center', gap: '1rem', marginBottom: '2rem' }}>
                 <div style={{
                     background: 'rgba(59, 130, 246, 0.1)',
@@ -56,7 +56,7 @@ const NotificationsPage = () => {
                     <MessageSquare size={32} color="#3b82f6" />
                 </div>
                 <div>
-                    <h1 style={{ fontSize: '1.875rem', fontWeight: 'bold', margin: 0 }}>
+                    <h1 style={{ fontSize: '1.875rem', fontWeight: '800', margin: 0 }}>
                         {t('common.not_read')}
                     </h1>
                     <p style={{ color: 'var(--text-muted)', margin: '4px 0 0 0' }}>

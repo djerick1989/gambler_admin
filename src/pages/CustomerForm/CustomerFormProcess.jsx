@@ -3,11 +3,14 @@ import { useParams, useNavigate, useLocation } from 'react-router-dom';
 import { ArrowLeft, Loader2, AlertTriangle, CheckCircle2 } from 'lucide-react';
 import { formService, formResponseService, formAnalysisService } from '../../services/api';
 import { useTranslation } from 'react-i18next';
+import { getApiErrorMessage, isFreeForm, isSubscriptionRequiredError } from '../../utils/subscription';
+import { useAuth } from '../../context/AuthContext';
 
 const CustomerFormProcess = () => {
     const { t, i18n } = useTranslation();
     const { id: formId } = useParams();
     const navigate = useNavigate();
+    const { isSubscribed } = useAuth();
     const { state } = useLocation();
     const userFormResponseId = state?.userFormResponseId;
 
@@ -36,6 +39,10 @@ const CustomerFormProcess = () => {
         try {
             const res = await formService.getFormById(formId, currentLanguageId);
             if (res.status) {
+                if (!isSubscribed && !isFreeForm(res.data)) {
+                    navigate('/subscriptions');
+                    return;
+                }
                 setForm(res.data);
                 // Initialize answers
                 const initialAnswers = {};
@@ -136,7 +143,9 @@ const CustomerFormProcess = () => {
             }
         } catch (err) {
             console.error(err);
-            alert('Error al enviar el formulario');
+            alert(isSubscriptionRequiredError(err)
+                ? getApiErrorMessage(err, t('subscriptions.form_locked'))
+                : 'Error al enviar el formulario');
         } finally {
             setSubmitting(false);
         }
@@ -163,7 +172,7 @@ const CustomerFormProcess = () => {
     const formTitle = form.translations?.find(t => t.languageId === currentLanguageId)?.title || "Formulario";
 
     return (
-        <div style={{ maxWidth: '1000px', margin: '0 auto', paddingBottom: '4rem', paddingTop: '1rem' }}>
+        <div style={{ paddingBottom: '4rem' }}>
             <div style={{ position: 'relative', display: 'flex', alignItems: 'center', justifyContent: 'center', marginBottom: '2.5rem' }}>
                 <button 
                     onClick={() => navigate('/customer/forms')}
@@ -173,7 +182,7 @@ const CustomerFormProcess = () => {
                 >
                     <ArrowLeft size={20} />
                 </button>
-                <h1 style={{ fontSize: '1.75rem', fontWeight: '800', textAlign: 'center', margin: 0 }}>
+                <h1 style={{ fontSize: '1.875rem', fontWeight: '800', textAlign: 'center', margin: 0 }}>
                     {formTitle}
                 </h1>
             </div>

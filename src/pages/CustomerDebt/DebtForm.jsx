@@ -213,7 +213,7 @@ const DebtForm = () => {
     const currencyCode = formData.currency || 'USD';
 
     return (
-        <div style={{ maxWidth: '800px', margin: '0 auto', paddingBottom: '5rem' }}>
+        <div style={{ paddingBottom: '5rem' }}>
             {/* Header */}
             <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '2.5rem' }}>
                 <div style={{ display: 'flex', alignItems: 'center', gap: '1rem' }}>
@@ -240,7 +240,7 @@ const DebtForm = () => {
                         <ArrowLeft size={20} />
                     </button>
                     <div style={{ display: 'flex', flexDirection: 'column' }}>
-                        <h1 style={{ fontSize: '1.75rem', fontWeight: '800', margin: 0 }}>
+                        <h1 style={{ fontSize: '1.875rem', fontWeight: '800', margin: 0 }}>
                             {isEdit ? t('debts.edit_debt') : t('debts.add_debt')}
                         </h1>
                         {formData.status === 'Cancelled' && (

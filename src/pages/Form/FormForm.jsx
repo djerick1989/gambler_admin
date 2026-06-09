@@ -6,6 +6,7 @@ import {
 } from 'lucide-react';
 import { formService, mediaService } from '../../services/api';
 import { useTranslation } from 'react-i18next';
+import { isFreeForm } from '../../utils/subscription';
 
 const FormForm = () => {
     const { t, i18n } = useTranslation();
@@ -32,7 +33,8 @@ const FormForm = () => {
         title: '',
         icon: '',
         description: '',
-        formType: 0
+        formType: 0,
+        isFree: false
     });
 
     useEffect(() => {
@@ -57,7 +59,8 @@ const FormForm = () => {
                             title: translation.title || '',
                             icon: formIcon,
                             description: translation.description || '',
-                            formType: form.formType
+                            formType: form.formType,
+                            isFree: isFreeForm(form)
                         });
                         setPreviewUrl(formIcon);
                     }
@@ -120,7 +123,7 @@ const FormForm = () => {
     }
 
     return (
-        <div style={{ maxWidth: '800px', margin: '0 auto', padding: '1rem' }}>
+        <div style={{ padding: '0 1rem 1rem' }}>
             <div style={{ display: 'flex', alignItems: 'center', gap: '1rem', marginBottom: '2rem' }}>
                 <button
                     onClick={() => navigate('/forms')}
@@ -174,6 +177,19 @@ const FormForm = () => {
                             <option value={2}>{t('forms.types.ADDICTION_EVALUATION')}</option>
                         </select>
                     </div>
+                </div>
+
+                <div className="input-group" style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: '1rem', padding: '1.25rem', border: '1px solid var(--stroke)', borderRadius: '0.75rem', background: 'var(--bg-light)' }}>
+                    <div>
+                        <label style={{ display: 'block', marginBottom: '0.25rem', fontWeight: '700' }}>{t('forms.free_access')}</label>
+                        <p style={{ margin: 0, color: 'var(--text-muted)', fontSize: '0.9rem' }}>{t('forms.free_access_help')}</p>
+                    </div>
+                    <input
+                        type="checkbox"
+                        checked={formData.isFree}
+                        onChange={(e) => setFormData(prev => ({ ...prev, isFree: e.target.checked }))}
+                        style={{ width: 22, height: 22, accentColor: 'var(--primary)' }}
+                    />
                 </div>
 
                 <div className="input-group">
