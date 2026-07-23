@@ -2,10 +2,13 @@ import React from 'react';
 import { Plus, User as UserIcon } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
 import { useAuth } from '../context/AuthContext';
+import PremiumAvatarBadge from './PremiumAvatarBadge';
 
 const StoryCard = ({ status, isAdd, onClick }) => {
     const { t } = useTranslation();
-    const { user: currentUser } = useAuth();
+    const { user: currentUser, isSubscribed } = useAuth();
+    const storyUserId = status?.userId || status?.user?.userId;
+    const isCurrentUserStory = storyUserId && currentUser?.userId && String(storyUserId) === String(currentUser.userId);
 
     const cardStyle = {
         width: '115px',
@@ -40,12 +43,30 @@ const StoryCard = ({ status, isAdd, onClick }) => {
             >
                 <div style={{
                     height: '140px',
-                    background: currentUser?.avatar ? `url(${currentUser.avatar}) center/cover` : 'var(--bg-darker)',
+                    background: currentUser?.avatar ? `url(${currentUser.avatar}) center/cover` : 'linear-gradient(180deg, rgba(217, 152, 0, 0.18), rgba(217, 152, 0, 0.06))',
                     display: 'flex',
                     alignItems: 'center',
-                    justifyContent: 'center'
+                    justifyContent: 'center',
+                    position: 'relative'
                 }}>
-                    {!currentUser?.avatar && <UserIcon size={40} color="var(--text-muted)" />}
+                    {isSubscribed && (
+                        <PremiumAvatarBadge size={26} top={0} left={0} />
+                    )}
+                    {!currentUser?.avatar && (
+                        <div style={{
+                            width: '58px',
+                            height: '58px',
+                            borderRadius: '50%',
+                            background: 'rgba(217, 152, 0, 0.18)',
+                            border: '2px solid var(--primary)',
+                            display: 'flex',
+                            alignItems: 'center',
+                            justifyContent: 'center',
+                            boxShadow: '0 5px 14px rgba(217, 152, 0, 0.22)'
+                        }}>
+                            <UserIcon size={34} color="var(--primary)" />
+                        </div>
+                    )}
                 </div>
                 <div style={{
                     height: '60px',
@@ -152,6 +173,9 @@ const StoryCard = ({ status, isAdd, onClick }) => {
                 alignItems: 'center',
                 justifyContent: 'center'
             }}>
+                {isSubscribed && isCurrentUserStory && (
+                    <PremiumAvatarBadge size={18} top={-9} left={-7} />
+                )}
                 {!user?.avatar && <UserIcon size={18} color="white" />}
             </div>
 

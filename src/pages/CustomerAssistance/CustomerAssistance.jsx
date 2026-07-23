@@ -7,6 +7,7 @@ import { useNotification } from '../../context/NotificationContext';
 import { getLanguageId } from '../../utils/languages';
 import SubscriptionGate from '../../components/SubscriptionGate';
 import { FREE_LIMITS, getApiErrorMessage, isSubscriptionRequiredError } from '../../utils/subscription';
+import PremiumAvatarBadge from '../../components/PremiumAvatarBadge';
 import './CustomerAssistance.css';
 
 const unwrapApiData = (response) => {
@@ -103,7 +104,7 @@ const getSessionPreview = (session, fallback) => {
     return cachedContent || session?.summary || fallback;
 };
 
-const AssistanceMessage = ({ message, user, locale }) => {
+const AssistanceMessage = ({ message, user, locale, isSubscribed }) => {
     const role = String(message?.role || '').toLowerCase();
     const isUser = role === 'user';
     const content = message?.content || message?.message || '';
@@ -116,6 +117,7 @@ const AssistanceMessage = ({ message, user, locale }) => {
         <article className={`assistance-message ${isUser ? 'user' : 'assistant'}`}>
             <div className="assistance-avatar">
                 {avatar ? <img src={avatar} alt={displayName} /> : isUser ? <UserRound size={18} /> : <Bot size={18} />}
+                {isUser && isSubscribed && <PremiumAvatarBadge size={18} top={-6} left={-6} />}
                 <span />
             </div>
             <div className="assistance-message-body">
@@ -409,6 +411,7 @@ const CustomerAssistance = () => {
                                         message={item}
                                         user={user}
                                         locale={locale}
+                                        isSubscribed={isSubscribed}
                                     />
                                 ))}
                                 {sending && (

@@ -49,6 +49,7 @@ const VerifyEmail = () => {
                 <form onSubmit={handleSubmit}>
                     <div className="input-group">
                         <input
+                            className="verify-code-input"
                             type="text"
                             placeholder={t('verify.placeholder')}
                             value={code}
@@ -63,6 +64,14 @@ const VerifyEmail = () => {
                     {t('verify.resend')}
                 </button>
             </div>
+            <style>{`
+                .verify-code-input::placeholder {
+                    font-size: 1rem;
+                    letter-spacing: 0.08rem;
+                    color: var(--text-muted);
+                    opacity: 0.85;
+                }
+            `}</style>
         </div>
     );
 };

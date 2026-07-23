@@ -1,11 +1,13 @@
 import React, { useState } from 'react';
 import { Outlet, Link, useLocation, useNavigate } from 'react-router-dom';
-import { LayoutDashboard, Languages, UserCheck, Lightbulb, LogOut, Menu, X, ChevronRight, Globe, Newspaper, MessageSquare, Image, User, FileText, Bell, Award, CreditCard, Trash2, ClipboardCheck, Wallet, Brain, LifeBuoy, RefreshCcw } from 'lucide-react';
+import { LayoutDashboard, Languages, UserCheck, Lightbulb, LogOut, Menu, X, ChevronRight, Globe, Newspaper, MessageSquare, Image, User, FileText, Bell, Award, CreditCard, Trash2, ClipboardCheck, Wallet, Brain, LifeBuoy, RefreshCcw, Crown, CheckCircle2, Loader2 } from 'lucide-react';
 import { useAuth } from '../context/AuthContext';
 import { useChat } from '../context/ChatContext';
 import { useNotification } from '../context/NotificationContext';
 import { ToastContainer } from '../components/Common/Toast';
 import { useTranslation } from 'react-i18next';
+import { isPremiumStatus } from '../utils/subscription';
+import PremiumAvatarBadge from '../components/PremiumAvatarBadge';
 
 const SidebarLink = ({ to, icon: Icon, label, active, onClick, badge }) => (
     <Link
@@ -46,10 +48,12 @@ const SidebarLink = ({ to, icon: Icon, label, active, onClick, badge }) => (
 );
 
 const MainLayout = () => {
-    const { t, i18n } = useTranslation();
+    const { t } = useTranslation();
     const [sidebarOpen, setSidebarOpen] = useState(true);
     const [userMenuOpen, setUserMenuOpen] = useState(false);
-    const { user, logout } = useAuth();
+    const [premiumWelcomeOpen, setPremiumWelcomeOpen] = useState(false);
+    const [premiumChecking, setPremiumChecking] = useState(false);
+    const { user, logout, isSubscribed, refreshSubscription } = useAuth();
     const { notifications, removeToast } = useNotification();
     const { setActiveChatId, totalUnreadCount } = useChat();
     const location = useLocation();
@@ -64,13 +68,46 @@ const MainLayout = () => {
         }
     }, [location.pathname, setActiveChatId]);
 
+    React.useEffect(() => {
+        const hasPendingWelcome = window.sessionStorage.getItem('premiumWelcomePending') === 'true';
+        if (!location.state?.premiumWelcome && !hasPendingWelcome) return;
+
+        window.sessionStorage.removeItem('premiumWelcomePending');
+        setPremiumWelcomeOpen(true);
+        navigate(location.pathname, { replace: true, state: null });
+    }, [location.pathname, location.state, navigate]);
+
+    React.useEffect(() => {
+        if (!premiumWelcomeOpen || isSubscribed || !user?.userId) return;
+
+        let cancelled = false;
+        const pollSubscription = async () => {
+            setPremiumChecking(true);
+            for (let attempt = 0; attempt < 10; attempt += 1) {
+                const nextSubscription = await refreshSubscription(user.userId);
+                if (cancelled || isPremiumStatus(nextSubscription)) break;
+                await new Promise(resolve => setTimeout(resolve, 1200));
+            }
+            if (!cancelled) {
+                setPremiumChecking(false);
+            }
+        };
+
+        pollSubscription();
+        return () => {
+            cancelled = true;
+        };
+    }, [isSubscribed, premiumWelcomeOpen, refreshSubscription, user?.userId]);
+
+    React.useEffect(() => {
+        if (!premiumWelcomeOpen || premiumChecking) return undefined;
+        const timeoutId = window.setTimeout(() => setPremiumWelcomeOpen(false), 4500);
+        return () => window.clearTimeout(timeoutId);
+    }, [premiumChecking, premiumWelcomeOpen]);
+
     const handleLogout = () => {
         logout();
         navigate('/login');
-    };
-
-    const changeLanguage = (lng) => {
-        i18n.changeLanguage(lng);
     };
 
     const getRoleName = (role) => {
@@ -94,7 +131,7 @@ const MainLayout = () => {
         { path: '/support-feedback', label: t('help_support.admin_menu') || 'Soporte', icon: LifeBuoy, roles: [1, 2] },
         { path: '/dopamine', label: t('dopamine.title') || 'Dopamine', icon: Brain, roles: [1, 2] },
         { path: '/customer/forms', label: t('forms.autodiagnosis') || 'Formularios', icon: ClipboardCheck, roles: [0] },
-        { path: '/subscriptions', label: t('subscriptions.title') || 'Suscripción', icon: CreditCard, roles: [0] },
+        { path: '/subscriptions', label: t('subscriptions.title') || 'Suscripción', icon: CreditCard, roles: [0], hideWhenSubscribed: true },
         { path: '/customer/assistance', label: t('common.assistance') || 'Asistencia', icon: LifeBuoy, roles: [0] },
         { path: '/customer/help-support', label: t('help_support.title') || 'Ayuda y Soporte', icon: LifeBuoy, roles: [0] },
         { path: '/customer/relapses', label: t('relapses.title') || 'Recaídas', icon: RefreshCcw, roles: [0] },
@@ -106,7 +143,8 @@ const MainLayout = () => {
     ];
 
     const filteredMenuItems = menuItems.filter(item =>
-        !item.roles || item.roles.includes(user?.role)
+        (!item.roles || item.roles.includes(user?.role)) &&
+        !(item.hideWhenSubscribed && isSubscribed)
     );
 
     return (
@@ -198,38 +236,6 @@ const MainLayout = () => {
                             {sidebarOpen ? <X size={24} /> : <Menu size={24} />}
                         </button>
 
-                        <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', background: 'rgba(255,255,255,0.05)', padding: '0.25rem', borderRadius: '0.5rem' }}>
-                            <button
-                                onClick={() => changeLanguage('en')}
-                                style={{
-                                    padding: '0.25rem 0.75rem',
-                                    borderRadius: '0.25rem',
-                                    background: i18n.language.startsWith('en') ? 'var(--primary)' : 'rgba(0,0,0,0.05)',
-                                    color: i18n.language.startsWith('en') ? 'white' : 'var(--text-main)',
-                                    border: 'none',
-                                    cursor: 'pointer',
-                                    fontSize: '0.75rem',
-                                    fontWeight: '600'
-                                }}
-                            >
-                                EN
-                            </button>
-                            <button
-                                onClick={() => changeLanguage('es')}
-                                style={{
-                                    padding: '0.25rem 0.75rem',
-                                    borderRadius: '0.25rem',
-                                    background: i18n.language.startsWith('es') ? 'var(--primary)' : 'rgba(0,0,0,0.05)',
-                                    color: i18n.language.startsWith('es') ? 'white' : 'var(--text-main)',
-                                    border: 'none',
-                                    cursor: 'pointer',
-                                    fontSize: '0.75rem',
-                                    fontWeight: '600'
-                                }}
-                            >
-                                ES
-                            </button>
-                        </div>
                     </div>
 
                     <div style={{ display: 'flex', alignItems: 'center', gap: '1.5rem', position: 'relative' }}>
@@ -278,10 +284,17 @@ const MainLayout = () => {
                                 width: '40px',
                                 height: '40px',
                                 borderRadius: '50%',
-                                background: user?.avatar ? `url(${user.avatar}) center/cover` : 'linear-gradient(45deg, var(--primary), var(--accent))',
-                                border: '2px solid var(--bg-white)',
-                                boxShadow: '0 2px 4px rgba(0,0,0,0.1)'
-                            }}></div>
+                                background: user?.avatar ? `url(${user.avatar}) center/cover` : 'rgba(217, 152, 0, 0.16)',
+                                border: user?.avatar ? '2px solid var(--bg-white)' : '2px solid var(--primary)',
+                                boxShadow: user?.avatar ? '0 2px 4px rgba(0,0,0,0.1)' : '0 4px 12px rgba(217, 152, 0, 0.22)',
+                                display: 'flex',
+                                alignItems: 'center',
+                                justifyContent: 'center',
+                                position: 'relative'
+                            }}>
+                                {isSubscribed && <PremiumAvatarBadge />}
+                                {!user?.avatar && <User size={22} color="var(--primary)" />}
+                            </div>
                         </div>
 
                         {userMenuOpen && (
@@ -360,6 +373,133 @@ const MainLayout = () => {
                         <Outlet />
                     </div>
                 </main>
+                {premiumWelcomeOpen && (
+                    <div
+                        style={{
+                            position: 'fixed',
+                            inset: 0,
+                            zIndex: 200,
+                            display: 'grid',
+                            placeItems: 'center',
+                            background: 'rgba(15, 23, 42, 0.45)',
+                            backdropFilter: 'blur(4px)',
+                            padding: '1.25rem'
+                        }}
+                    >
+                        <div
+                            className="animate-fade-in"
+                            style={{
+                                width: 'min(440px, 100%)',
+                                borderRadius: '18px',
+                                background: 'linear-gradient(145deg, #fff 0%, #fff9e8 100%)',
+                                border: '1px solid rgba(212, 144, 0, 0.35)',
+                                boxShadow: '0 26px 70px rgba(15, 23, 42, 0.28)',
+                                padding: '2rem',
+                                textAlign: 'center',
+                                position: 'relative',
+                                overflow: 'hidden'
+                            }}
+                        >
+                            <button
+                                type="button"
+                                onClick={() => setPremiumWelcomeOpen(false)}
+                                aria-label={t('common.close', { defaultValue: 'Close' })}
+                                style={{
+                                    position: 'absolute',
+                                    top: '1rem',
+                                    right: '1rem',
+                                    border: 'none',
+                                    background: 'rgba(15, 23, 42, 0.06)',
+                                    borderRadius: '50%',
+                                    width: 34,
+                                    height: 34,
+                                    display: 'grid',
+                                    placeItems: 'center',
+                                    cursor: 'pointer',
+                                    color: 'var(--text-main)'
+                                }}
+                            >
+                                <X size={18} />
+                            </button>
+
+                            <div
+                                style={{
+                                    width: 76,
+                                    height: 76,
+                                    margin: '0 auto 1rem',
+                                    borderRadius: '50%',
+                                    background: 'linear-gradient(135deg, #facc15, var(--primary))',
+                                    color: '#fff',
+                                    display: 'grid',
+                                    placeItems: 'center',
+                                    boxShadow: '0 16px 34px rgba(212, 144, 0, 0.35)'
+                                }}
+                            >
+                                {premiumChecking && !isSubscribed ? (
+                                    <Loader2 size={34} className="animate-spin" />
+                                ) : (
+                                    <Crown size={38} strokeWidth={2.4} />
+                                )}
+                            </div>
+
+                            <h2 style={{ margin: '0 0 0.65rem', fontSize: '1.75rem', fontWeight: 900 }}>
+                                {t('subscriptions.welcome_premium_title')}
+                            </h2>
+                            <p style={{ margin: '0 auto 1.5rem', color: 'var(--text-muted)', lineHeight: 1.55, maxWidth: 340 }}>
+                                {isSubscribed
+                                    ? t('subscriptions.redirecting_home')
+                                    : t('subscriptions.activating_premium')}
+                            </p>
+                            <div
+                                style={{
+                                    display: 'grid',
+                                    gap: '0.6rem',
+                                    margin: '0 0 1.5rem',
+                                    textAlign: 'left'
+                                }}
+                            >
+                                {[
+                                    t('subscriptions.benefit_alerts'),
+                                    t('subscriptions.benefit_balance'),
+                                    t('subscriptions.benefit_support')
+                                ].map(item => (
+                                    <div
+                                        key={item}
+                                        style={{
+                                            display: 'flex',
+                                            alignItems: 'center',
+                                            gap: '0.55rem',
+                                            padding: '0.65rem 0.75rem',
+                                            borderRadius: '0.75rem',
+                                            background: 'rgba(217, 152, 0, 0.08)',
+                                            color: 'var(--text-main)',
+                                            fontWeight: 700
+                                        }}
+                                    >
+                                        <CheckCircle2 size={18} color="var(--primary)" />
+                                        <span>{item}</span>
+                                    </div>
+                                ))}
+                            </div>
+                            <button
+                                type="button"
+                                className="btn btn-primary"
+                                onClick={() => setPremiumWelcomeOpen(false)}
+                                style={{
+                                    minWidth: 190,
+                                    display: 'inline-flex',
+                                    alignItems: 'center',
+                                    justifyContent: 'center',
+                                    gap: '0.5rem',
+                                    fontWeight: 900
+                                }}
+                            >
+                                <CheckCircle2 size={19} />
+                                {t('subscriptions.continue_home') || 'Continuar'}
+                            </button>
+                        </div>
+                    </div>
+                )}
                 <ToastContainer notifications={notifications} onRemove={removeToast} />
                 <style>
                     {`

@@ -1,18 +1,21 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { createPortal } from 'react-dom';
-import { X, Heart, Trash2, Users, ChevronDown } from 'lucide-react';
+import { X, Heart, Trash2, Users, ChevronDown, Volume2, VolumeX } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
 import { statusService } from '../services/api';
 import { useAuth } from '../context/AuthContext';
 import StoryReactionsModal from './StoryReactionsModal';
+import PremiumAvatarBadge from './PremiumAvatarBadge';
 
 const StoryViewer = ({ isOpen, onClose, initialStatus, allStatuses, onDeleteSuccess }) => {
     const { t } = useTranslation();
-    const { user: currentUser } = useAuth();
+    const { user: currentUser, isSubscribed } = useAuth();
     const isAdmin = currentUser?.role === 1 || currentUser?.role === 2;
     const [statuses, setStatuses] = useState([]);
     const [currentIndex, setCurrentIndex] = useState(0);
     const [showReactions, setShowReactions] = useState(false);
+    const [isMuted, setIsMuted] = useState(false);
+    const [needsAudioTap, setNeedsAudioTap] = useState(false);
     const containerRef = useRef(null);
     const isProgrammaticScroll = useRef(false);
 
@@ -65,14 +68,43 @@ const StoryViewer = ({ isOpen, onClose, initialStatus, allStatuses, onDeleteSucc
                     if (prevIndex.current !== currentIndex) {
                         video.currentTime = 0;
                     }
-                    video.play().catch(err => console.log('Autoplay blocked or failed:', err));
+                    video.muted = isMuted;
+                    video.volume = isMuted ? 0 : 1;
+                    video.play().then(() => {
+                        setNeedsAudioTap(false);
+                    }).catch(err => {
+                        console.log('Autoplay blocked or failed:', err);
+                        if (!isMuted) {
+                            video.muted = true;
+                            video.volume = 0;
+                            video.play().catch(() => { });
+                            setNeedsAudioTap(true);
+                        }
+                    });
                 } else {
                     video.pause();
                 }
             });
             prevIndex.current = currentIndex;
         }
-    }, [currentIndex, isOpen, statuses]);
+    }, [currentIndex, isOpen, statuses, isMuted]);
+
+    const handleToggleAudio = () => {
+        const nextMuted = !isMuted;
+        setIsMuted(nextMuted);
+        setNeedsAudioTap(false);
+
+        const currentWrapper = containerRef.current?.children[currentIndex];
+        const video = currentWrapper?.querySelector('video');
+        if (!video) return;
+
+        video.muted = nextMuted;
+        video.volume = nextMuted ? 0 : 1;
+        video.play().catch(err => {
+            console.log('Audio toggle play failed:', err);
+            setNeedsAudioTap(!nextMuted);
+        });
+    };
 
     const handleScroll = (e) => {
         if (isProgrammaticScroll.current) return;
@@ -249,7 +281,7 @@ const StoryViewer = ({ isOpen, onClose, initialStatus, allStatuses, onDeleteSucc
                                     src={status.content}
                                     style={{ maxWidth: '100%', maxHeight: '100%', objectFit: 'contain' }}
                                     autoPlay={index === currentIndex}
-                                    muted
+                                    muted={isMuted}
                                     loop
                                     playsInline
                                 />
@@ -308,8 +340,13 @@ const StoryViewer = ({ isOpen, onClose, initialStatus, allStatuses, onDeleteSucc
                                 height: '48px',
                                 borderRadius: '50%',
                                 border: '2px solid white',
-                                background: status.user?.avatar ? `url(${status.user.avatar}) center/cover` : 'var(--primary)'
-                            }} />
+                                background: status.user?.avatar ? `url(${status.user.avatar}) center/cover` : 'var(--primary)',
+                                position: 'relative'
+                            }}>
+                                {isSubscribed && String(status.userId || status.user?.userId) === String(currentUser?.userId) && (
+                                    <PremiumAvatarBadge size={20} top={-8} left={-7} />
+                                )}
+                            </div>
                             <div>
                                 <div style={{ fontWeight: '600', color: 'white', textShadow: '0 2px 4px rgba(0,0,0,0.5)' }}>{status.user?.nickName || status.user?.name}</div>
                                 <div style={{ fontSize: '14px', color: 'rgba(255,255,255,0.8)', textShadow: '0 2px 4px rgba(0,0,0,0.5)' }}>@{status.user?.nickName}</div>
@@ -373,6 +410,38 @@ const StoryViewer = ({ isOpen, onClose, initialStatus, allStatuses, onDeleteSucc
                                 </button>
                             )}
                         </div>
+
+                        {(status.type === 2 || (status.type === 1 && /\.(mp4|mov|webm|quicktime)(\?.*)?$/i.test(status.content))) && (
+                            <button
+                                onClick={handleToggleAudio}
+                                aria-label={isMuted ? 'Activar audio' : 'Silenciar audio'}
+                                title={isMuted ? 'Activar audio' : 'Silenciar audio'}
+                                style={{
+                                    position: 'absolute',
+                                    top: '66px',
+                                    right: '20px',
+                                    zIndex: 10001,
+                                    width: needsAudioTap ? 'auto' : '42px',
+                                    height: '42px',
+                                    padding: needsAudioTap ? '0 14px' : 0,
+                                    borderRadius: '999px',
+                                    border: '1px solid rgba(255,255,255,0.25)',
+                                    background: needsAudioTap ? 'rgba(217, 152, 0, 0.95)' : 'rgba(0,0,0,0.5)',
+                                    color: 'white',
+                                    cursor: 'pointer',
+                                    display: 'flex',
+                                    alignItems: 'center',
+                                    justifyContent: 'center',
+                                    gap: '8px',
+                                    fontWeight: 800,
+                                    backdropFilter: 'blur(6px)',
+                                    boxShadow: needsAudioTap ? '0 10px 24px rgba(217, 152, 0, 0.35)' : 'none'
+                                }}
+                            >
+                                {isMuted || needsAudioTap ? <VolumeX size={22} /> : <Volume2 size={22} />}
+                                {needsAudioTap && <span style={{ fontSize: '13px' }}>Activar audio</span>}
+                            </button>
+                        )}
                     </div>
                 ))}
             </div>

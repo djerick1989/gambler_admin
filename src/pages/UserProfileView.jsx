@@ -4,6 +4,7 @@ import { Loader2, User, ArrowLeft, MessageSquare, AlertCircle, MessageCircle } f
 import { gamblerService, postService, chatService } from '../services/api';
 import PostCard from '../components/PostCard';
 import { useTranslation } from 'react-i18next';
+import PremiumAvatarBadge from '../components/PremiumAvatarBadge';
 
 const LANGUAGE_IDS = {
     en: '11e8ba3a-b290-4a2c-9dad-0f40e457f72c',
@@ -131,8 +132,12 @@ const UserProfileView = () => {
                         alignItems: 'center',
                         justifyContent: 'center',
                         border: '3px solid var(--primary)',
-                        flexShrink: 0
+                        flexShrink: 0,
+                        position: 'relative'
                     }}>
+                        {(gambler.user?.isPremium ?? gambler.user?.IsPremium) && (
+                            <PremiumAvatarBadge size={30} top={-8} left={-8} />
+                        )}
                         {!gambler.user?.avatar && <User size={48} color="var(--text-muted)" />}
                     </div>
                     <div>

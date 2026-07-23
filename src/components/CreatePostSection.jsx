@@ -1,11 +1,14 @@
 import React from 'react';
 import { Image as ImageIcon, Video, User as UserIcon } from 'lucide-react';
+import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 import { useTranslation } from 'react-i18next';
+import PremiumAvatarBadge from './PremiumAvatarBadge';
 
 const CreatePostSection = ({ onClick, onMediaClick }) => {
-    const { user } = useAuth();
+    const { user, isSubscribed } = useAuth();
     const { t } = useTranslation();
+    const navigate = useNavigate();
 
     return (
         <div
@@ -19,20 +22,37 @@ const CreatePostSection = ({ onClick, onMediaClick }) => {
             }}
         >
             <div style={{ display: 'flex', alignItems: 'center', gap: '1rem' }}>
-                <div style={{
+                <div
+                    onClick={() => navigate('/profile')}
+                    style={{
                     width: '40px',
                     height: '40px',
                     borderRadius: '50%',
                     background: user?.avatar
                         ? `url(${user.avatar}) center/cover`
-                        : '#f1f5f9',
+                        : 'rgba(217, 152, 0, 0.16)',
                     display: 'flex',
                     alignItems: 'center',
                     justifyContent: 'center',
                     flexShrink: 0,
-                    border: '1px solid var(--stroke)'
-                }}>
-                    {!user?.avatar && <UserIcon size={20} color="var(--text-muted)" />}
+                    border: user?.avatar ? '1px solid var(--stroke)' : '1px solid var(--primary)',
+                    boxShadow: user?.avatar ? 'none' : '0 3px 10px rgba(217, 152, 0, 0.18)',
+                    cursor: 'pointer',
+                    transition: 'all 0.2s',
+                    position: 'relative'
+                }}
+                    onMouseEnter={(e) => {
+                        e.currentTarget.style.transform = 'scale(1.1)';
+                        e.currentTarget.style.boxShadow = '0 6px 16px rgba(217, 152, 0, 0.25)';
+                    }}
+                    onMouseLeave={(e) => {
+                        e.currentTarget.style.transform = 'scale(1)';
+                        e.currentTarget.style.boxShadow = user?.avatar ? 'none' : '0 3px 10px rgba(217, 152, 0, 0.18)';
+                    }}
+                    title={t('common.profile')}
+                >
+                    {isSubscribed && <PremiumAvatarBadge size={20} top={-9} left={-7} />}
+                    {!user?.avatar && <UserIcon size={20} color="var(--primary)" />}
                 </div>
 
                 <div
@@ -61,20 +81,23 @@ const CreatePostSection = ({ onClick, onMediaClick }) => {
                         alignItems: 'center',
                         justifyContent: 'center',
                         padding: '0.6rem',
-                        background: 'rgba(16, 185, 129, 0.1)',
-                        border: 'none',
-                        color: '#10b981',
+                        background: 'rgba(217, 152, 0, 0.14)',
+                        border: '1px solid rgba(217, 152, 0, 0.28)',
+                        color: 'var(--primary)',
                         borderRadius: '50%',
                         cursor: 'pointer',
                         transition: 'all 0.2s',
-                        flexShrink: 0
+                        flexShrink: 0,
+                        boxShadow: '0 4px 12px rgba(217, 152, 0, 0.16)'
                     }}
                     onMouseEnter={(e) => {
-                        e.currentTarget.style.background = 'rgba(16, 185, 129, 0.2)';
+                        e.currentTarget.style.background = 'rgba(217, 152, 0, 0.24)';
+                        e.currentTarget.style.boxShadow = '0 6px 16px rgba(217, 152, 0, 0.25)';
                         e.currentTarget.style.transform = 'scale(1.1)';
                     }}
                     onMouseLeave={(e) => {
-                        e.currentTarget.style.background = 'rgba(16, 185, 129, 0.1)';
+                        e.currentTarget.style.background = 'rgba(217, 152, 0, 0.14)';
+                        e.currentTarget.style.boxShadow = '0 4px 12px rgba(217, 152, 0, 0.16)';
                         e.currentTarget.style.transform = 'scale(1)';
                     }}
                     title={t('posts.media.photos') || 'Fotos/Videos'}

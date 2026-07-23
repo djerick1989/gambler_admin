@@ -1,12 +1,38 @@
-import React from 'react';
+import React, { useEffect, useRef } from 'react';
 import { useTranslation } from 'react-i18next';
-import { useNavigate } from 'react-router-dom';
+import { useLocation, useNavigate } from 'react-router-dom';
 import { Trophy, User, Building2 } from 'lucide-react';
 import UserDonationList from './UserDonationList';
+import { useNotification } from '../../context/NotificationContext';
 
 const DonationTypeSelection = () => {
     const { t } = useTranslation();
     const navigate = useNavigate();
+    const location = useLocation();
+    const { addToast } = useNotification();
+    const processedStripeReturnRef = useRef(false);
+
+    useEffect(() => {
+        const params = new URLSearchParams(location.search);
+        const stripeStatus = params.get('stripe');
+
+        if (!stripeStatus || processedStripeReturnRef.current) {
+            return;
+        }
+
+        processedStripeReturnRef.current = true;
+
+        if (stripeStatus === 'success') {
+            addToast('success', t('donations.form.success'));
+            navigate('/donations', { replace: true });
+            return;
+        }
+
+        if (stripeStatus === 'cancel') {
+            addToast('error', t('donations.form.cancelled'));
+            navigate('/donations', { replace: true });
+        }
+    }, [location.search, addToast, navigate, t]);
 
     const types = [
         {

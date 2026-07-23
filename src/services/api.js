@@ -76,6 +76,39 @@ export const subscriptionService = {
   purchasePlan: async ({ userId, planId }) => {
     const response = await apiClient.post('/api/Subscription/purchase', { userId, planId });
     return response.data;
+  },
+  createCheckoutSession: async ({ userId, planId, successUrl, cancelUrl }) => {
+    const response = await apiClient.post('/api/Stripe/create-subscription-checkout-session', {
+      userId,
+      planId,
+      successUrl,
+      cancelUrl
+    });
+    return response.data;
+  },
+  createPlanChangeCheckoutSession: async ({ userId, planId, successUrl, cancelUrl }) => {
+    const response = await apiClient.post('/api/Stripe/create-subscription-plan-change-checkout-session', {
+      userId,
+      planId,
+      successUrl,
+      cancelUrl
+    });
+    return response.data;
+  },
+  confirmCheckoutSession: async ({ userId, sessionId }) => {
+    const response = await apiClient.post('/api/Stripe/confirm-subscription-checkout-session', {
+      userId,
+      sessionId
+    });
+    return response.data;
+  },
+  cancelSubscription: async ({ userId }) => {
+    const response = await apiClient.post('/api/Subscription/cancel', { userId });
+    return response.data;
+  },
+  reactivateSubscription: async ({ userId }) => {
+    const response = await apiClient.post('/api/Subscription/reactivate', { userId });
+    return response.data;
   }
 };
 
@@ -279,6 +312,12 @@ export const gamblerService = {
   },
   getGamblerByUserId: async (userId) => {
     const response = await apiClient.get(`/api/Gambler/getGamblerByUserId/${userId}`);
+    return response.data;
+  },
+  getDebtedDonationCandidates: async (limit = 20, nickname = '') => {
+    const response = await apiClient.get('/api/Gambler/getDebtedDonationCandidates', {
+      params: { limit, nickname }
+    });
     return response.data;
   },
   updateGambler: async (data) => {
@@ -630,6 +669,10 @@ export const paymentPlatformService = {
 };
 
 export const donationService = {
+  createCheckoutSession: async (data) => {
+    const response = await apiClient.post('/api/Stripe/create-donation-checkout-session', data);
+    return response.data;
+  },
   createDonation: async (data) => {
     const response = await apiClient.post('/api/Donation/createDonation', data);
     return response.data;
@@ -656,6 +699,13 @@ export const donationService = {
     const response = await apiClient.get('/api/Donation/getDonationsSummary', {
       params: { page, pageSize, sortBy }
     });
+    return response.data;
+  }
+};
+
+export const dashboardService = {
+  getAdminDashboard: async () => {
+    const response = await apiClient.get('/api/Dashboard/admin');
     return response.data;
   }
 };

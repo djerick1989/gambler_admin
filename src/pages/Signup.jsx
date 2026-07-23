@@ -5,6 +5,10 @@ import { UserPlus, Mail, Lock, User as UserIcon, Facebook, Twitter, Chrome, Smar
 import { useTranslation } from 'react-i18next';
 import LanguageSwitcher from '../components/LanguageSwitcher';
 
+const SIGNUP_ERROR_KEYS = {
+    'user already exists': 'signup.errors.user_exists'
+};
+
 const Signup = () => {
     const { t, i18n } = useTranslation();
     const [formData, setFormData] = useState({
@@ -36,7 +40,11 @@ const Signup = () => {
             await authService.signup(formData);
             navigate('/verify-email', { state: { email: formData.email } });
         } catch (err) {
-            setError(err.response?.data?.message || t('signup.error_default'));
+            const payload = err.response?.data;
+            const backendMessage = payload?.errorMessage || payload?.message || (typeof payload?.data === 'string' ? payload.data : null);
+            const normalizedMessage = backendMessage?.trim().toLowerCase();
+            const translationKey = SIGNUP_ERROR_KEYS[normalizedMessage];
+            setError(translationKey ? t(translationKey) : backendMessage || t('signup.error_default'));
         } finally {
             setLoading(false);
         }

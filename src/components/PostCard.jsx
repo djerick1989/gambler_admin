@@ -9,10 +9,11 @@ import { postViewedService, postLikeService, postSharedService } from '../servic
 import PostSharedViewersModal from './PostSharedViewersModal';
 import { useTranslation } from 'react-i18next';
 import 'react-quill-new/dist/quill.snow.css';
+import PremiumAvatarBadge from './PremiumAvatarBadge';
 
 const PostCard = ({ post, onEdit, onDelete }) => {
     const { t, i18n } = useTranslation();
-    const { user, loading: authLoading } = useAuth();
+    const { user, loading: authLoading, isSubscribed } = useAuth();
     const [isExpanded, setIsExpanded] = useState(false);
     const [showComments, setShowComments] = useState(false);
     const [isLiked, setIsLiked] = useState(Boolean(post.likePostByCurrentUser));
@@ -31,6 +32,8 @@ const PostCard = ({ post, onEdit, onDelete }) => {
     const shareTooltipTimeoutRef = useRef(null);
 
     const isAdmin = user?.role === 1 || user?.role === 2;
+    const postAuthorIsPremium = Boolean(post.user?.isPremium ?? post.user?.IsPremium) ||
+        (isSubscribed && String(post.userId) === String(user?.userId));
 
     useEffect(() => {
         const handleClickOutside = (event) => {
@@ -279,11 +282,15 @@ const PostCard = ({ post, onEdit, onDelete }) => {
                             justifyContent: 'center',
                             transition: 'opacity 0.2s',
                             cursor: 'pointer',
-                            border: '1px solid var(--stroke)'
+                            border: '1px solid var(--stroke)',
+                            position: 'relative'
                         }}
                             onMouseEnter={(e) => e.currentTarget.style.opacity = '0.8'}
                             onMouseLeave={(e) => e.currentTarget.style.opacity = '1'}
                         >
+                            {postAuthorIsPremium && (
+                                <PremiumAvatarBadge size={20} top={-8} left={-7} />
+                            )}
                             {!post.user?.avatar && <User color="var(--text-muted)" />}
                         </div>
                     </Link>

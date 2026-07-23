@@ -3,10 +3,11 @@ import { postCommentService } from '../services/api';
 import { useAuth } from '../context/AuthContext';
 import { useTranslation } from 'react-i18next';
 import { Loader2, Send, Edit2, Trash2, User, X, Check } from 'lucide-react';
+import PremiumAvatarBadge from './PremiumAvatarBadge';
 
 const PostComments = ({ postId, onCommentAdded, onCommentDeleted }) => {
     const { t } = useTranslation();
-    const { user } = useAuth();
+    const { user, isSubscribed } = useAuth();
     const [comments, setComments] = useState([]);
     const [loading, setLoading] = useState(true);
     const [loadingMore, setLoadingMore] = useState(false);
@@ -133,8 +134,11 @@ const PostComments = ({ postId, onCommentAdded, onCommentDeleted }) => {
                     <div style={{
                         width: '32px', height: '32px', borderRadius: '50%',
                         background: user?.avatar ? `url(${user.avatar}) center/cover` : 'rgba(255,255,255,0.1)',
-                        flexShrink: 0
-                    }} />
+                        flexShrink: 0,
+                        position: 'relative'
+                    }}>
+                        {isSubscribed && <PremiumAvatarBadge size={17} top={-7} left={-6} />}
+                    </div>
                     <div style={{ flex: 1, position: 'relative' }}>
                         <input
                             type="text"
@@ -175,8 +179,12 @@ const PostComments = ({ postId, onCommentAdded, onCommentDeleted }) => {
                             width: '32px', height: '32px', borderRadius: '50%',
                             background: comment.user?.avatar ? `url(${comment.user.avatar}) center/cover` : 'rgba(255,255,255,0.1)',
                             flexShrink: 0,
-                            display: 'flex', alignItems: 'center', justifyContent: 'center'
+                            display: 'flex', alignItems: 'center', justifyContent: 'center',
+                            position: 'relative'
                         }}>
+                            {isSubscribed && String(comment.user?.userId) === String(user?.userId) && (
+                                <PremiumAvatarBadge size={17} top={-7} left={-6} />
+                            )}
                             {!comment.user?.avatar && <User size={14} color="var(--text-muted)" />}
                         </div>
 

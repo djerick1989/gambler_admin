@@ -1,48 +1,194 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import ReactQuill from 'react-quill-new';
 import 'react-quill-new/dist/quill.snow.css';
 import {
     Loader2, User as UserIcon, Phone, Globe, Mail,
     Save, Shield, Bell, MessageSquare, Heart,
     Activity, Calendar, Info, MapPin, Languages, Edit2,
-    Eye, Trash2
+    Eye, Trash2, CreditCard, Crown, CheckCircle2, AlertCircle
 } from 'lucide-react';
-import { gamblerService, languageService, mediaService, dataDeletionService } from '../services/api';
+import { useLocation, useSearchParams } from 'react-router-dom';
+import { gamblerService, mediaService, dataDeletionService, subscriptionService } from '../services/api';
 import { useTranslation } from 'react-i18next';
 import { useAuth } from '../context/AuthContext';
 import { countries } from '../utils/countries';
+import { getLanguageId } from '../utils/languages';
+import PremiumAvatarBadge from '../components/PremiumAvatarBadge';
 
 const Profile = () => {
-    const { t } = useTranslation();
-    const { user, fetchUser } = useAuth();
+    const { t, i18n } = useTranslation();
+    const location = useLocation();
+    const [searchParams, setSearchParams] = useSearchParams();
+    const { user, fetchUser, subscription, isSubscribed, refreshSubscription } = useAuth();
+    const handledStripeReturnRef = useRef(null);
 
     const [gambler, setGambler] = useState(null);
-    const [languages, setLanguages] = useState([]);
     const [loading, setLoading] = useState(true);
     const [saving, setSaving] = useState(false);
     const [isUploadingAvatar, setIsUploadingAvatar] = useState(false);
-    const [activeSection, setActiveSection] = useState('profile'); // profile, config, notifications
+    const [cancelingSubscription, setCancelingSubscription] = useState(false);
+    const [reactivatingSubscription, setReactivatingSubscription] = useState(false);
+    const [subscriptionPlans, setSubscriptionPlans] = useState([]);
+    const [loadingSubscriptionPlans, setLoadingSubscriptionPlans] = useState(false);
+    const [changingPlanId, setChangingPlanId] = useState(null);
+    const [activeSection, setActiveSection] = useState(location.state?.section || 'profile'); // profile, config, notifications, subscription
     const [errors, setErrors] = useState({});
 
     useEffect(() => {
         if (user?.userId) {
             fetchData();
+            refreshSubscription(user.userId);
         }
     }, [user?.userId]);
+
+    useEffect(() => {
+        if (location.state?.section) {
+            setActiveSection(location.state.section);
+        }
+    }, [location.state?.section]);
+
+    useEffect(() => {
+        if (!user?.userId || !isSubscribed) return;
+
+        setLoadingSubscriptionPlans(true);
+        subscriptionService.getPlans()
+            .then(response => {
+                if (response?.status) {
+                    setSubscriptionPlans(response.data || []);
+                }
+            })
+            .catch(error => console.error("Error fetching subscription plans:", error))
+            .finally(() => setLoadingSubscriptionPlans(false));
+    }, [isSubscribed, user?.userId]);
+
+    useEffect(() => {
+        const stripeStatus = searchParams.get('stripe');
+        if (!stripeStatus) return;
+
+        const sessionId = searchParams.get('session_id') || '';
+        const returnKey = `${stripeStatus}:${sessionId}`;
+        if (handledStripeReturnRef.current === returnKey) return;
+        handledStripeReturnRef.current = returnKey;
+
+        const nextParams = new URLSearchParams(searchParams);
+        nextParams.delete('stripe');
+        nextParams.delete('session_id');
+        setSearchParams(nextParams, { replace: true });
+
+        if (stripeStatus === 'plan-change-success') {
+            let cancelled = false;
+            const confirmPlanChange = async () => {
+                setActiveSection('subscription');
+                if (sessionId && user?.userId) {
+                    try {
+                        await subscriptionService.confirmCheckoutSession({
+                            userId: user.userId,
+                            sessionId
+                        });
+                    } catch (error) {
+                        console.error("Error confirming plan change checkout session:", error);
+                    }
+                }
+
+                await refreshSubscription(user.userId);
+                if (!cancelled) {
+                    alert(t('subscriptions.plan_change_success'));
+                }
+            };
+
+            confirmPlanChange();
+            return () => {
+                cancelled = true;
+            };
+        }
+
+        if (stripeStatus === 'plan-change-cancel') {
+            setActiveSection('subscription');
+            alert(t('subscriptions.checkout_cancelled'));
+        }
+    }, [refreshSubscription, searchParams, setSearchParams, t, user?.userId]);
+
+    const formatDate = (value) => {
+        if (!value) return t('subscriptions.not_available');
+        return new Date(value).toLocaleDateString();
+    };
+
+    const getPlanLabel = (sub = subscription) => {
+        const planType = Number(sub?.planType);
+        if (Number.isFinite(planType)) {
+            const labels = [
+                t('subscriptions.plan_monthly'),
+                t('subscriptions.plan_quarterly'),
+                t('subscriptions.plan_semiannual'),
+                t('subscriptions.plan_annual')
+            ];
+            return labels[planType] || sub?.planName || t('subscriptions.premium');
+        }
+
+        return sub?.planName || t('subscriptions.premium');
+    };
+
+    const getCurrentPlanFromPlans = () => {
+        if (!subscriptionPlans.length) return null;
+        if (subscription?.planId) {
+            const byId = subscriptionPlans.find(plan => plan.subscriptionPlanId === subscription.planId);
+            if (byId) return byId;
+        }
+
+        const planType = Number(subscription?.planType);
+        if (Number.isFinite(planType)) {
+            return subscriptionPlans.find(plan => Number(plan.type) === planType) || null;
+        }
+
+        const durationDays = Number(subscription?.durationDays);
+        if (Number.isFinite(durationDays) && durationDays > 0) {
+            return subscriptionPlans.find(plan => Number(plan.durationDays) === durationDays) || null;
+        }
+
+        return null;
+    };
+
+    const getPlanPrice = () => {
+        if (subscription?.planPrice !== null && subscription?.planPrice !== undefined) {
+            return `$${subscription.planPrice}`;
+        }
+
+        const currentPlan = getCurrentPlanFromPlans();
+        return currentPlan ? `$${currentPlan.price}` : null;
+    };
+
+    const hasRecurringStripeSubscription = Boolean(subscription?.stripeSubscriptionId);
+    const isRenewalCancellationScheduled = hasRecurringStripeSubscription && Boolean(subscription?.cancelAtPeriodEnd);
+
+    const getPlanLabelFromPlan = (plan) => {
+        const planType = Number(plan?.type);
+        const labels = [
+            t('subscriptions.plan_monthly'),
+            t('subscriptions.plan_quarterly'),
+            t('subscriptions.plan_semiannual'),
+            t('subscriptions.plan_annual')
+        ];
+
+        return labels[planType] || plan?.name || t('subscriptions.premium');
+    };
+
+    const estimateExpiryAfterPlanChange = (plan) => {
+        const baseDate = subscription?.expiryDate || subscription?.currentPeriodEnd;
+        const startDate = baseDate && new Date(baseDate).getTime() > Date.now()
+            ? new Date(baseDate)
+            : new Date();
+        const nextDate = new Date(startDate);
+        nextDate.setDate(nextDate.getDate() + Number(plan?.durationDays || 0));
+        return nextDate.toLocaleDateString();
+    };
 
     const fetchData = async () => {
         setLoading(true);
         try {
-            const [gamblerRes, languagesRes] = await Promise.all([
-                gamblerService.getGamblerByUserId(user.userId),
-                languageService.getAll()
-            ]);
+            const gamblerRes = await gamblerService.getGamblerByUserId(user.userId);
 
             if (gamblerRes.status) {
                 setGambler(gamblerRes.data);
-            }
-            if (languagesRes.status) {
-                setLanguages(languagesRes.data);
             }
         } catch (err) {
             console.error("Error fetching profile data:", err);
@@ -79,6 +225,42 @@ const Profile = () => {
         if (!phone) return true;
         const phoneRegex = /^\+?[\d\s-]{7,15}$/;
         return phoneRegex.test(phone);
+    };
+
+    const handleChangeGlobalLanguage = async (language) => {
+        if (!gambler?.gamblerId) return;
+
+        const previousLanguage = i18n.language;
+        const previousGambler = gambler;
+        const languageId = getLanguageId(language);
+        const updatedGambler = { ...gambler, languageId };
+
+        i18n.changeLanguage(language);
+        setGambler(updatedGambler);
+        setSaving(true);
+
+        try {
+            const response = await gamblerService.updateGamblerConfiguration({
+                gamblerId: updatedGambler.gamblerId,
+                profileVisibility: updatedGambler.profileVisibility,
+                receiveMessages: updatedGambler.receiveMessages,
+                receiveDonations: updatedGambler.receiveDonations,
+                languageId: updatedGambler.languageId
+            });
+
+            if (response.status) {
+                await fetchUser();
+            } else {
+                throw new Error(response.errorMessage || "Error updating language");
+            }
+        } catch (err) {
+            console.error("Error updating language:", err);
+            setGambler(previousGambler);
+            i18n.changeLanguage(previousLanguage);
+            alert("Error updating language");
+        } finally {
+            setSaving(false);
+        }
     };
 
     const handleUpdateProfile = async (e) => {
@@ -182,6 +364,82 @@ const Profile = () => {
         }
     };
 
+    const handleCancelSubscription = async () => {
+        if (!user?.userId || cancelingSubscription) return;
+        if (!window.confirm(t('subscriptions.cancel_confirm'))) return;
+
+        setCancelingSubscription(true);
+        try {
+            const response = await subscriptionService.cancelSubscription({ userId: user.userId });
+            if (response.status) {
+                await refreshSubscription(user.userId);
+                alert(t('subscriptions.cancel_scheduled_success'));
+            } else {
+                alert(response.errorMessage || t('subscriptions.cancel_error'));
+            }
+        } catch (err) {
+            console.error("Error cancelling subscription:", err);
+            alert(t('subscriptions.cancel_error'));
+        } finally {
+            setCancelingSubscription(false);
+        }
+    };
+
+    const handleReactivateSubscription = async () => {
+        if (!user?.userId || reactivatingSubscription) return;
+
+        setReactivatingSubscription(true);
+        try {
+            const response = await subscriptionService.reactivateSubscription({ userId: user.userId });
+            if (response.status) {
+                await refreshSubscription(user.userId);
+                alert(t('subscriptions.reactivate_success'));
+            } else {
+                alert(response.errorMessage || t('subscriptions.reactivate_error'));
+            }
+        } catch (err) {
+            console.error("Error reactivating subscription:", err);
+            alert(t('subscriptions.reactivate_error'));
+        } finally {
+            setReactivatingSubscription(false);
+        }
+    };
+
+    const handleChangeSubscriptionPlan = async (plan) => {
+        if (!user?.userId || !plan?.subscriptionPlanId || changingPlanId) return;
+        if (subscription?.planId === plan.subscriptionPlanId) return;
+
+        const confirmed = window.confirm(t('subscriptions.plan_change_confirm', {
+            plan: getPlanLabelFromPlan(plan),
+            price: plan.price,
+            expiry: estimateExpiryAfterPlanChange(plan)
+        }));
+
+        if (!confirmed) return;
+
+        setChangingPlanId(plan.subscriptionPlanId);
+        try {
+            const response = await subscriptionService.createPlanChangeCheckoutSession({
+                userId: user.userId,
+                planId: plan.subscriptionPlanId,
+                successUrl: `${window.location.origin}/profile?stripe=plan-change-success&session_id={CHECKOUT_SESSION_ID}`,
+                cancelUrl: `${window.location.origin}/profile?stripe=plan-change-cancel`
+            });
+
+            const checkoutUrl = response?.data?.url || response?.data?.checkoutUrl || response?.url || response?.checkoutUrl;
+            if (response?.status && checkoutUrl) {
+                window.location.assign(checkoutUrl);
+            } else {
+                alert(response?.errorMessage || t('subscriptions.plan_change_error'));
+                setChangingPlanId(null);
+            }
+        } catch (err) {
+            console.error("Error changing subscription plan:", err);
+            alert(t('subscriptions.plan_change_error'));
+            setChangingPlanId(null);
+        }
+    };
+
     if (loading) {
         return (
             <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '400px' }}>
@@ -264,6 +522,28 @@ const Profile = () => {
                             <Bell size={20} />
                             {t('gambler_mgmt.detail.notifications')}
                         </button>
+                        {isSubscribed && user?.role === 0 && (
+                            <button
+                                onClick={() => setActiveSection('subscription')}
+                                style={{
+                                    width: '100%',
+                                    padding: '1rem',
+                                    border: 'none',
+                                    borderRadius: '0.5rem',
+                                    background: activeSection === 'subscription' ? 'var(--primary)' : 'transparent',
+                                    color: activeSection === 'subscription' ? 'white' : 'var(--text-main)',
+                                    textAlign: 'left',
+                                    display: 'flex',
+                                    alignItems: 'center',
+                                    gap: '0.75rem',
+                                    cursor: 'pointer',
+                                    transition: 'all 0.2s'
+                                }}
+                            >
+                                <CreditCard size={20} />
+                                {t('subscriptions.title')}
+                            </button>
+                        )}
                     </div>
 
                     {/* Stats Card */}
@@ -308,6 +588,7 @@ const Profile = () => {
                                     ) : !gambler.user?.avatar && (
                                         <UserIcon size={40} />
                                     )}
+                                    {isSubscribed && <PremiumAvatarBadge size={24} top={-9} left={-7} />}
                                     <div style={{
                                         position: 'absolute',
                                         bottom: 0,
@@ -373,21 +654,6 @@ const Profile = () => {
                                     </select>
                                 </div>
                                 <div className="input-group">
-                                    <label style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}><Languages size={16} /> {t('gambler_mgmt.detail.language')}</label>
-                                    <select
-                                        value={gambler.languageId || ''}
-                                        onChange={(e) => setGambler({ ...gambler, languageId: e.target.value })}
-                                        style={{ width: '100%', padding: '0.75rem', background: '#FFFFFF', border: '1px solid var(--stroke)', borderRadius: '0.5rem', color: 'var(--text-main)' }}
-                                    >
-                                        <option value="">Select Language</option>
-                                        {languages.map(lang => (
-                                            <option key={lang.languageId} value={lang.languageId}>
-                                                {lang.name} ({lang.code})
-                                            </option>
-                                        ))}
-                                    </select>
-                                </div>
-                                <div className="input-group">
                                     <label style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}><Calendar size={16} /> Member Since</label>
                                     <input
                                         type="text"
@@ -447,6 +713,56 @@ const Profile = () => {
                                 <Shield color="var(--primary)" /> {t('gambler_mgmt.detail.configurations')}
                             </h3>
                             <div style={{ display: 'flex', flexDirection: 'column', gap: '1.5rem' }}>
+                                <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '1.5rem', background: '#f8fafc', borderRadius: '1rem', border: '1px solid var(--stroke)' }}>
+                                    <div style={{ display: 'flex', gap: '1rem' }}>
+                                        <div style={{ padding: '0.75rem', background: 'rgba(217, 152, 0, 0.12)', borderRadius: '0.75rem' }}>
+                                            <Languages size={24} color="var(--primary)" />
+                                        </div>
+                                        <div>
+                                            <h4 style={{ fontWeight: 'bold' }}>{t('profile.global_language_title')}</h4>
+                                            <p style={{ color: 'var(--text-muted)', fontSize: '0.875rem' }}>{t('profile.global_language_desc')}</p>
+                                        </div>
+                                    </div>
+                                    <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', background: '#FFFFFF', padding: '0.35rem', borderRadius: '0.65rem', border: '1px solid var(--stroke)' }}>
+                                        <button
+                                            type="button"
+                                            onClick={() => handleChangeGlobalLanguage('en')}
+                                            disabled={saving}
+                                            style={{
+                                                padding: '0.45rem 0.9rem',
+                                                borderRadius: '0.45rem',
+                                                background: i18n.language.startsWith('en') ? 'var(--primary)' : 'rgba(0,0,0,0.05)',
+                                                color: i18n.language.startsWith('en') ? 'white' : 'var(--text-main)',
+                                                border: 'none',
+                                                cursor: saving ? 'not-allowed' : 'pointer',
+                                                fontSize: '0.85rem',
+                                                fontWeight: '700',
+                                                opacity: saving ? 0.75 : 1
+                                            }}
+                                        >
+                                            EN
+                                        </button>
+                                        <button
+                                            type="button"
+                                            onClick={() => handleChangeGlobalLanguage('es')}
+                                            disabled={saving}
+                                            style={{
+                                                padding: '0.45rem 0.9rem',
+                                                borderRadius: '0.45rem',
+                                                background: i18n.language.startsWith('es') ? 'var(--primary)' : 'rgba(0,0,0,0.05)',
+                                                color: i18n.language.startsWith('es') ? 'white' : 'var(--text-main)',
+                                                border: 'none',
+                                                cursor: saving ? 'not-allowed' : 'pointer',
+                                                fontSize: '0.85rem',
+                                                fontWeight: '700',
+                                                opacity: saving ? 0.75 : 1
+                                            }}
+                                        >
+                                            ES
+                                        </button>
+                                    </div>
+                                </div>
+
                                 <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '1.5rem', background: '#f8fafc', borderRadius: '1rem', border: '1px solid var(--stroke)' }}>
                                     <div style={{ display: 'flex', gap: '1rem' }}>
                                         <div style={{ padding: '0.75rem', background: 'rgba(59, 130, 246, 0.1)', borderRadius: '0.75rem' }}>
@@ -534,6 +850,226 @@ const Profile = () => {
                                 {saving ? <Loader2 size={18} className="animate-spin" /> : <Save size={18} />}
                                 {t('gambler_mgmt.detail.save_changes')}
                             </button>
+                        </div>
+                    )}
+
+                    {activeSection === 'subscription' && (
+                        <div style={{ display: 'flex', flexDirection: 'column', gap: '1.5rem' }}>
+                            <h3 style={{ fontSize: '1.5rem', fontWeight: 'bold', marginBottom: '0.5rem', display: 'flex', alignItems: 'center', gap: '0.75rem' }}>
+                                <Crown color="var(--primary)" /> {t('subscriptions.manage_title')}
+                            </h3>
+
+                            <div style={{
+                                padding: '1.75rem',
+                                borderRadius: '1.25rem',
+                                border: '1px solid rgba(217, 152, 0, 0.28)',
+                                background: 'linear-gradient(135deg, rgba(217, 152, 0, 0.12), rgba(255, 255, 255, 0.95))',
+                                boxShadow: '0 18px 36px rgba(15, 23, 42, 0.06)'
+                            }}>
+                                <div style={{ display: 'flex', alignItems: 'flex-start', justifyContent: 'space-between', gap: '1rem', marginBottom: '1.5rem' }}>
+                                    <div style={{ display: 'flex', gap: '1rem', alignItems: 'center' }}>
+                                        <div style={{
+                                            width: 58,
+                                            height: 58,
+                                            borderRadius: '50%',
+                                            background: 'linear-gradient(135deg, #facc15, var(--primary))',
+                                            display: 'grid',
+                                            placeItems: 'center',
+                                            color: 'white',
+                                            boxShadow: '0 12px 24px rgba(217, 152, 0, 0.24)'
+                                        }}>
+                                            <Crown size={30} />
+                                        </div>
+                                        <div>
+                                            <p style={{ margin: 0, color: 'var(--text-muted)', fontWeight: 700 }}>{t('subscriptions.current_plan')}</p>
+                                            <h2 style={{ margin: '0.25rem 0 0', fontSize: '1.8rem', fontWeight: 900 }}>{getPlanLabel()}</h2>
+                                        </div>
+                                    </div>
+                                    <span style={{
+                                        padding: '0.55rem 0.85rem',
+                                        borderRadius: '999px',
+                                        background: isRenewalCancellationScheduled ? 'rgba(245, 158, 11, 0.12)' : 'rgba(16, 185, 129, 0.12)',
+                                        color: isRenewalCancellationScheduled ? '#b45309' : '#047857',
+                                        fontWeight: 800,
+                                        display: 'inline-flex',
+                                        alignItems: 'center',
+                                        gap: '0.4rem'
+                                    }}>
+                                        {isRenewalCancellationScheduled ? <AlertCircle size={17} /> : <CheckCircle2 size={17} />}
+                                        {isRenewalCancellationScheduled ? t('subscriptions.cancel_scheduled') : t('subscriptions.active')}
+                                    </span>
+                                </div>
+
+                                <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, minmax(0, 1fr))', gap: '1rem' }}>
+                                    <div style={{ padding: '1rem', background: 'rgba(255,255,255,0.78)', border: '1px solid var(--stroke)', borderRadius: '0.9rem' }}>
+                                        <p style={{ margin: '0 0 0.35rem', color: 'var(--text-muted)', fontSize: '0.85rem', fontWeight: 700 }}>{t('subscriptions.price')}</p>
+                                        <strong style={{ fontSize: '1.15rem' }}>{getPlanPrice() || t('subscriptions.not_available')}</strong>
+                                    </div>
+                                    <div style={{ padding: '1rem', background: 'rgba(255,255,255,0.78)', border: '1px solid var(--stroke)', borderRadius: '0.9rem' }}>
+                                        <p style={{ margin: '0 0 0.35rem', color: 'var(--text-muted)', fontSize: '0.85rem', fontWeight: 700 }}>{t('subscriptions.expires')}</p>
+                                        <strong style={{ fontSize: '1.15rem' }}>{formatDate(subscription?.expiryDate || subscription?.currentPeriodEnd)}</strong>
+                                    </div>
+                                    <div style={{ padding: '1rem', background: 'rgba(255,255,255,0.78)', border: '1px solid var(--stroke)', borderRadius: '0.9rem' }}>
+                                        <p style={{ margin: '0 0 0.35rem', color: 'var(--text-muted)', fontSize: '0.85rem', fontWeight: 700 }}>{t('subscriptions.renewal')}</p>
+                                        <strong style={{ fontSize: '1.15rem' }}>
+                                            {isRenewalCancellationScheduled
+                                                ? t('subscriptions.no_renewal')
+                                                : t('subscriptions.auto_renewal')}
+                                        </strong>
+                                    </div>
+                                </div>
+
+                                <p style={{ margin: '1.25rem 0 0', color: 'var(--text-muted)', lineHeight: 1.55 }}>
+                                    {isRenewalCancellationScheduled
+                                        ? t('subscriptions.cancel_scheduled_note')
+                                        : t('subscriptions.manage_note')}
+                                </p>
+                            </div>
+
+                            <div style={{
+                                padding: '1.2rem',
+                                border: '1px solid rgba(217, 152, 0, 0.22)',
+                                borderRadius: '1rem',
+                                background: '#fff',
+                                display: 'flex',
+                                flexDirection: 'column',
+                                gap: '1rem'
+                            }}>
+                                <div>
+                                    <h4 style={{ margin: '0 0 0.35rem', fontWeight: 900 }}>{t('subscriptions.change_plan_title')}</h4>
+                                    <p style={{ margin: 0, color: 'var(--text-muted)', fontSize: '0.95rem', lineHeight: 1.45 }}>
+                                        {t('subscriptions.change_plan_hint')}
+                                    </p>
+                                </div>
+
+                                {loadingSubscriptionPlans ? (
+                                    <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', color: 'var(--text-muted)', fontWeight: 700 }}>
+                                        <Loader2 size={17} className="animate-spin" />
+                                        {t('subscriptions.loading_plans')}
+                                    </div>
+                                ) : (
+                                    <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(180px, 1fr))', gap: '0.85rem' }}>
+                                        {subscriptionPlans.map(plan => {
+                                            const isCurrentPlan = subscription?.planId
+                                                ? subscription.planId === plan.subscriptionPlanId
+                                                : Number(subscription?.planType) === Number(plan.type);
+                                            const isChanging = changingPlanId === plan.subscriptionPlanId;
+
+                                            return (
+                                                <button
+                                                    type="button"
+                                                    key={plan.subscriptionPlanId}
+                                                    onClick={() => handleChangeSubscriptionPlan(plan)}
+                                                    disabled={isCurrentPlan || Boolean(changingPlanId)}
+                                                    style={{
+                                                        border: isCurrentPlan ? '1px solid rgba(217, 152, 0, 0.45)' : '1px solid var(--stroke)',
+                                                        background: isCurrentPlan ? 'rgba(217, 152, 0, 0.08)' : '#fff',
+                                                        borderRadius: '0.85rem',
+                                                        padding: '0.9rem',
+                                                        textAlign: 'left',
+                                                        cursor: isCurrentPlan || changingPlanId ? 'not-allowed' : 'pointer',
+                                                        opacity: isCurrentPlan || (changingPlanId && !isChanging) ? 0.65 : 1
+                                                    }}
+                                                >
+                                                    <strong style={{ display: 'block', fontSize: '1rem', marginBottom: '0.25rem' }}>
+                                                        {getPlanLabelFromPlan(plan)}
+                                                    </strong>
+                                                    <span style={{ display: 'block', color: 'var(--primary)', fontWeight: 900 }}>
+                                                        ${plan.price}
+                                                    </span>
+                                                    <small style={{ color: 'var(--text-muted)', display: 'block', marginTop: '0.35rem' }}>
+                                                        {isCurrentPlan
+                                                            ? t('subscriptions.current_plan_badge')
+                                                            : t('subscriptions.new_expiry_after_change', { date: estimateExpiryAfterPlanChange(plan) })}
+                                                    </small>
+                                                    {isChanging && (
+                                                        <span style={{ display: 'inline-flex', alignItems: 'center', gap: '0.35rem', marginTop: '0.6rem', color: 'var(--primary)', fontWeight: 800 }}>
+                                                            <Loader2 size={15} className="animate-spin" />
+                                                            {t('subscriptions.opening_checkout')}
+                                                        </span>
+                                                    )}
+                                                </button>
+                                            );
+                                        })}
+                                    </div>
+                                )}
+                            </div>
+
+                            {isRenewalCancellationScheduled ? (
+                                <div style={{
+                                    padding: '1.2rem',
+                                    border: '1px solid rgba(217, 152, 0, 0.36)',
+                                    borderRadius: '1rem',
+                                    background: 'linear-gradient(135deg, rgba(217, 152, 0, 0.1), rgba(255,255,255,0.96))',
+                                    display: 'flex',
+                                    alignItems: 'center',
+                                    justifyContent: 'space-between',
+                                    gap: '1rem'
+                                }}>
+                                    <div>
+                                        <h4 style={{ margin: '0 0 0.35rem', fontWeight: 900 }}>{t('subscriptions.reactivate_title')}</h4>
+                                        <p style={{ margin: 0, color: 'var(--text-muted)', fontSize: '0.95rem', lineHeight: 1.45 }}>
+                                            {t('subscriptions.reactivate_hint')}
+                                        </p>
+                                    </div>
+                                    <button
+                                        type="button"
+                                        onClick={handleReactivateSubscription}
+                                        disabled={reactivatingSubscription}
+                                        style={{
+                                            border: 'none',
+                                            background: 'linear-gradient(135deg, #facc15, var(--primary))',
+                                            color: 'white',
+                                            borderRadius: '0.75rem',
+                                            padding: '0.8rem 1.2rem',
+                                            fontWeight: 900,
+                                            cursor: reactivatingSubscription ? 'not-allowed' : 'pointer',
+                                            display: 'inline-flex',
+                                            alignItems: 'center',
+                                            gap: '0.5rem',
+                                            boxShadow: '0 12px 24px rgba(217, 152, 0, 0.22)',
+                                            whiteSpace: 'nowrap',
+                                            opacity: reactivatingSubscription ? 0.7 : 1
+                                        }}
+                                    >
+                                        {reactivatingSubscription ? <Loader2 size={17} className="animate-spin" /> : <CheckCircle2 size={17} />}
+                                        {t('subscriptions.reactivate_subscription')}
+                                    </button>
+                                </div>
+                            ) : hasRecurringStripeSubscription ? (
+                                <div style={{
+                                    alignSelf: 'flex-start',
+                                    padding: '0.9rem 1rem',
+                                    border: '1px solid var(--stroke)',
+                                    borderRadius: '0.85rem',
+                                    background: '#fff'
+                                }}>
+                                    <p style={{ margin: '0 0 0.7rem', color: 'var(--text-muted)', fontSize: '0.875rem' }}>
+                                        {t('subscriptions.cancel_hint')}
+                                    </p>
+                                    <button
+                                        type="button"
+                                        onClick={handleCancelSubscription}
+                                        disabled={cancelingSubscription}
+                                        style={{
+                                            border: '1px solid rgba(100, 116, 139, 0.35)',
+                                            background: 'transparent',
+                                            color: 'var(--text-muted)',
+                                            borderRadius: '0.5rem',
+                                            padding: '0.55rem 0.85rem',
+                                            fontWeight: 700,
+                                            cursor: cancelingSubscription ? 'not-allowed' : 'pointer',
+                                            display: 'inline-flex',
+                                            alignItems: 'center',
+                                            gap: '0.45rem',
+                                            opacity: cancelingSubscription ? 0.55 : 1
+                                        }}
+                                    >
+                                        {cancelingSubscription ? <Loader2 size={16} className="animate-spin" /> : <CreditCard size={16} />}
+                                        {t('subscriptions.cancel_subscription')}
+                                    </button>
+                                </div>
+                            ) : null}
                         </div>
                     )}
 

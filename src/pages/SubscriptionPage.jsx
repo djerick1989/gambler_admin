@@ -1,21 +1,22 @@
-import React, { useEffect, useMemo, useState } from 'react';
+import React, { useEffect, useMemo, useRef, useState } from 'react';
 import {
-    Bell,
+    Activity,
     CheckCircle2,
     CreditCard,
-    Headphones,
-    Lightbulb,
+    HeartHandshake,
     Loader2,
-    MessageCircle,
-    Scale,
+    PiggyBank,
+    ShieldAlert,
     ShieldCheck
 } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
+import { useNavigate, useSearchParams } from 'react-router-dom';
 import { subscriptionService } from '../services/api';
 import { useAuth } from '../context/AuthContext';
 import { useNotification } from '../context/NotificationContext';
+import { getApiErrorMessage } from '../utils/subscription';
 
-const benefitIcons = [Bell, Scale, MessageCircle, Headphones, Lightbulb];
+const benefitIcons = [ShieldAlert, Activity, HeartHandshake, CheckCircle2, PiggyBank];
 
 const planMeta = (plan, t) => {
     const days = Number(plan.durationDays || 0);
@@ -27,12 +28,16 @@ const planMeta = (plan, t) => {
 
 const SubscriptionPage = () => {
     const { t } = useTranslation();
+    const navigate = useNavigate();
+    const [searchParams, setSearchParams] = useSearchParams();
     const { user, subscription, isSubscribed, refreshSubscription } = useAuth();
     const { addToast } = useNotification();
     const [plans, setPlans] = useState([]);
     const [loading, setLoading] = useState(true);
     const [selectedPlanId, setSelectedPlanId] = useState(null);
     const [buyingPlanId, setBuyingPlanId] = useState(null);
+    const [processingStripeReturn, setProcessingStripeReturn] = useState(false);
+    const handledStripeReturnRef = useRef(null);
 
     useEffect(() => {
         subscriptionService.getPlans()
@@ -48,6 +53,63 @@ const SubscriptionPage = () => {
             .finally(() => setLoading(false));
     }, [addToast, t]);
 
+    useEffect(() => {
+        const stripeStatus = searchParams.get('stripe');
+        if (!stripeStatus) return;
+
+        const sessionId = searchParams.get('session_id') || '';
+        const returnKey = `${stripeStatus}:${sessionId}`;
+        if (handledStripeReturnRef.current === returnKey) return;
+        handledStripeReturnRef.current = returnKey;
+
+        const nextParams = new URLSearchParams(searchParams);
+        nextParams.delete('stripe');
+        nextParams.delete('session_id');
+        setSearchParams(nextParams, { replace: true });
+
+        if (stripeStatus === 'success') {
+            setProcessingStripeReturn(true);
+            let cancelled = false;
+            const confirmAndRedirect = async () => {
+                if (sessionId && user?.userId) {
+                    try {
+                        await subscriptionService.confirmCheckoutSession({
+                            userId: user.userId,
+                            sessionId
+                        });
+                    } catch (error) {
+                        console.error('Error confirming Stripe checkout session:', error);
+                    }
+                }
+
+                try {
+                    await refreshSubscription();
+                } catch (error) {
+                    console.error('Error refreshing subscription after checkout:', error);
+                }
+
+                if (!cancelled) {
+                    window.sessionStorage.setItem('premiumWelcomePending', 'true');
+                    navigate('/posts', { replace: true, state: { premiumWelcome: true } });
+                }
+            };
+
+            confirmAndRedirect();
+            return () => {
+                cancelled = true;
+            };
+        }
+        if (stripeStatus === 'cancel') {
+            addToast('error', t('subscriptions.checkout_cancelled'));
+        }
+    }, [addToast, navigate, refreshSubscription, searchParams, setSearchParams, t, user?.userId]);
+
+    useEffect(() => {
+        if (isSubscribed && !searchParams.get('stripe') && !processingStripeReturn) {
+            navigate('/profile', { replace: true, state: { section: 'subscription' } });
+        }
+    }, [isSubscribed, navigate, processingStripeReturn, searchParams]);
+
     const selectedPlan = useMemo(
         () => plans.find(plan => plan.subscriptionPlanId === selectedPlanId),
         [plans, selectedPlanId]
@@ -57,16 +119,21 @@ const SubscriptionPage = () => {
         if (!user?.userId || !planId) return;
         setBuyingPlanId(planId);
         try {
-            const response = await subscriptionService.purchasePlan({ userId: user.userId, planId });
-            if (response?.status) {
-                await refreshSubscription();
-                addToast('success', t('subscriptions.purchase_success'));
+            const response = await subscriptionService.createCheckoutSession({
+                userId: user.userId,
+                planId,
+                successUrl: `${window.location.origin}/subscriptions?stripe=success&session_id={CHECKOUT_SESSION_ID}`,
+                cancelUrl: `${window.location.origin}/subscriptions?stripe=cancel`
+            });
+            const checkoutUrl = response?.data?.url || response?.data?.checkoutUrl || response?.url || response?.checkoutUrl;
+            if (response?.status && checkoutUrl) {
+                window.location.assign(checkoutUrl);
             } else {
                 addToast('error', response?.errorMessage || t('subscriptions.purchase_error'));
+                setBuyingPlanId(null);
             }
         } catch (err) {
-            addToast('error', t('subscriptions.purchase_error'));
-        } finally {
+            addToast('error', getApiErrorMessage(err, t('subscriptions.purchase_error')));
             setBuyingPlanId(null);
         }
     };

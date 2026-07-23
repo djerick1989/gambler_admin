@@ -5,10 +5,11 @@ import Modal from './Modal';
 import { subscriptionService } from '../services/api';
 import { useAuth } from '../context/AuthContext';
 import { useNotification } from '../context/NotificationContext';
+import { getApiErrorMessage } from '../utils/subscription';
 
 const SubscriptionGate = ({ isOpen, onClose, message }) => {
     const { t } = useTranslation();
-    const { user, refreshSubscription } = useAuth();
+    const { user } = useAuth();
     const { addToast } = useNotification();
     const [plans, setPlans] = useState([]);
     const [loading, setLoading] = useState(false);
@@ -29,17 +30,21 @@ const SubscriptionGate = ({ isOpen, onClose, message }) => {
         if (!user?.userId || buyingPlanId) return;
         setBuyingPlanId(planId);
         try {
-            const response = await subscriptionService.purchasePlan({ userId: user.userId, planId });
-            if (response?.status) {
-                await refreshSubscription();
-                addToast('success', t('subscriptions.purchase_success'));
-                onClose?.();
+            const response = await subscriptionService.createCheckoutSession({
+                userId: user.userId,
+                planId,
+                successUrl: `${window.location.origin}/subscriptions?stripe=success&session_id={CHECKOUT_SESSION_ID}`,
+                cancelUrl: `${window.location.origin}${window.location.pathname}?stripe=cancel`
+            });
+            const checkoutUrl = response?.data?.url || response?.data?.checkoutUrl || response?.url || response?.checkoutUrl;
+            if (response?.status && checkoutUrl) {
+                window.location.assign(checkoutUrl);
             } else {
                 addToast('error', response?.errorMessage || t('subscriptions.purchase_error'));
+                setBuyingPlanId(null);
             }
         } catch (err) {
-            addToast('error', t('subscriptions.purchase_error'));
-        } finally {
+            addToast('error', getApiErrorMessage(err, t('subscriptions.purchase_error')));
             setBuyingPlanId(null);
         }
     };
