@@ -6,6 +6,8 @@ import {
 } from 'lucide-react';
 import { i18nService } from '../../services/api';
 import { useTranslation } from 'react-i18next';
+import { confirmDialog } from '../../utils/dialog';
+
 
 const Namespaces = () => {
     const { t } = useTranslation();
@@ -89,7 +91,7 @@ const Namespaces = () => {
     };
 
     const handleDelete = async (id) => {
-        if (window.confirm("Are you sure you want to delete this namespace?")) {
+        if (await confirmDialog("Are you sure you want to delete this namespace?")) {
             try {
                 await i18nService.deleteNamespace(id);
                 fetchNamespaces();

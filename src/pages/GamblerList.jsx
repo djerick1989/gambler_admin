@@ -6,6 +6,8 @@ import {
 } from 'lucide-react';
 import { gamblerService, chatService } from '../services/api';
 import { useTranslation } from 'react-i18next';
+import { confirmDialog } from '../utils/dialog';
+
 
 const GamblerList = () => {
     const { t } = useTranslation();
@@ -58,7 +60,7 @@ const GamblerList = () => {
     };
 
     const handleDelete = async (id) => {
-        if (window.confirm(t('gambler_mgmt.detail.delete_confirm'))) {
+        if (await confirmDialog(t('gambler_mgmt.detail.delete_confirm'))) {
             try {
                 const response = await gamblerService.deleteGambler(id);
                 if (response.status) {

@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { Outlet, Link, useLocation, useNavigate } from 'react-router-dom';
-import { LayoutDashboard, Languages, UserCheck, Lightbulb, LogOut, Menu, X, ChevronRight, Globe, Newspaper, MessageSquare, Image, User, FileText, Bell, Award, CreditCard, Trash2, ClipboardCheck, Wallet, Brain, LifeBuoy, RefreshCcw, Crown, CheckCircle2, Loader2 } from 'lucide-react';
+import { LayoutDashboard, Languages, UserCheck, Lightbulb, LogOut, Menu, X, ChevronRight, Globe, Newspaper, MessageSquare, Image, User, FileText, Bell, Award, CreditCard, Trash2, ClipboardCheck, Wallet, Brain, LifeBuoy, RefreshCcw, Crown, CheckCircle2, Loader2, Headphones } from 'lucide-react';
 import { useAuth } from '../context/AuthContext';
 import { useChat } from '../context/ChatContext';
 import { useNotification } from '../context/NotificationContext';
@@ -8,6 +8,7 @@ import { ToastContainer } from '../components/Common/Toast';
 import { useTranslation } from 'react-i18next';
 import { isPremiumStatus } from '../utils/subscription';
 import PremiumAvatarBadge from '../components/PremiumAvatarBadge';
+import { healthAgentService, subscriptionService } from '../services/api';
 
 const SidebarLink = ({ to, icon: Icon, label, active, onClick, badge }) => (
     <Link
@@ -53,11 +54,14 @@ const MainLayout = () => {
     const [userMenuOpen, setUserMenuOpen] = useState(false);
     const [premiumWelcomeOpen, setPremiumWelcomeOpen] = useState(false);
     const [premiumChecking, setPremiumChecking] = useState(false);
+    const [healthQueueCount, setHealthQueueCount] = useState(0);
     const { user, logout, isSubscribed, refreshSubscription } = useAuth();
-    const { notifications, removeToast } = useNotification();
+    const { notifications, removeToast, addToast } = useNotification();
     const { setActiveChatId, totalUnreadCount } = useChat();
     const location = useLocation();
     const navigate = useNavigate();
+    const handledCheckoutSessionRef = React.useRef(null);
+    const previousHealthQueueCountRef = React.useRef(0);
 
     // Safety effect: Clear activeChatId if we navigate away from the chat module
     React.useEffect(() => {
@@ -76,6 +80,60 @@ const MainLayout = () => {
         setPremiumWelcomeOpen(true);
         navigate(location.pathname, { replace: true, state: null });
     }, [location.pathname, location.state, navigate]);
+
+    React.useEffect(() => {
+        const params = new URLSearchParams(location.search);
+        const stripeStatus = params.get('stripe');
+        const sessionId = params.get('session_id');
+
+        if (stripeStatus !== 'success' || !sessionId || !user?.userId) return;
+        if (handledCheckoutSessionRef.current === sessionId) return;
+        handledCheckoutSessionRef.current = sessionId;
+
+        const cleanParams = new URLSearchParams(location.search);
+        cleanParams.delete('stripe');
+        cleanParams.delete('session_id');
+        const cleanSearch = cleanParams.toString();
+
+        window.sessionStorage.setItem('premiumWelcomePending', 'true');
+        setPremiumWelcomeOpen(true);
+        setPremiumChecking(true);
+        navigate(
+            {
+                pathname: '/posts',
+                search: cleanSearch ? `?${cleanSearch}` : ''
+            },
+            { replace: true, state: { premiumWelcome: true } }
+        );
+
+        let cancelled = false;
+        const confirmCheckout = async () => {
+            try {
+                await subscriptionService.confirmCheckoutSession({
+                    userId: user.userId,
+                    sessionId
+                });
+            } catch (error) {
+                console.error('Error confirming Stripe checkout session from layout:', error);
+            }
+
+            try {
+                await refreshSubscription(user.userId);
+            } catch (error) {
+                console.error('Error refreshing subscription after Stripe checkout:', error);
+            }
+
+            if (!cancelled) {
+                window.sessionStorage.removeItem('premiumWelcomePending');
+                setPremiumChecking(false);
+            }
+        };
+
+        confirmCheckout();
+        return () => {
+            cancelled = true;
+        };
+    }, [location.search, navigate, refreshSubscription, user?.userId]);
 
     React.useEffect(() => {
         if (!premiumWelcomeOpen || isSubscribed || !user?.userId) return;
@@ -105,13 +163,47 @@ const MainLayout = () => {
         return () => window.clearTimeout(timeoutId);
     }, [premiumChecking, premiumWelcomeOpen]);
 
+    React.useEffect(() => {
+        if (![1, 2, 3, 4, 5].includes(user?.role)) return undefined;
+        let cancelled = false;
+        let queueEndpointAvailable = true;
+
+        const pollHealthQueue = async () => {
+            if (!queueEndpointAvailable) return;
+            try {
+                const response = await healthAgentService.getAgentQueue();
+                const data = response?.data ?? response;
+                const items = Array.isArray(data?.data) ? data.data : Array.isArray(data) ? data : Array.isArray(data?.items) ? data.items : [];
+                if (cancelled) return;
+                setHealthQueueCount(items.length);
+                if (items.length > previousHealthQueueCountRef.current && previousHealthQueueCountRef.current > 0) {
+                    addToast('info', t('health_agent.new_waiting') || 'Nueva conversación esperando agente.');
+                }
+                previousHealthQueueCountRef.current = items.length;
+            } catch (error) {
+                if (error?.response?.status === 404) {
+                    queueEndpointAvailable = false;
+                    return;
+                }
+                console.error('Error polling health agent queue:', error);
+            }
+        };
+
+        pollHealthQueue();
+        const intervalId = window.setInterval(pollHealthQueue, 20000);
+        return () => {
+            cancelled = true;
+            window.clearInterval(intervalId);
+        };
+    }, [addToast, t, user?.role]);
+
     const handleLogout = () => {
         logout();
         navigate('/login');
     };
 
     const getRoleName = (role) => {
-        const roles = ['CUSTOMER', 'ADMIN', 'SUPER_ADMIN', 'ADVISOR', 'AUTHOR'];
+        const roles = ['CUSTOMER', 'ADMIN', 'SUPER_ADMIN', 'ADVISOR', 'AUTHOR', 'AGENT'];
         return roles[role] || 'Unknown';
     };
 
@@ -122,13 +214,14 @@ const MainLayout = () => {
         { path: '/i18n', label: t('common.i18n'), icon: Globe, roles: [1, 2] },
         { path: '/posts', label: t('common.posts') || 'Posts', icon: FileText },
         { path: '/chat', label: t('common.chat') || 'Chat', icon: MessageSquare },
-        { path: '/news', label: t('common.news'), icon: Newspaper },
+        { path: '/news', label: t('common.news'), icon: Newspaper, roles: [1, 2] },
         { path: '/media', label: t('media_mgmt.title') || 'Media', icon: Image, roles: [1, 2] },
         { path: '/achievements', label: t('achievements.title') || 'Achievements', icon: Award },
         { path: '/donations', label: t('donations.title') || 'Donations', icon: CreditCard },
         { path: '/payment-platforms', label: t('payment_platforms.title') || 'Payment Platforms', icon: CreditCard, roles: [1, 2] },
         { path: '/forms', label: t('forms.title') || 'Formularios', icon: FileText, roles: [1, 2] },
         { path: '/support-feedback', label: t('help_support.admin_menu') || 'Soporte', icon: LifeBuoy, roles: [1, 2] },
+        { path: '/health-agent', label: t('health_agent.menu') || 'Asistencia IA', icon: Headphones, roles: [1, 2, 3, 4, 5], badge: healthQueueCount },
         { path: '/dopamine', label: t('dopamine.title') || 'Dopamine', icon: Brain, roles: [1, 2] },
         { path: '/customer/forms', label: t('forms.autodiagnosis') || 'Formularios', icon: ClipboardCheck, roles: [0] },
         { path: '/subscriptions', label: t('subscriptions.title') || 'Suscripción', icon: CreditCard, roles: [0], hideWhenSubscribed: true },
@@ -206,7 +299,7 @@ const MainLayout = () => {
                             {...item}
                             to={item.path}
                             active={item.path === '/' ? location.pathname === '/' : location.pathname === item.path || location.pathname.startsWith(`${item.path}/`)}
-                            badge={item.path === '/chat' ? totalUnreadCount : null}
+                            badge={item.path === '/chat' ? totalUnreadCount : item.badge}
                         />
                     ))}
                 </nav>

@@ -16,6 +16,8 @@ import SubscriptionGate from '../../components/SubscriptionGate';
 import { FREE_LIMITS, getApiErrorMessage, isSubscriptionRequiredError } from '../../utils/subscription';
 import { getEntityId, normalizeHtmlContent, normalizeText, normalizeTranslatedEntity, normalizeTranslatedList, toArray, unwrapApiData } from './dopamineUtils';
 import './Dopamine.css';
+import { confirmDialog } from '../../utils/dialog';
+
 
 const ProgressPanel = ({ step, maxStepReached, onStepClick }) => {
     const { t } = useTranslation();
@@ -742,7 +744,7 @@ const DopamineControl = () => {
     const handleDeleteFlow = async (flowItem) => {
         const itemId = getEntityId(flowItem, ['dopamineFlowId']);
         if (!itemId || isFlowCompleted(flowItem)) return;
-        if (!window.confirm(t('dopamine.delete_flow_confirm'))) return;
+        if (!await confirmDialog(t('dopamine.delete_flow_confirm'))) return;
 
         setDeletingFlowId(itemId);
         try {

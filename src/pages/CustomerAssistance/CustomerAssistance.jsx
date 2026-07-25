@@ -1,5 +1,5 @@
 import React, { useEffect, useMemo, useRef, useState } from 'react';
-import { Bot, Loader2, MessageCircle, Plus, Send, UserRound } from 'lucide-react';
+import { Bot, Headphones, Loader2, MessageCircle, Plus, Send, UserRound } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
 import { healthAgentService } from '../../services/api';
 import { useAuth } from '../../context/AuthContext';
@@ -8,6 +8,7 @@ import { getLanguageId } from '../../utils/languages';
 import SubscriptionGate from '../../components/SubscriptionGate';
 import { FREE_LIMITS, getApiErrorMessage, isSubscriptionRequiredError } from '../../utils/subscription';
 import PremiumAvatarBadge from '../../components/PremiumAvatarBadge';
+import { useHealthAgentRealtime } from '../../context/HealthAgentRealtimeContext';
 import './CustomerAssistance.css';
 
 const unwrapApiData = (response) => {
@@ -34,6 +35,7 @@ const getConversationId = (conversation) => (
 );
 
 const getConversationStatus = (conversation) => String(conversation?.status || '').toLowerCase();
+const isHumanStatus = (conversation) => ['waitingforagent', 'humanactive'].includes(getConversationStatus(conversation));
 
 const getConversationTimestamp = (conversation) => (
     getCachedMessages(getConversationId(conversation)).slice(-1)[0]?.createdAt ||
@@ -73,6 +75,35 @@ const stripHtml = (html = '') => {
     return div.textContent || div.innerText || '';
 };
 
+const escapeHtml = (value = '') => String(value)
+    .replace(/&/g, '&amp;')
+    .replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;')
+    .replace(/"/g, '&quot;')
+    .replace(/'/g, '&#39;');
+
+const hasHtmlMarkup = (value = '') => /<\/?[a-z][\s\S]*>/i.test(String(value));
+
+const formatAssistantContent = (value = '') => {
+    const content = String(value).trim();
+    if (!content) return '';
+    if (hasHtmlMarkup(content)) return content;
+
+    const normalized = content
+        .replace(/\r\n/g, '\n')
+        .replace(/\s+-\s+/g, '\n- ')
+        .replace(/([.!?])\s+(?=(Primero|Segundo|Tambien|También|Si |Dime|Cuéntame|Cuentame|Puedes|Recuerda|First|Second|Also|If |Tell me|Can you)\b)/g, '$1\n\n');
+
+    return normalized
+        .split(/\n{2,}|\n(?=-\s+)/)
+        .map(part => part.trim())
+        .filter(Boolean)
+        .map(part => part.startsWith('- ')
+            ? `<p>${escapeHtml(part.replace(/^-+\s*/, ''))}</p>`
+            : `<p>${escapeHtml(part)}</p>`)
+        .join('');
+};
+
 const formatTime = (value, locale) => {
     if (!value) return '';
     const date = new Date(value);
@@ -82,6 +113,10 @@ const formatTime = (value, locale) => {
         minute: '2-digit'
     });
 };
+
+const getAssistantFallback = (locale) => locale === 'en'
+    ? '<p>I am having trouble preparing the response.</p><p>Please send your message again in one short sentence so I can help you step by step.</p>'
+    : '<p>Estoy teniendo problemas para preparar la respuesta.</p><p>Por favor envia tu mensaje otra vez en una frase corta para ayudarte paso a paso.</p>';
 
 const formatSessionDate = (value, locale) => {
     if (!value) return '';
@@ -107,14 +142,15 @@ const getSessionPreview = (session, fallback) => {
 const AssistanceMessage = ({ message, user, locale, isSubscribed }) => {
     const role = String(message?.role || '').toLowerCase();
     const isUser = role === 'user';
+    const isAgent = role === 'agent';
     const content = message?.content || message?.message || '';
     const avatar = isUser ? user?.avatar : 'https://s3.us-east-2.amazonaws.com/ludopata.org/logo_gambler.png';
     const displayName = isUser
         ? (user?.name || user?.fullName || user?.nickName || 'Customer')
-        : 'Gambler Team';
+        : isAgent ? (message?.actorName || message?.agentName || (locale === 'es' ? 'Agente' : 'Agent')) : 'Gambler Team';
 
     return (
-        <article className={`assistance-message ${isUser ? 'user' : 'assistant'}`}>
+        <article className={`assistance-message ${isUser ? 'user' : isAgent ? 'agent' : 'assistant'}`}>
             <div className="assistance-avatar">
                 {avatar ? <img src={avatar} alt={displayName} /> : isUser ? <UserRound size={18} /> : <Bot size={18} />}
                 {isUser && isSubscribed && <PremiumAvatarBadge size={18} top={-6} left={-6} />}
@@ -128,7 +164,7 @@ const AssistanceMessage = ({ message, user, locale, isSubscribed }) => {
                 {isUser ? (
                     <p>{content}</p>
                 ) : (
-                    <div className="assistance-message-html" dangerouslySetInnerHTML={{ __html: content }} />
+                    <div className="assistance-message-html" dangerouslySetInnerHTML={{ __html: formatAssistantContent(content) }} />
                 )}
             </div>
         </article>
@@ -139,6 +175,7 @@ const CustomerAssistance = () => {
     const { t, i18n } = useTranslation();
     const { user, isSubscribed } = useAuth();
     const { addToast } = useNotification();
+    const { joinConversation, leaveConversation } = useHealthAgentRealtime();
     const messagesEndRef = useRef(null);
 
     const [sessions, setSessions] = useState([]);
@@ -160,6 +197,7 @@ const CustomerAssistance = () => {
 
     const messages = useMemo(() => toArray(conversation?.messages), [conversation]);
     const userMessageCount = useMemo(() => messages.filter(item => String(item?.role || '').toLowerCase() === 'user').length, [messages]);
+    const waitingForAgent = getConversationStatus(conversation) === 'waitingforagent';
 
     const loadSessions = async () => {
         setLoadingSessions(true);
@@ -186,7 +224,13 @@ const CustomerAssistance = () => {
         try {
             const response = await healthAgentService.getConversation(conversationId);
             const data = unwrapApiData(response);
-            const cachedMessages = getCachedMessages(conversationId);
+            const serverMessages = toArray(data?.messages).map(item => ({
+                ...item,
+                messageId: item.messageId || item.id,
+                role: String(item.role || '').toLowerCase(),
+                actorName: item.actorName || item.agentName
+            }));
+            const cachedMessages = serverMessages.length ? serverMessages : getCachedMessages(conversationId);
             setConversation({
                 ...data,
                 conversationId: getConversationId(data) || conversationId,
@@ -208,6 +252,40 @@ const CustomerAssistance = () => {
         if (selectedConversationId) {
             loadConversation(selectedConversationId);
         }
+    }, [selectedConversationId]);
+
+    useEffect(() => {
+        if (!selectedConversationId) return undefined;
+        joinConversation(selectedConversationId);
+        return () => leaveConversation(selectedConversationId);
+    }, [joinConversation, leaveConversation, selectedConversationId]);
+
+    useEffect(() => {
+        const handleConversationUpdated = (event) => {
+            const data = event.detail;
+            const conversationId = getConversationId(data);
+            if (!conversationId) return;
+            const serverMessages = toArray(data?.messages).map(item => ({
+                ...item,
+                messageId: item.messageId || item.id,
+                role: String(item.role || '').toLowerCase(),
+                actorName: item.actorName || item.agentName
+            }));
+            setCachedMessages(conversationId, serverMessages);
+            setSessions(prev => {
+                const exists = prev.some(item => getConversationId(item) === conversationId);
+                const next = { ...data, conversationId, messages: serverMessages };
+                return exists
+                    ? prev.map(item => getConversationId(item) === conversationId ? next : item)
+                    : [next, ...prev];
+            });
+            if (conversationId === selectedConversationId) {
+                setConversation({ ...data, conversationId, messages: serverMessages });
+            }
+        };
+
+        window.addEventListener('health-agent:conversation-updated', handleConversationUpdated);
+        return () => window.removeEventListener('health-agent:conversation-updated', handleConversationUpdated);
     }, [selectedConversationId]);
 
     useEffect(() => {
@@ -305,22 +383,39 @@ const CustomerAssistance = () => {
                 metadata: { languageId, locale }
             });
             const data = unwrapApiData(response);
-            const assistantMessage = {
-                messageId: `assistant-${data.timestamp || Date.now()}`,
-                role: 'assistant',
-                content: data.response || data.message || '',
-                createdAt: data.timestamp || new Date().toISOString(),
-                sources: data.sources || [],
-                safety: data.safety || null
-            };
+            const assistantContent = String(data.response || data.message || '').trim();
+            if (assistantContent) {
+                const assistantMessage = {
+                    messageId: `assistant-${data.timestamp || Date.now()}`,
+                    role: 'assistant',
+                    content: assistantContent,
+                    createdAt: data.timestamp || new Date().toISOString(),
+                    sources: data.sources || [],
+                    safety: data.safety || null
+                };
 
-            const nextConversation = prev => ({
-                ...(prev || { conversationId, messages: [] }),
-                conversationId: data.conversationId || conversationId,
-                messages: [...toArray(prev?.messages), assistantMessage]
-            });
-            setConversation(nextConversation);
-            setCachedMessages(conversationId, [...getCachedMessages(conversationId), assistantMessage]);
+                const nextConversation = prev => ({
+                    ...(prev || { conversationId, messages: [] }),
+                    conversationId: data.conversationId || conversationId,
+                    messages: [...toArray(prev?.messages), assistantMessage]
+                });
+                setConversation(nextConversation);
+                setCachedMessages(conversationId, [...getCachedMessages(conversationId), assistantMessage]);
+            } else if (!data?.safety?.requiresEscalation) {
+                const fallbackMessage = {
+                    messageId: `assistant-fallback-${Date.now()}`,
+                    role: 'assistant',
+                    content: getAssistantFallback(locale),
+                    createdAt: new Date().toISOString()
+                };
+                setConversation(prev => ({
+                    ...(prev || { conversationId, messages: [] }),
+                    messages: [...toArray(prev?.messages), fallbackMessage]
+                }));
+            }
+            if (data?.safety?.requiresEscalation || !assistantContent) {
+                await loadConversation(conversationId);
+            }
             await loadSessions();
         } catch (err) {
             console.error('Error sending health agent message:', err);
@@ -330,6 +425,42 @@ const CustomerAssistance = () => {
             } else {
                 addToast('error', t('assistance.send_error'));
             }
+        } finally {
+            setSending(false);
+        }
+    };
+
+    const handleRequestHuman = async () => {
+        if (!selectedConversationId || sending || starting) return;
+        if (!isSubscribed) {
+            setSubscriptionGate({
+                open: true,
+                message: locale === 'es'
+                    ? 'La asistencia con agente humano esta disponible para usuarios Premium.'
+                    : 'Human agent support is available for Premium users.'
+            });
+            return;
+        }
+        setSending(true);
+        try {
+            const response = await healthAgentService.requestHuman(
+                selectedConversationId,
+                locale === 'es' ? 'Solicitado por el usuario' : 'Requested by user'
+            );
+            const data = unwrapApiData(response);
+            const serverMessages = toArray(data?.messages).map(item => ({
+                ...item,
+                messageId: item.messageId || item.id,
+                role: String(item.role || '').toLowerCase(),
+                actorName: item.actorName || item.agentName
+            }));
+            setConversation({ ...data, conversationId: getConversationId(data) || selectedConversationId, messages: serverMessages });
+            setCachedMessages(selectedConversationId, serverMessages);
+            await loadSessions();
+            addToast('success', locale === 'es' ? 'El equipo humano fue notificado.' : 'The human team was notified.');
+        } catch (err) {
+            console.error('Error requesting human support:', err);
+            addToast('error', locale === 'es' ? 'No se pudo solicitar apoyo humano.' : 'Human support could not be requested.');
         } finally {
             setSending(false);
         }
@@ -372,6 +503,7 @@ const CustomerAssistance = () => {
                                             <small>{getSessionPreview(session, t('assistance.new_conversation'))}</small>
                                         </span>
                                         {getConversationStatus(session) === 'active' && <i>{t('assistance.active')}</i>}
+                                        {isHumanStatus(session) && <i className="human">{locale === 'es' ? 'Humano' : 'Human'}</i>}
                                     </button>
                                 );
                             })
@@ -396,6 +528,19 @@ const CustomerAssistance = () => {
                         <div>
                             <h2>{t('assistance.team_name')}</h2>
                         </div>
+                        {selectedConversationId && (
+                            <button
+                                type="button"
+                                className={`assistance-human-button ${isHumanStatus(conversation) ? 'active' : ''}`}
+                                onClick={handleRequestHuman}
+                                disabled={sending || starting || isHumanStatus(conversation)}
+                            >
+                                <Headphones size={17} />
+                                {isHumanStatus(conversation)
+                                    ? (locale === 'es' ? 'Agente notificado' : 'Agent notified')
+                                    : (locale === 'es' ? 'Hablar con humano' : 'Talk to a human')}
+                            </button>
+                        )}
                     </header>
 
                     <div className="assistance-messages">
@@ -419,6 +564,13 @@ const CustomerAssistance = () => {
                                         <span />
                                         <span />
                                         <span />
+                                    </div>
+                                )}
+                                {waitingForAgent && !sending && (
+                                    <div className="assistance-waiting-agent">
+                                        <Headphones size={16} />
+                                        {locale === 'es' ? 'Esperando a un agente' : 'Waiting for an agent'}
+                                        <span className="assistance-waiting-dots"><i /> <i /> <i /></span>
                                     </div>
                                 )}
                                 <div ref={messagesEndRef} />

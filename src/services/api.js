@@ -55,6 +55,14 @@ export const authService = {
     const response = await apiClient.post('/api/Auth/resetPassword', data);
     return response.data;
   },
+  getExternalLoginUrl: (provider, languageCode = 'ES') => {
+    const returnUrl = `${window.location.origin}/auth/social-callback`;
+    const params = new URLSearchParams({
+      returnUrl,
+      languageCode
+    });
+    return `${API_BASE_URL}/api/Auth/external/${provider}?${params.toString()}`;
+  },
   getUserInformation: async () => {
     const response = await apiClient.get('/api/Auth/getUserInformation');
     return response.data;
@@ -120,13 +128,14 @@ export const languageService = {
 };
 
 export const mediaService = {
-  upload: async (file) => {
+  upload: async (file, options = {}) => {
     const formData = new FormData();
     formData.append('file', file);
     const response = await apiClient.post('/api/Media/upload', formData, {
       headers: {
         'Content-Type': 'multipart/form-data',
       },
+      onUploadProgress: options.onUploadProgress,
     });
     return response.data;
   },
@@ -563,6 +572,52 @@ export const healthAgentService = {
   summarizeConversation: async (conversationId) => {
     const response = await apiClient.post(`/api/health-agent/conversations/${conversationId}/summary`);
     return response.data;
+  },
+  requestHuman: async (conversationId, reason = '') => {
+    const response = await apiClient.post(`/api/health-agent/conversations/${conversationId}/request-human`, { reason });
+    return response.data;
+  },
+  uploadDocument: async (formData) => {
+    const response = await apiClient.post('/api/health-agent/documents/upload', formData, {
+      headers: { 'Content-Type': 'multipart/form-data' }
+    });
+    return response.data;
+  },
+  getDocuments: async () => {
+    const response = await apiClient.get('/api/health-agent/documents');
+    return response.data;
+  },
+  deleteDocument: async (id) => {
+    const response = await apiClient.delete(`/api/health-agent/documents/${id}`);
+    return response.data;
+  },
+  getPendingFeedback: async () => {
+    const response = await apiClient.get('/api/health-agent/feedback/pending');
+    return response.data;
+  },
+  approveFeedback: async (id) => {
+    const response = await apiClient.post(`/api/health-agent/feedback/${id}/approve`);
+    return response.data;
+  },
+  getAgentQueue: async () => {
+    const response = await apiClient.get('/api/health-agent/agent/queue');
+    return response.data;
+  },
+  getAgentProfiles: async () => {
+    const response = await apiClient.get('/api/health-agent/agent/profiles');
+    return response.data;
+  },
+  registerAgent: async (data) => {
+    const response = await apiClient.post('/api/health-agent/agent/register', data);
+    return response.data;
+  },
+  getAgentConversation: async (conversationId) => {
+    const response = await apiClient.get(`/api/health-agent/agent/conversations/${conversationId}`);
+    return response.data;
+  },
+  replyAsAgent: async (conversationId, message) => {
+    const response = await apiClient.post(`/api/health-agent/agent/conversations/${conversationId}/reply`, { message });
+    return response.data;
   }
 };
 
@@ -679,6 +734,10 @@ export const donationService = {
   },
   updateStatus: async (data) => {
     const response = await apiClient.put('/api/Donation/updateStatus', data);
+    return response.data;
+  },
+  approvePending: async () => {
+    const response = await apiClient.put('/api/Donation/approvePending');
     return response.data;
   },
   getDonationById: async (id) => {

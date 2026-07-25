@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { useNavigate, Link } from 'react-router-dom';
+import { useNavigate, Link, useLocation } from 'react-router-dom';
 import { authService } from '../services/api';
 import { UserPlus, Mail, Lock, User as UserIcon, Facebook, Twitter, Chrome, Smartphone, Asterisk } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
@@ -9,8 +9,11 @@ const SIGNUP_ERROR_KEYS = {
     'user already exists': 'signup.errors.user_exists'
 };
 
+const SHOW_SOCIAL_SIGNUP = false;
+
 const Signup = () => {
     const { t, i18n } = useTranslation();
+    const location = useLocation();
     const [formData, setFormData] = useState({
         name: '',
         nickName: '',
@@ -28,6 +31,21 @@ const Signup = () => {
     const [loading, setLoading] = useState(false);
     const navigate = useNavigate();
 
+    React.useEffect(() => {
+        if (location.state?.error) {
+            setError(location.state.error);
+            navigate(location.pathname, { replace: true });
+        }
+    }, [location.pathname, location.state, navigate]);
+
+    const handleSocialSignup = (provider) => {
+        setError('');
+        window.location.href = authService.getExternalLoginUrl(
+            provider,
+            i18n.language ? i18n.language.toUpperCase() : 'ES'
+        );
+    };
+
     const handleSubmit = async (e) => {
         e.preventDefault();
         setError('');
@@ -38,6 +56,7 @@ const Signup = () => {
         setLoading(true);
         try {
             await authService.signup(formData);
+            sessionStorage.setItem('pendingVerificationEmail', formData.email);
             navigate('/verify-email', { state: { email: formData.email } });
         } catch (err) {
             const payload = err.response?.data;
@@ -94,23 +113,25 @@ const Signup = () => {
                         {loading ? t('signup.button_loading') : t('signup.button')}
                     </button>
 
-                    <div style={{ gridColumn: 'span 2', display: 'flex', flexDirection: 'column', gap: '0.5rem', marginTop: '1rem' }}>
-                        <div style={{ textAlign: 'center', fontSize: '0.8rem', color: 'var(--text-muted)', marginBottom: '0.5rem' }}>{t('signup.or_social')}</div>
-                        <div style={{ display: 'flex', gap: '1rem', justifyContent: 'center' }}>
-                            <button type="button" className="btn-social" style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', padding: '0.5rem 1rem', border: '1px solid var(--border-color)', borderRadius: '0.5rem', background: 'var(--bg-card)' }} onClick={() => console.log('Facebook login')}>
-                                <Facebook size={20} color="#1877F2" />
-                            </button>
-                            <button type="button" className="btn-social" style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', padding: '0.5rem 1rem', border: '1px solid var(--border-color)', borderRadius: '0.5rem', background: 'var(--bg-card)' }} onClick={() => console.log('Google login')}>
-                                <Chrome size={20} color="#DB4437" />
-                            </button>
-                            <button type="button" className="btn-social" style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', padding: '0.5rem 1rem', border: '1px solid var(--border-color)', borderRadius: '0.5rem', background: 'var(--bg-card)' }} onClick={() => console.log('X login')}>
-                                <Twitter size={20} color="#000000" />
-                            </button>
-                            <button type="button" className="btn-social" style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', padding: '0.5rem 1rem', border: '1px solid var(--border-color)', borderRadius: '0.5rem', background: 'var(--bg-card)' }} onClick={() => console.log('Apple login')}>
-                                <Smartphone size={20} color="#000000" />
-                            </button>
+                    {SHOW_SOCIAL_SIGNUP && (
+                        <div style={{ gridColumn: 'span 2', display: 'flex', flexDirection: 'column', gap: '0.5rem', marginTop: '1rem' }}>
+                            <div style={{ textAlign: 'center', fontSize: '0.8rem', color: 'var(--text-muted)', marginBottom: '0.5rem' }}>{t('signup.or_social')}</div>
+                            <div style={{ display: 'flex', gap: '1rem', justifyContent: 'center' }}>
+                                <button type="button" className="btn-social" aria-label={t('signup.social_facebook')} style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', padding: '0.5rem 1rem', border: '1px solid var(--border-color)', borderRadius: '0.5rem', background: 'var(--bg-card)' }} onClick={() => handleSocialSignup('facebook')}>
+                                    <Facebook size={20} color="#1877F2" />
+                                </button>
+                                <button type="button" className="btn-social" aria-label={t('signup.social_google')} style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', padding: '0.5rem 1rem', border: '1px solid var(--border-color)', borderRadius: '0.5rem', background: 'var(--bg-card)' }} onClick={() => handleSocialSignup('google')}>
+                                    <Chrome size={20} color="#DB4437" />
+                                </button>
+                                <button type="button" className="btn-social" aria-label={t('signup.social_x')} style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', padding: '0.5rem 1rem', border: '1px solid var(--border-color)', borderRadius: '0.5rem', background: 'var(--bg-card)' }} onClick={() => handleSocialSignup('x')}>
+                                    <Twitter size={20} color="#000000" />
+                                </button>
+                                <button type="button" className="btn-social" style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', padding: '0.5rem 1rem', border: '1px solid var(--border-color)', borderRadius: '0.5rem', background: 'var(--bg-card)' }} onClick={() => console.log('Apple login')}>
+                                    <Smartphone size={20} color="#000000" />
+                                </button>
+                            </div>
                         </div>
-                    </div>
+                    )}
                 </form>
 
                 <div style={{ marginTop: '2rem', textAlign: 'center', fontSize: '0.875rem', color: 'var(--text-muted)' }}>

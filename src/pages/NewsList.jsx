@@ -8,6 +8,8 @@ import { newsService } from '../services/api';
 import { useTranslation } from 'react-i18next';
 
 import NewsComments from './NewsComments';
+import { confirmDialog } from '../utils/dialog';
+
 
 const NewsList = () => {
     const { t, i18n } = useTranslation();
@@ -58,7 +60,7 @@ const NewsList = () => {
     };
 
     const handleDelete = async (id) => {
-        if (window.confirm(t('news_mgmt.delete_confirm'))) {
+        if (await confirmDialog(t('news_mgmt.delete_confirm'))) {
             try {
                 const response = await newsService.deleteNews(id);
                 if (response.status) {

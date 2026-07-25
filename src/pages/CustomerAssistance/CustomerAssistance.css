@@ -154,6 +154,11 @@
     font-style: normal;
 }
 
+.assistance-session i.human {
+    background: rgba(37, 99, 235, 0.12);
+    color: #1d4ed8;
+}
+
 .assistance-chat {
     min-width: 0;
     min-height: 0;
@@ -170,6 +175,34 @@
     align-items: center;
     gap: 0.8rem;
     padding: 0 1.25rem;
+}
+
+.assistance-human-button {
+    margin-left: auto;
+    border: 1px solid rgba(212, 144, 0, 0.3);
+    border-radius: 999px;
+    background: #fff7e6;
+    color: #8a5d00;
+    min-height: 38px;
+    padding: 0 0.85rem;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.45rem;
+    font: inherit;
+    font-size: 0.82rem;
+    font-weight: 900;
+    cursor: pointer;
+}
+
+.assistance-human-button.active {
+    border-color: rgba(37, 99, 235, 0.18);
+    background: rgba(37, 99, 235, 0.08);
+    color: #1d4ed8;
+}
+
+.assistance-human-button:disabled {
+    cursor: not-allowed;
+    opacity: 0.76;
 }
 
 .assistance-team-mark,
@@ -264,6 +297,15 @@
 
 .assistance-message.assistant .assistance-message-body {
     background: #fff;
+}
+
+.assistance-message.agent .assistance-avatar span {
+    background: #2563eb;
+}
+
+.assistance-message.agent .assistance-message-body {
+    background: #eff6ff;
+    border-color: rgba(37, 99, 235, 0.18);
 }
 
 .assistance-message-meta {
@@ -413,6 +455,44 @@
 }
 
 .assistance-typing span:nth-child(3) {
+    animation-delay: 0.3s;
+}
+
+.assistance-waiting-agent {
+    width: fit-content;
+    margin: 0.25rem 0 1rem 3.5rem;
+    border: 1px solid rgba(37, 99, 235, 0.18);
+    border-radius: 999px;
+    background: rgba(37, 99, 235, 0.08);
+    color: #1d4ed8;
+    min-height: 34px;
+    padding: 0 0.85rem;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.45rem;
+    font-size: 0.82rem;
+    font-weight: 900;
+}
+
+.assistance-waiting-dots {
+    display: inline-flex;
+    gap: 0.2rem;
+    margin-left: 0.1rem;
+}
+
+.assistance-waiting-dots i {
+    width: 5px;
+    height: 5px;
+    border-radius: 50%;
+    background: currentColor;
+    animation: assistancePulse 1.1s infinite ease-in-out;
+}
+
+.assistance-waiting-dots i:nth-child(2) {
+    animation-delay: 0.15s;
+}
+
+.assistance-waiting-dots i:nth-child(3) {
     animation-delay: 0.3s;
 }
 

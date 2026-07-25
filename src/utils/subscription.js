@@ -1,7 +1,7 @@
 export const FREE_LIMITS = {
     posts: 10,
     assistanceConversations: 1,
-    assistanceUserMessages: 25,
+    assistanceUserMessages: 5,
     commitments: 1,
     relapses: 1
 };

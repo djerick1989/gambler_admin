@@ -12,6 +12,8 @@ import { gamblerService, languageService, mediaService } from '../services/api';
 import GamblerAchievementManager from '../components/Achievement/GamblerAchievementManager';
 import { useTranslation } from 'react-i18next';
 import { countries } from '../utils/countries';
+import { confirmDialog } from '../utils/dialog';
+
 
 const GamblerDetail = () => {
     const { t } = useTranslation();
@@ -166,7 +168,7 @@ const GamblerDetail = () => {
     };
 
     const handleDelete = async () => {
-        if (window.confirm(t('gambler_mgmt.detail.delete_confirm'))) {
+        if (await confirmDialog(t('gambler_mgmt.detail.delete_confirm'))) {
             try {
                 const response = await gamblerService.deleteGambler(id);
                 if (response.status) {

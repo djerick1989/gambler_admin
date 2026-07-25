@@ -4,6 +4,8 @@ import { useAuth } from '../context/AuthContext';
 import { useTranslation } from 'react-i18next';
 import { Loader2, Send, Edit2, Trash2, User, X, Check } from 'lucide-react';
 import PremiumAvatarBadge from './PremiumAvatarBadge';
+import { confirmDialog } from '../utils/dialog';
+
 
 const PostComments = ({ postId, onCommentAdded, onCommentDeleted }) => {
     const { t } = useTranslation();
@@ -105,7 +107,7 @@ const PostComments = ({ postId, onCommentAdded, onCommentDeleted }) => {
     };
 
     const handleDeleteComment = async (commentId) => {
-        if (window.confirm(t('common.delete_confirm') || 'Delete this comment?')) {
+        if (await confirmDialog(t('common.delete_confirm') || 'Delete this comment?')) {
             try {
                 const response = await postCommentService.deletePostComment(commentId);
                 if (response.status) {

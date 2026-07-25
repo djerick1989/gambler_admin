@@ -6,6 +6,8 @@ import {
 } from 'lucide-react';
 import { paymentPlatformService } from '../services/api';
 import { useTranslation } from 'react-i18next';
+import { confirmDialog } from '../utils/dialog';
+
 
 const PaymentPlatformList = () => {
     const { t } = useTranslation();
@@ -43,7 +45,7 @@ const PaymentPlatformList = () => {
     };
 
     const handleDelete = async (id) => {
-        if (window.confirm(t('payment_platforms.delete_confirm'))) {
+        if (await confirmDialog(t('payment_platforms.delete_confirm'))) {
             try {
                 const response = await paymentPlatformService.delete(id);
                 if (response.status) {

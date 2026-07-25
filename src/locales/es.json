@@ -58,6 +58,10 @@
         "untitled": "Sin título",
         "untitled_question": "Pregunta sin título"
     },
+    "health_agent": {
+        "menu": "Asistencia IA",
+        "new_waiting": "Nueva conversación esperando agente."
+    },
     "posts": {
         "title": "Publicaciones de la Comunidad",
         "subtitle": "Gestiona e interactúa con el contenido de la comunidad",
@@ -115,6 +119,19 @@
         "password_mismatch": "Las contraseñas no coinciden",
         "or_social": "O regístrate con",
         "error_default": "Error al registrarse",
+        "social_title": "Conectando cuenta",
+        "social_finishing": "Estamos terminando tu acceso...",
+        "social_success": "Cuenta conectada correctamente",
+        "social_error": "No se pudo iniciar sesión con esa plataforma",
+        "social_facebook": "Registrarse con Facebook",
+        "social_google": "Registrarse con Google",
+        "social_x": "Registrarse con X",
+        "social_errors": {
+            "facebook_not_configured": "Facebook aún no está configurado",
+            "google_not_configured": "Google aún no está configurado",
+            "x_not_configured": "X aún no está configurado",
+            "external_auth_failed": "No se pudo completar la autenticación social"
+        },
         "errors": {
             "user_exists": "El usuario ya existe"
         }
@@ -409,7 +426,7 @@
     "assistance": {
         "title": "Asistencia",
         "team_name": "Gambler Team",
-        "health_agent_welcome": "Hola, soy tu asistente de apoyo emocional. Puedo orientarte con informacion validada y ayudarte a ordenar lo que estas viviendo. Escribe tu consulta de forma breve y clara.",
+        "health_agent_welcome": "Hola, soy tu asistente de apoyo emocional. Vamos paso a paso para ordenar lo que estas viviendo. Cuéntame en una frase qué necesitas ahora.",
         "active": "Activo",
         "new_conversation": "Nueva conversación",
         "no_sessions": "Aún no tienes conversaciones con el asistente.",
@@ -773,6 +790,10 @@
                 "no_beneficiaries": "No hay beneficiarios específicos para esta donación."
             },
             "approve_confirm": "¿Estás seguro de que deseas aprobar esta donación?",
+            "approve_all_button": "Aprobar pendientes",
+            "approve_all_confirm": "¿Estás seguro de que deseas aprobar todas las donaciones pendientes?",
+            "approve_all_success": "{{count}} donaciones pendientes aprobadas con éxito",
+            "approve_all_error": "Error al aprobar las donaciones pendientes",
             "deny_confirm": "¿Estás seguro de que deseas rechazar esta donación?"
         },
         "user": {

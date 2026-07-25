@@ -8,6 +8,8 @@ import {
 import { formService } from '../../services/api';
 import { useTranslation } from 'react-i18next';
 import Modal from '../../components/Modal';
+import { confirmDialog } from '../../utils/dialog';
+
 
 const FormQuestions = () => {
     const { t, i18n } = useTranslation();
@@ -129,7 +131,7 @@ const FormQuestions = () => {
     };
 
     const handleDeleteQuestion = async (questionId) => {
-        if (window.confirm(t('common.delete_confirm'))) {
+        if (await confirmDialog(t('common.delete_confirm'))) {
             try {
                 const response = await formService.deleteQuestion(questionId, currentLanguageId);
                 if (response.status) {
@@ -188,7 +190,7 @@ const FormQuestions = () => {
     };
 
     const handleDeleteOption = async (optionId) => {
-        if (window.confirm(t('common.delete_confirm'))) {
+        if (await confirmDialog(t('common.delete_confirm'))) {
             try {
                 const response = await formService.deleteOption(optionId, currentLanguageId);
                 if (response.status) {

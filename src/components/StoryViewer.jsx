@@ -6,6 +6,8 @@ import { statusService } from '../services/api';
 import { useAuth } from '../context/AuthContext';
 import StoryReactionsModal from './StoryReactionsModal';
 import PremiumAvatarBadge from './PremiumAvatarBadge';
+import { confirmDialog } from '../utils/dialog';
+
 
 const StoryViewer = ({ isOpen, onClose, initialStatus, allStatuses, onDeleteSuccess }) => {
     const { t } = useTranslation();
@@ -179,7 +181,7 @@ const StoryViewer = ({ isOpen, onClose, initialStatus, allStatuses, onDeleteSucc
     };
 
     const handleDeleteStatus = async (statusId) => {
-        if (window.confirm(t('stories.delete_confirm'))) {
+        if (await confirmDialog(t('stories.delete_confirm'))) {
             try {
                 const response = await statusService.deleteStatus(statusId);
                 if (response.status) {

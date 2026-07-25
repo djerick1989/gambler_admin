@@ -3,6 +3,7 @@ import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-d
 import Login from './pages/Login';
 import Signup from './pages/Signup';
 import VerifyEmail from './pages/VerifyEmail';
+import SocialAuthCallback from './pages/SocialAuthCallback';
 import RecoveryPassword from './pages/RecoveryPassword';
 import ResetPassword from './pages/ResetPassword';
 import Dashboard from './pages/Dashboard';
@@ -57,6 +58,7 @@ import CustomerAssistance from './pages/CustomerAssistance/CustomerAssistance';
 import CustomerHelpSupport from './pages/HelpSupport/CustomerHelpSupport';
 import CustomerFAQ from './pages/HelpSupport/CustomerFAQ';
 import AdminFeedbackList from './pages/HelpSupport/AdminFeedbackList';
+import HealthAgentAdmin from './pages/HealthAgentAdmin/HealthAgentAdmin';
 import AdminDopamineList from './pages/AdminDopamine/AdminDopamineList';
 import AdminDopamineForm from './pages/AdminDopamine/AdminDopamineForm';
 import RelapseList from './pages/CustomerRelapse/RelapseList';
@@ -66,7 +68,9 @@ import SubscriptionPage from './pages/SubscriptionPage';
 import MainLayout from './layouts/MainLayout';
 import { AuthProvider, useAuth } from './context/AuthContext';
 import { ChatProvider } from './context/ChatContext';
+import { HealthAgentRealtimeProvider } from './context/HealthAgentRealtimeContext';
 import { NotificationProvider } from './context/NotificationContext';
+import { DialogProvider } from './context/DialogContext';
 import { useTranslation } from 'react-i18next';
 
 const ProtectedRoute = ({ children }) => {
@@ -94,16 +98,29 @@ const AdminRoute = ({ children }) => {
   return children;
 };
 
+const StaffRoute = ({ children }) => {
+  const { user, loading } = useAuth();
+  if (loading) return null;
+  // ADMIN = 1, SUPER_ADMIN = 2, ADVISOR = 3, AUTHOR = 4, AGENT = 5
+  if (![1, 2, 3, 4, 5].includes(user?.role)) {
+    return <Navigate to="/posts" replace />;
+  }
+  return children;
+};
+
 function App() {
   return (
     <AuthProvider>
       <NotificationProvider>
-        <ChatProvider>
-          <Router>
-            <Routes>
+        <DialogProvider>
+          <ChatProvider>
+            <HealthAgentRealtimeProvider>
+            <Router>
+              <Routes>
               <Route path="/login" element={<Login />} />
               <Route path="/signup" element={<Signup />} />
               <Route path="/verify-email" element={<VerifyEmail />} />
+              <Route path="/auth/social-callback" element={<SocialAuthCallback />} />
               <Route path="/recovery-password" element={<RecoveryPassword />} />
               <Route path="/reset-password" element={<ResetPassword />} />
 
@@ -129,8 +146,8 @@ function App() {
                 <Route path="i18n/namespace/:namespaceId/key/edit/:id" element={<AdminRoute><KeyForm /></AdminRoute>} />
 
                 <Route path="news" element={<NewsSwitch />} />
-                <Route path="news/gallery" element={<NewsGallery />} />
-                <Route path="news/view/:id" element={<NewsDetail />} />
+                <Route path="news/gallery" element={<AdminRoute><NewsGallery /></AdminRoute>} />
+                <Route path="news/view/:id" element={<AdminRoute><NewsDetail /></AdminRoute>} />
                 <Route path="news/new" element={<AdminRoute><NewsForm /></AdminRoute>} />
                 <Route path="news/edit/:id" element={<AdminRoute><NewsForm /></AdminRoute>} />
 
@@ -179,6 +196,7 @@ function App() {
                 <Route path="dopamine" element={<AdminRoute><AdminDopamineList /></AdminRoute>} />
                 <Route path="dopamine/type/:type" element={<AdminRoute><AdminDopamineForm /></AdminRoute>} />
                 <Route path="support-feedback" element={<AdminRoute><AdminFeedbackList /></AdminRoute>} />
+                <Route path="health-agent" element={<StaffRoute><HealthAgentAdmin /></StaffRoute>} />
 
                 {/* Customer Forms */}
                 <Route path="customer/forms" element={<CustomerFormList />} />
@@ -212,9 +230,11 @@ function App() {
                 <Route path="customer/relapses/:id/conclusion" element={<RelapseConclusion />} />
 
               </Route>
-            </Routes>
-          </Router>
-        </ChatProvider>
+              </Routes>
+            </Router>
+            </HealthAgentRealtimeProvider>
+          </ChatProvider>
+        </DialogProvider>
       </NotificationProvider>
     </AuthProvider>
   );
@@ -231,7 +251,7 @@ const NewsSwitch = () => {
   const { user } = useAuth();
   // ADMIN = 1, SUPER_ADMIN = 2
   const isAdmin = user?.role === 1 || user?.role === 2;
-  return isAdmin ? <NewsList /> : <NewsGallery />;
+  return isAdmin ? <NewsList /> : <Navigate to="/posts" replace />;
 };
 
 export default App;

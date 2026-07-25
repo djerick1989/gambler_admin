@@ -7,6 +7,8 @@ import { useAuth } from '../../context/AuthContext';
 import { useNotification } from '../../context/NotificationContext';
 import { getLanguageId } from '../../utils/languages';
 import { getApiErrorMessage, isSubscriptionRequiredError } from '../../utils/subscription';
+import { confirmDialog } from '../../utils/dialog';
+
 
 const StrategyForm = () => {
     const { t, i18n } = useTranslation();
@@ -106,7 +108,7 @@ const StrategyForm = () => {
     };
 
     const handleDelete = async () => {
-        if (!window.confirm(t('common.delete_confirm', 'Are you sure?'))) return;
+        if (!await confirmDialog(t('common.delete_confirm', 'Are you sure?'))) return;
         setSaving(true);
         try {
             await strategyService.deleteStrategy(id);

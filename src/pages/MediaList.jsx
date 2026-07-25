@@ -2,6 +2,8 @@ import React, { useState, useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
 import { mediaService } from '../services/api';
 import { Trash2, ExternalLink, Image as ImageIcon, Film, FileText, Loader2, AlertCircle } from 'lucide-react';
+import { confirmDialog } from '../utils/dialog';
+
 
 const MediaList = () => {
     const { t } = useTranslation();
@@ -41,7 +43,7 @@ const MediaList = () => {
     }, []);
 
     const handleDelete = async (key) => {
-        if (window.confirm(t('media_mgmt.delete_confirm'))) {
+        if (await confirmDialog(t('media_mgmt.delete_confirm'))) {
             try {
                 const response = await mediaService.deleteAWSMedia(key);
                 if (response.status) {

@@ -5,6 +5,8 @@ import {
 } from 'lucide-react';
 import { newsCommentService } from '../services/api';
 import { useTranslation } from 'react-i18next';
+import { confirmDialog } from '../utils/dialog';
+
 
 const NewsComments = ({ newsId = null, onBack = null }) => {
     const { t, i18n } = useTranslation();
@@ -48,7 +50,7 @@ const NewsComments = ({ newsId = null, onBack = null }) => {
     };
 
     const handleDelete = async (id) => {
-        if (window.confirm(t('common.delete_confirm') || 'Are you sure you want to delete this comment?')) {
+        if (await confirmDialog(t('common.delete_confirm') || 'Are you sure you want to delete this comment?')) {
             try {
                 const response = await newsCommentService.deleteNewsComment(id);
                 if (response.status) {

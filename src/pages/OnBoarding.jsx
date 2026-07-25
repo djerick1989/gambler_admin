@@ -6,6 +6,8 @@ import {
 } from 'lucide-react';
 import { onboardingService } from '../services/api';
 import { useTranslation } from 'react-i18next';
+import { confirmDialog } from '../utils/dialog';
+
 
 const LANGUAGE_IDS = {
     en: '11e8ba3a-b290-4a2c-9dad-0f40e457f72c',
@@ -61,7 +63,7 @@ const OnBoarding = () => {
     };
 
     const handleDelete = async (id) => {
-        if (window.confirm(t('onboarding.delete_confirm'))) {
+        if (await confirmDialog(t('onboarding.delete_confirm'))) {
             try {
                 await onboardingService.delete(id);
                 fetchOnboardings();

@@ -1,0 +1,399 @@
+.health-admin-page {
+    color: #172033;
+}
+
+.health-admin-hero {
+    border: 1px solid var(--stroke);
+    border-radius: 12px;
+    background: linear-gradient(135deg, #fff8e8, #fff);
+    padding: 1.4rem 1.6rem;
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    margin-bottom: 1.2rem;
+    box-shadow: 0 16px 35px rgba(15, 23, 42, 0.05);
+}
+
+.health-admin-hero svg {
+    color: #d99400;
+}
+
+.health-admin-hero h1 {
+    margin: 0;
+    font-size: 2rem;
+    font-weight: 950;
+}
+
+.health-admin-hero p {
+    margin: 0.2rem 0 0;
+    color: #64748b;
+}
+
+.health-admin-grid {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+    gap: 1rem;
+}
+
+.health-admin-card {
+    border: 1px solid var(--stroke);
+    border-radius: 12px;
+    background: #fff;
+    padding: 1rem;
+    box-shadow: 0 12px 30px rgba(15, 23, 42, 0.04);
+}
+
+.health-queue-card {
+    grid-column: 1 / -1;
+}
+
+.health-admin-card-head {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 1rem;
+    margin-bottom: 0.8rem;
+}
+
+.health-admin-card-head h2 {
+    margin: 0;
+    display: flex;
+    align-items: center;
+    gap: 0.55rem;
+    font-size: 1.1rem;
+    font-weight: 950;
+}
+
+.health-admin-card-head h2 svg,
+.health-admin-card-head > span {
+    color: #d99400;
+}
+
+.health-admin-card-head > span {
+    border-radius: 999px;
+    background: #fff4d8;
+    padding: 0.25rem 0.65rem;
+    font-weight: 950;
+}
+
+.health-upload-button {
+    border: 0;
+    border-radius: 999px;
+    background: #d99400;
+    color: #fff;
+    padding: 0.6rem 0.9rem;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.45rem;
+    font-weight: 900;
+    cursor: pointer;
+}
+
+.health-upload-button input {
+    display: none;
+}
+
+.health-admin-note,
+.health-empty {
+    color: #64748b;
+    margin: 0.35rem 0 1rem;
+}
+
+.health-list {
+    display: grid;
+    gap: 0.6rem;
+}
+
+.health-row,
+.health-feedback-row {
+    border: 1px solid #e5e7eb;
+    border-radius: 10px;
+    padding: 0.75rem;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 0.9rem;
+}
+
+.health-row strong,
+.health-row small {
+    display: block;
+}
+
+.health-row small {
+    color: #64748b;
+    margin-top: 0.2rem;
+}
+
+.health-row button,
+.health-feedback-row button {
+    border: 0;
+    border-radius: 8px;
+    min-height: 34px;
+    padding: 0 0.7rem;
+    font: inherit;
+    font-weight: 900;
+    cursor: pointer;
+}
+
+.health-row button {
+    background: #fee2e2;
+    color: #dc2626;
+}
+
+.health-feedback-row {
+    align-items: flex-start;
+}
+
+.health-feedback-row p {
+    flex: 1;
+    margin: 0;
+    color: #334155;
+}
+
+.health-feedback-row button,
+.health-reply-form button {
+    background: #dcfce7;
+    color: #047857;
+}
+
+.health-agent-form {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 0.65rem;
+    margin-bottom: 0.9rem;
+}
+
+.health-agent-form input {
+    border: 1px solid #d1d5db;
+    border-radius: 10px;
+    min-height: 42px;
+    padding: 0 0.75rem;
+    font: inherit;
+}
+
+.health-agent-form button {
+    grid-column: 1 / -1;
+    border: 0;
+    border-radius: 10px;
+    background: #d99400;
+    color: #fff;
+    min-height: 42px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.45rem;
+    font: inherit;
+    font-weight: 950;
+    cursor: pointer;
+}
+
+.health-agent-form button:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+}
+
+.health-agent-presence {
+    border: 1px solid #e5e7eb;
+    border-radius: 10px;
+    background: #f8fafc;
+    padding: 0.75rem;
+    margin-bottom: 0.9rem;
+}
+
+.health-agent-presence strong {
+    display: block;
+    margin-bottom: 0.55rem;
+    font-size: 0.9rem;
+}
+
+.health-agent-presence > div {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.45rem;
+}
+
+.health-agent-presence span {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.35rem;
+    border: 1px solid #e5e7eb;
+    border-radius: 999px;
+    background: #fff;
+    color: #64748b;
+    padding: 0.28rem 0.55rem;
+    font-size: 0.82rem;
+    font-weight: 800;
+}
+
+.health-agent-presence span.online {
+    border-color: rgba(16, 185, 129, 0.28);
+    background: #ecfdf5;
+    color: #047857;
+}
+
+.health-agent-presence span i {
+    width: 8px;
+    height: 8px;
+    border-radius: 999px;
+    background: #94a3b8;
+}
+
+.health-agent-presence span.online i {
+    background: #10b981;
+}
+
+.health-agent-presence em {
+    color: #64748b;
+    font-style: normal;
+    font-size: 0.9rem;
+}
+
+.health-queue-layout {
+    display: grid;
+    grid-template-columns: 330px minmax(0, 1fr);
+    gap: 1rem;
+    min-height: 520px;
+}
+
+.health-queue-list {
+    border-right: 1px solid #e5e7eb;
+    padding-right: 1rem;
+    display: flex;
+    flex-direction: column;
+    gap: 0.6rem;
+    overflow-y: auto;
+}
+
+.health-queue-list button {
+    border: 1px solid #e5e7eb;
+    border-radius: 10px;
+    background: #fff;
+    padding: 0.75rem;
+    text-align: left;
+    cursor: pointer;
+}
+
+.health-queue-list button.active,
+.health-queue-list button:hover {
+    border-color: rgba(217, 148, 0, 0.45);
+    background: #fff8e8;
+}
+
+.health-queue-list strong,
+.health-queue-list small {
+    display: block;
+}
+
+.health-queue-list small {
+    color: #64748b;
+    margin-top: 0.25rem;
+    line-height: 1.35;
+}
+
+.health-conversation-panel {
+    min-width: 0;
+    display: grid;
+    grid-template-rows: minmax(0, 1fr) auto;
+    gap: 1rem;
+}
+
+.health-thread {
+    min-height: 0;
+    overflow-y: auto;
+    display: flex;
+    flex-direction: column;
+    gap: 0.8rem;
+    padding-right: 0.4rem;
+}
+
+.health-thread-message {
+    max-width: 78%;
+    border-radius: 12px;
+    padding: 0.75rem 0.9rem;
+    background: #f8fafc;
+    border: 1px solid #e5e7eb;
+}
+
+.health-thread-message.user {
+    align-self: flex-end;
+    background: #fff7e6;
+    border-color: rgba(217, 148, 0, 0.24);
+}
+
+.health-thread-message.agent {
+    background: #eff6ff;
+    border-color: rgba(37, 99, 235, 0.2);
+}
+
+.health-thread-message strong {
+    display: block;
+    margin-bottom: 0.3rem;
+    font-size: 0.82rem;
+}
+
+.health-thread-message p,
+.health-thread-message div {
+    margin: 0;
+    line-height: 1.5;
+}
+
+.health-reply-form {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) auto;
+    gap: 0.75rem;
+}
+
+.health-reply-form textarea {
+    min-height: 86px;
+    border: 1px solid #d1d5db;
+    border-radius: 12px;
+    padding: 0.85rem;
+    font: inherit;
+    resize: vertical;
+}
+
+.health-reply-form button {
+    border: 0;
+    border-radius: 12px;
+    padding: 0 1.1rem;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.45rem;
+    font: inherit;
+    font-weight: 950;
+    cursor: pointer;
+}
+
+.health-reply-form button:disabled {
+    opacity: 0.55;
+    cursor: not-allowed;
+}
+
+.health-empty.centered,
+.health-admin-loading {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 260px;
+    gap: 0.6rem;
+}
+
+@media (max-width: 980px) {
+    .health-admin-grid,
+    .health-queue-layout {
+        grid-template-columns: 1fr;
+    }
+
+    .health-agent-form {
+        grid-template-columns: 1fr;
+    }
+
+    .health-queue-list {
+        border-right: 0;
+        border-bottom: 1px solid #e5e7eb;
+        padding-right: 0;
+        padding-bottom: 1rem;
+        max-height: 280px;
+    }
+}

@@ -4,7 +4,7 @@ import ReactQuill from 'react-quill-new';
 import 'react-quill-new/dist/quill.snow.css';
 import {
     ArrowLeft, Loader2, Image as ImageIcon,
-    Save, X, Type, Video, Plus, Globe, Smile
+    Save, X, Type, Video, Plus, Globe, Smile, Play
 } from 'lucide-react';
 import EmojiPicker, { Theme as EmojiTheme } from 'emoji-picker-react';
 import {
@@ -34,7 +34,61 @@ const LANGUAGE_IDS = {
     es: '6892a523-0dc1-4e3b-9ddd-c9a558c7920b'
 };
 
-const SortableMediaItem = ({ media, index, onRemove }) => {
+const MAX_MEDIA_UPLOAD_BYTES = 500 * 1024 * 1024;
+
+const formatBytes = (bytes = 0) => {
+    if (!Number.isFinite(bytes) || bytes <= 0) return '0 MB';
+    const units = ['B', 'KB', 'MB', 'GB'];
+    const index = Math.min(Math.floor(Math.log(bytes) / Math.log(1024)), units.length - 1);
+    const value = bytes / Math.pow(1024, index);
+    return `${value >= 10 || index === 0 ? value.toFixed(0) : value.toFixed(1)} ${units[index]}`;
+};
+
+const formatDuration = (seconds = 0) => {
+    if (!Number.isFinite(seconds) || seconds <= 0) return 'calculando...';
+    if (seconds < 60) return `${Math.ceil(seconds)}s`;
+    const minutes = Math.floor(seconds / 60);
+    const remainingSeconds = Math.ceil(seconds % 60);
+    return `${minutes}m ${remainingSeconds}s`;
+};
+
+const createVideoThumbnail = (file) => new Promise((resolve) => {
+    const videoUrl = URL.createObjectURL(file);
+    const video = document.createElement('video');
+    const cleanup = () => URL.revokeObjectURL(videoUrl);
+
+    video.preload = 'metadata';
+    video.muted = true;
+    video.playsInline = true;
+    video.src = videoUrl;
+
+    video.onloadedmetadata = () => {
+        const captureTime = Math.min(1, Math.max(video.duration / 10, 0.1));
+        video.currentTime = Number.isFinite(captureTime) ? captureTime : 0.1;
+    };
+
+    video.onseeked = () => {
+        try {
+            const canvas = document.createElement('canvas');
+            canvas.width = video.videoWidth || 640;
+            canvas.height = video.videoHeight || 360;
+            const context = canvas.getContext('2d');
+            context.drawImage(video, 0, 0, canvas.width, canvas.height);
+            resolve(canvas.toDataURL('image/jpeg', 0.82));
+        } catch {
+            resolve(null);
+        } finally {
+            cleanup();
+        }
+    };
+
+    video.onerror = () => {
+        cleanup();
+        resolve(null);
+    };
+});
+
+const SortableMediaItem = ({ media, index, onRemove, onPreview }) => {
     const {
         attributes,
         listeners,
@@ -58,8 +112,50 @@ const SortableMediaItem = ({ media, index, onRemove }) => {
     return (
         <div ref={setNodeRef} style={style} {...attributes} {...listeners}>
             {media.mediaType === 1 ? (
-                <div style={{ height: '100%', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-                    <Video size={32} color="white" />
+                <div style={{ position: 'relative', width: '100%', height: '100%' }}>
+                    {media.thumbnailUrl ? (
+                        <img
+                            src={media.thumbnailUrl}
+                            alt=""
+                            style={{ width: '100%', height: '100%', objectFit: 'cover' }}
+                        />
+                    ) : media.mediaUrl ? (
+                        <video
+                            src={media.mediaUrl}
+                            muted
+                            preload="metadata"
+                            style={{ width: '100%', height: '100%', objectFit: 'cover' }}
+                        />
+                    ) : (
+                        <div style={{ height: '100%', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                            <Video size={32} color="white" />
+                        </div>
+                    )}
+                    <button
+                        type="button"
+                        onPointerDown={(e) => e.stopPropagation()}
+                        onClick={() => onPreview(media)}
+                        style={{
+                            position: 'absolute',
+                            left: '50%',
+                            top: '50%',
+                            transform: 'translate(-50%, -50%)',
+                            width: '38px',
+                            height: '38px',
+                            borderRadius: '50%',
+                            border: '1px solid rgba(255,255,255,0.65)',
+                            background: 'rgba(0,0,0,0.42)',
+                            color: 'white',
+                            cursor: 'pointer',
+                            display: 'flex',
+                            alignItems: 'center',
+                            justifyContent: 'center',
+                            backdropFilter: 'blur(4px)'
+                        }}
+                        title="Ver video"
+                    >
+                        <Play size={18} fill="white" />
+                    </button>
                 </div>
             ) : (
                 <img src={media.mediaUrl} alt="" style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
@@ -112,6 +208,8 @@ const PostForm = ({ id: propId, onSuccess, autoOpenMedia }) => {
     const [loading, setLoading] = useState(isEditing);
     const [saving, setSaving] = useState(false);
     const [uploadingMedia, setUploadingMedia] = useState(false);
+    const [uploadProgress, setUploadProgress] = useState(null);
+    const [previewMedia, setPreviewMedia] = useState(null);
 
     const [formData, setFormData] = useState({
         contentHtml: '',
@@ -210,32 +308,77 @@ const PostForm = ({ id: propId, onSuccess, autoOpenMedia }) => {
         const files = Array.from(e.target.files);
         if (files.length === 0) return;
 
+        const oversizedFile = files.find(file => file.size > MAX_MEDIA_UPLOAD_BYTES);
+        if (oversizedFile) {
+            alert(`El archivo "${oversizedFile.name}" pesa ${formatBytes(oversizedFile.size)}. El limite actual es ${formatBytes(MAX_MEDIA_UPLOAD_BYTES)}.`);
+            e.target.value = '';
+            return;
+        }
+
         setUploadingMedia(true);
+        setUploadProgress({
+            fileName: files[0]?.name || '',
+            percent: 0,
+            uploadedBytes: 0,
+            totalBytes: files.reduce((sum, file) => sum + file.size, 0),
+            etaSeconds: null
+        });
+
+        const uploadStartedAt = Date.now();
+        let completedBytes = 0;
+
         try {
             const newMediaList = [...formData.postMediaList];
+            const totalBytes = files.reduce((sum, file) => sum + file.size, 0);
 
             for (const file of files) {
-                const response = await mediaService.upload(file);
+                const isVideo = file.type.startsWith('video');
+                const thumbnailUrl = isVideo ? await createVideoThumbnail(file) : null;
+                const response = await mediaService.upload(file, {
+                    onUploadProgress: (progressEvent) => {
+                        const currentLoaded = progressEvent.loaded || 0;
+                        const uploadedBytes = Math.min(completedBytes + currentLoaded, totalBytes);
+                        const elapsedSeconds = Math.max((Date.now() - uploadStartedAt) / 1000, 0.1);
+                        const bytesPerSecond = uploadedBytes / elapsedSeconds;
+                        const remainingBytes = Math.max(totalBytes - uploadedBytes, 0);
+
+                        setUploadProgress({
+                            fileName: file.name,
+                            percent: totalBytes ? Math.min(Math.round((uploadedBytes / totalBytes) * 100), 100) : 0,
+                            uploadedBytes,
+                            totalBytes,
+                            etaSeconds: bytesPerSecond > 0 ? remainingBytes / bytesPerSecond : null
+                        });
+                    }
+                });
                 if (response.status && response.data?.url) {
                     newMediaList.push({
                         tempId: self.crypto.randomUUID(),
                         postMediaId: "",
                         postId: isEditing ? id : "",
                         mediaUrl: response.data.url,
+                        thumbnailUrl,
                         height: 0,
                         width: 0,
-                        mediaType: file.type.startsWith('video') ? 1 : 0, // 0: Image, 1: Video
+                        mediaType: isVideo ? 1 : 0, // 0: Image, 1: Video
                         order: newMediaList.length
                     });
                 }
+                completedBytes += file.size;
             }
 
             setFormData(prev => ({ ...prev, postMediaList: newMediaList }));
         } catch (err) {
             console.error("Error uploading media:", err);
-            alert("Error uploading media");
+            const backendMessage = err.response?.data?.errorMessage || err.response?.data?.message;
+            const statusMessage = err.response?.status === 413
+                ? `El archivo es demasiado grande. El limite actual es ${formatBytes(MAX_MEDIA_UPLOAD_BYTES)}.`
+                : null;
+            alert(backendMessage || statusMessage || "No se pudo subir el archivo. Intenta con un video mas liviano o revisa tu conexion.");
         } finally {
             setUploadingMedia(false);
+            setUploadProgress(null);
+            e.target.value = '';
         }
     };
 
@@ -327,6 +470,8 @@ const PostForm = ({ id: propId, onSuccess, autoOpenMedia }) => {
             </div>
         );
     }
+
+    const uploadIsProcessing = uploadingMedia && (uploadProgress?.percent || 0) >= 100;
 
     return (
         <div style={{
@@ -522,14 +667,41 @@ const PostForm = ({ id: propId, onSuccess, autoOpenMedia }) => {
                                             media={media}
                                             index={index}
                                             onRemove={removeMedia}
+                                            onPreview={setPreviewMedia}
                                         />
                                     ))}
                                 </SortableContext>
                             </DndContext>
 
                             {uploadingMedia && (
-                                <div style={{ aspectRatio: '1/1', display: 'flex', alignItems: 'center', justifyContent: 'center', background: 'rgba(255,255,255,0.02)', borderRadius: '0.5rem', border: '1px dashed var(--glass-border)' }}>
-                                    <Loader2 className="animate-spin" color="var(--primary)" />
+                                <div style={{
+                                    gridColumn: '1 / -1',
+                                    padding: '1rem',
+                                    background: '#fff8e6',
+                                    borderRadius: '0.75rem',
+                                    border: '1px solid rgba(217, 146, 0, 0.35)',
+                                    display: 'flex',
+                                    flexDirection: 'column',
+                                    gap: '0.65rem'
+                                    }}>
+                                        <div style={{ display: 'flex', alignItems: 'center', gap: '0.6rem', color: 'var(--text-main)', fontWeight: 700 }}>
+                                            <Loader2 size={18} className="animate-spin" color="var(--primary)" />
+                                        {uploadIsProcessing ? 'Procesando' : 'Subiendo'} {uploadProgress?.fileName || 'archivo'}...
+                                        </div>
+                                    <div style={{ height: '10px', borderRadius: '999px', background: '#f3e5bd', overflow: 'hidden' }}>
+                                        <div style={{
+                                            width: `${uploadProgress?.percent || 0}%`,
+                                            height: '100%',
+                                            borderRadius: '999px',
+                                            background: 'var(--primary)',
+                                            transition: 'width 0.2s ease'
+                                        }} />
+                                    </div>
+                                    <div style={{ display: 'flex', justifyContent: 'space-between', gap: '1rem', flexWrap: 'wrap', color: 'var(--text-muted)', fontSize: '0.85rem' }}>
+                                        <span>{uploadProgress?.percent || 0}% completado</span>
+                                        <span>{formatBytes(uploadProgress?.uploadedBytes)} de {formatBytes(uploadProgress?.totalBytes)}</span>
+                                        <span>{uploadIsProcessing ? 'Finalizando en el servidor...' : `Faltan ${formatDuration(uploadProgress?.etaSeconds)}`}</span>
+                                    </div>
                                 </div>
                             )}
                         </div>
@@ -572,6 +744,65 @@ const PostForm = ({ id: propId, onSuccess, autoOpenMedia }) => {
                     </button>
                 </div>
             </form>
+
+            {previewMedia && (
+                <div
+                    onClick={() => setPreviewMedia(null)}
+                    style={{
+                        position: 'fixed',
+                        inset: 0,
+                        background: 'rgba(15, 23, 42, 0.78)',
+                        zIndex: 100000,
+                        display: 'flex',
+                        alignItems: 'center',
+                        justifyContent: 'center',
+                        padding: '2rem'
+                    }}
+                >
+                    <div
+                        onClick={(event) => event.stopPropagation()}
+                        style={{
+                            width: 'min(760px, 92vw)',
+                            background: 'white',
+                            borderRadius: '1rem',
+                            padding: '1rem',
+                            boxShadow: '0 24px 70px rgba(0,0,0,0.35)'
+                        }}
+                    >
+                        <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '0.75rem' }}>
+                            <strong>Vista previa del video</strong>
+                            <button
+                                type="button"
+                                onClick={() => setPreviewMedia(null)}
+                                style={{
+                                    border: 'none',
+                                    background: '#f1f5f9',
+                                    borderRadius: '0.5rem',
+                                    width: '36px',
+                                    height: '36px',
+                                    cursor: 'pointer',
+                                    display: 'flex',
+                                    alignItems: 'center',
+                                    justifyContent: 'center'
+                                }}
+                            >
+                                <X size={20} />
+                            </button>
+                        </div>
+                        <video
+                            src={previewMedia.mediaUrl}
+                            poster={previewMedia.thumbnailUrl || undefined}
+                            controls
+                            style={{
+                                width: '100%',
+                                maxHeight: '70vh',
+                                borderRadius: '0.75rem',
+                                background: '#000'
+                            }}
+                        />
+                    </div>
+                </div>
+            )}
         </div>
     );
 };

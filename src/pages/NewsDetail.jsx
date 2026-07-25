@@ -8,6 +8,8 @@ import { newsService, newsCommentService } from '../services/api';
 import { useAuth } from '../context/AuthContext';
 import { useNotification } from '../context/NotificationContext';
 import { useTranslation } from 'react-i18next';
+import { confirmDialog } from '../utils/dialog';
+
 
 const NewsDetail = () => {
     const { id } = useParams();
@@ -84,7 +86,7 @@ const NewsDetail = () => {
     };
 
     const handleDeleteComment = async (commentId) => {
-        if (!window.confirm(t('common.delete_confirm'))) return;
+        if (!await confirmDialog(t('common.delete_confirm'))) return;
 
         try {
             const response = await newsCommentService.deleteNewsComment(commentId);

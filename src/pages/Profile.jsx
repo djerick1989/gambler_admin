@@ -14,6 +14,8 @@ import { useAuth } from '../context/AuthContext';
 import { countries } from '../utils/countries';
 import { getLanguageId } from '../utils/languages';
 import PremiumAvatarBadge from '../components/PremiumAvatarBadge';
+import { confirmDialog } from '../utils/dialog';
+
 
 const Profile = () => {
     const { t, i18n } = useTranslation();
@@ -344,7 +346,7 @@ const Profile = () => {
     };
 
     const handleRequestDataDeletion = async () => {
-        if (!window.confirm(t('profile.confirm_data_deletion') || "Are you sure you want to request your data deletion? This action cannot be undone.")) {
+        if (!await confirmDialog(t('profile.confirm_data_deletion') || "Are you sure you want to request your data deletion? This action cannot be undone.")) {
             return;
         }
 
@@ -366,7 +368,7 @@ const Profile = () => {
 
     const handleCancelSubscription = async () => {
         if (!user?.userId || cancelingSubscription) return;
-        if (!window.confirm(t('subscriptions.cancel_confirm'))) return;
+        if (!await confirmDialog(t('subscriptions.cancel_confirm'))) return;
 
         setCancelingSubscription(true);
         try {
@@ -409,7 +411,7 @@ const Profile = () => {
         if (!user?.userId || !plan?.subscriptionPlanId || changingPlanId) return;
         if (subscription?.planId === plan.subscriptionPlanId) return;
 
-        const confirmed = window.confirm(t('subscriptions.plan_change_confirm', {
+        const confirmed = await confirmDialog(t('subscriptions.plan_change_confirm', {
             plan: getPlanLabelFromPlan(plan),
             price: plan.price,
             expiry: estimateExpiryAfterPlanChange(plan)

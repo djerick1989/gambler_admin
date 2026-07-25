@@ -8,6 +8,8 @@ import { achievementService } from '../../services/api';
 import { useTranslation } from 'react-i18next';
 
 import { getLanguageId } from '../../utils/languages';
+import { confirmDialog } from '../../utils/dialog';
+
 
 const AchievementList = () => {
     const { t, i18n } = useTranslation();
@@ -37,7 +39,7 @@ const AchievementList = () => {
     };
 
     const handleDelete = async (id) => {
-        if (window.confirm(t('common.delete_confirm') || 'Are you sure you want to delete this achievement?')) {
+        if (await confirmDialog(t('common.delete_confirm') || 'Are you sure you want to delete this achievement?')) {
             try {
                 const response = await achievementService.deleteAchievement(id);
                 if (response.status) {

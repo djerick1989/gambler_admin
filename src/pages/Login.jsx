@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { useNavigate, Link } from 'react-router-dom';
+import { useNavigate, Link, useLocation } from 'react-router-dom';
 import { authService } from '../services/api';
 import { LogIn, Mail, Lock, User } from 'lucide-react';
 import { useAuth } from '../context/AuthContext';
@@ -8,8 +8,11 @@ import LanguageSwitcher from '../components/LanguageSwitcher';
 
 const Login = () => {
     const { t } = useTranslation();
-    const [formData, setFormData] = useState({ login: '', password: '', loginType: 0 });
+    const location = useLocation();
+    const verifiedEmail = location.state?.verifiedEmail || '';
+    const [formData, setFormData] = useState({ login: verifiedEmail, password: '', loginType: 0 });
     const [error, setError] = useState('');
+    const [successMessage] = useState(location.state?.message || '');
     const [loading, setLoading] = useState(false);
     const { fetchUser } = useAuth();
     const navigate = useNavigate();
@@ -43,15 +46,18 @@ const Login = () => {
                     <p style={{ color: 'var(--text-muted)' }}>{t('login.subtitle')}</p>
                 </div>
 
+                {successMessage && <div style={{ background: 'rgba(16, 185, 129, 0.12)', border: '1px solid #10b981', color: '#047857', padding: '0.75rem', borderRadius: '0.5rem', marginBottom: '1.5rem', fontSize: '0.875rem', fontWeight: 700 }}>{successMessage}</div>}
                 {error && <div style={{ background: 'rgba(239, 68, 68, 0.1)', border: '1px solid var(--danger)', color: 'var(--danger)', padding: '0.75rem', borderRadius: '0.5rem', marginBottom: '1.5rem', fontSize: '0.875rem' }}>{error}</div>}
 
-                <form onSubmit={handleSubmit}>
+                <form onSubmit={handleSubmit} autoComplete="off">
                     <div className="input-group">
                         <label>{t('login.email_user')}</label>
                         <div style={{ position: 'relative' }}>
                             <Mail size={18} style={{ position: 'absolute', left: '12px', top: '50%', transform: 'translateY(-50%)', color: 'var(--text-muted)' }} />
                             <input
                                 type="text"
+                                name="login"
+                                autoComplete="username"
                                 placeholder={t('login.email_placeholder')}
                                 style={{ paddingLeft: '2.5rem' }}
                                 value={formData.login}
@@ -67,6 +73,8 @@ const Login = () => {
                             <Lock size={18} style={{ position: 'absolute', left: '12px', top: '50%', transform: 'translateY(-50%)', color: 'var(--text-muted)' }} />
                             <input
                                 type="password"
+                                name="password"
+                                autoComplete="current-password"
                                 placeholder={t('login.password_placeholder')}
                                 style={{ paddingLeft: '2.5rem' }}
                                 value={formData.password}

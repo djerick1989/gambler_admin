@@ -14,6 +14,8 @@ import StoryViewer from '../components/StoryViewer';
 import SubscriptionGate from '../components/SubscriptionGate';
 import { FREE_LIMITS } from '../utils/subscription';
 import { useNotification } from '../context/NotificationContext';
+import { confirmDialog } from '../utils/dialog';
+
 
 const LANGUAGE_IDS = {
     en: '11e8ba3a-b290-4a2c-9dad-0f40e457f72c',
@@ -130,7 +132,7 @@ const PostList = () => {
     };
 
     const handleDelete = async (postId) => {
-        if (window.confirm(t('common.delete_confirm') || 'Are you sure you want to delete this post?')) {
+        if (await confirmDialog(t('common.delete_confirm') || 'Are you sure you want to delete this post?')) {
             try {
                 const response = await postService.deletePost(postId);
                 if (response.status) {

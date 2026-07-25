@@ -4,7 +4,9 @@ import { donationService } from '../../services/api';
 import { useTranslation } from 'react-i18next';
 import { useAuth } from '../../context/AuthContext';
 import { useNotification } from '../../context/NotificationContext';
-import { Loader2, CheckCircle, XCircle, User, Calendar, DollarSign, Tag, Users, X, ChevronLeft, ChevronRight } from 'lucide-react';
+import { Loader2, CheckCircle, XCircle, User, Calendar, DollarSign, Tag, Users, X, ChevronLeft, ChevronRight, CheckCheck } from 'lucide-react';
+import { confirmDialog } from '../../utils/dialog';
+
 
 const DonationAdminList = () => {
     const { t } = useTranslation();
@@ -14,6 +16,7 @@ const DonationAdminList = () => {
     const [donations, setDonations] = useState([]);
     const [loading, setLoading] = useState(true);
     const [processing, setProcessing] = useState(null);
+    const [bulkProcessing, setBulkProcessing] = useState(false);
     const [selectedDonation, setSelectedDonation] = useState(null);
     const [sortBy, setSortBy] = useState('date_desc');
     const [pagination, setPagination] = useState({
@@ -50,7 +53,7 @@ const DonationAdminList = () => {
             ? t('donations.admin.approve_confirm')
             : t('donations.admin.deny_confirm');
 
-        if (!window.confirm(confirmMsg)) return;
+        if (!await confirmDialog(confirmMsg)) return;
 
         setProcessing(donationId);
         try {
@@ -69,6 +72,26 @@ const DonationAdminList = () => {
             addToast('error', t('donations.admin.status_update_error'));
         } finally {
             setProcessing(null);
+        }
+    };
+
+    const handleApprovePending = async () => {
+        if (!await confirmDialog(t('donations.admin.approve_all_confirm'))) return;
+
+        setBulkProcessing(true);
+        try {
+            const response = await donationService.approvePending();
+            if (response.status || response.statusCode === 200) {
+                const approvedCount = response.data ?? 0;
+                addToast('success', t('donations.admin.approve_all_success', { count: approvedCount }));
+                setPagination(prev => ({ ...prev, page: 1 }));
+                fetchDonations();
+            }
+        } catch (err) {
+            console.error("Error approving pending donations:", err);
+            addToast('error', t('donations.admin.approve_all_error'));
+        } finally {
+            setBulkProcessing(false);
         }
     };
 
@@ -93,7 +116,34 @@ const DonationAdminList = () => {
                 <p style={{ color: 'var(--text-muted)' }}>{t('donations.admin.subtitle')}</p>
             </div>
 
-            <div style={{ display: 'flex', justifyContent: 'flex-end', marginBottom: '1.5rem' }}>
+            <div style={{ display: 'flex', justifyContent: 'flex-end', alignItems: 'center', gap: '0.75rem', marginBottom: '1.5rem', flexWrap: 'wrap' }}>
+                <button
+                    onClick={handleApprovePending}
+                    disabled={bulkProcessing || loading}
+                    style={{
+                        display: 'inline-flex',
+                        alignItems: 'center',
+                        gap: '0.5rem',
+                        padding: '0.75rem 1rem',
+                        borderRadius: '0.5rem',
+                        border: '1px solid rgba(16, 185, 129, 0.35)',
+                        background: bulkProcessing || loading ? '#f1f5f9' : 'rgba(16, 185, 129, 0.12)',
+                        color: bulkProcessing || loading ? 'var(--text-muted)' : '#047857',
+                        fontSize: '0.9rem',
+                        fontWeight: '800',
+                        cursor: bulkProcessing || loading ? 'not-allowed' : 'pointer',
+                        transition: 'all 0.2s'
+                    }}
+                    onMouseOver={(e) => {
+                        if (!bulkProcessing && !loading) e.currentTarget.style.background = 'rgba(16, 185, 129, 0.2)';
+                    }}
+                    onMouseOut={(e) => {
+                        if (!bulkProcessing && !loading) e.currentTarget.style.background = 'rgba(16, 185, 129, 0.12)';
+                    }}
+                >
+                    {bulkProcessing ? <Loader2 size={18} className="animate-spin" /> : <CheckCheck size={18} />}
+                    {t('donations.admin.approve_all_button')}
+                </button>
                 <select
                     value={sortBy}
                     onChange={(e) => setSortBy(e.target.value)}

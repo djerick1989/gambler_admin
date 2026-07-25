@@ -58,6 +58,10 @@
         "untitled": "Untitled",
         "untitled_question": "Untitled Question"
     },
+    "health_agent": {
+        "menu": "AI Assistance",
+        "new_waiting": "New conversation waiting for an agent."
+    },
     "posts": {
         "title": "Community Posts",
         "subtitle": "Manage and interact with community content",
@@ -115,6 +119,19 @@
         "password_mismatch": "Passwords do not match",
         "or_social": "Or sign up with",
         "error_default": "Error signing up",
+        "social_title": "Connecting account",
+        "social_finishing": "We are finishing your access...",
+        "social_success": "Account connected successfully",
+        "social_error": "Could not sign in with that platform",
+        "social_facebook": "Sign up with Facebook",
+        "social_google": "Sign up with Google",
+        "social_x": "Sign up with X",
+        "social_errors": {
+            "facebook_not_configured": "Facebook is not configured yet",
+            "google_not_configured": "Google is not configured yet",
+            "x_not_configured": "X is not configured yet",
+            "external_auth_failed": "Could not complete social authentication"
+        },
         "errors": {
             "user_exists": "User already exists"
         }
@@ -409,7 +426,7 @@
     "assistance": {
         "title": "Assistance",
         "team_name": "Gambler Team",
-        "health_agent_welcome": "Hi, I am your emotional support assistant. I can guide you with validated information and help you organize what you are going through. Write your question briefly and clearly.",
+        "health_agent_welcome": "Hi, I am your emotional support assistant. We will go step by step to organize what you are going through. Tell me in one sentence what you need right now.",
         "active": "Active",
         "new_conversation": "New conversation",
         "no_sessions": "You do not have assistant conversations yet.",
@@ -773,6 +790,10 @@
                 "no_beneficiaries": "No specific beneficiaries for this donation."
             },
             "approve_confirm": "Are you sure you want to approve this donation?",
+            "approve_all_button": "Approve pending",
+            "approve_all_confirm": "Are you sure you want to approve all pending donations?",
+            "approve_all_success": "{{count}} pending donations approved successfully",
+            "approve_all_error": "Error approving pending donations",
             "deny_confirm": "Are you sure you want to deny this donation?"
         },
         "user": {

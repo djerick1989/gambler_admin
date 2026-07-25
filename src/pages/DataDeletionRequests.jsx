@@ -7,6 +7,8 @@ import {
 import { dataDeletionService } from '../services/api';
 import { useTranslation } from 'react-i18next';
 import Modal from '../components/Modal';
+import { confirmDialog } from '../utils/dialog';
+
 
 const DataDeletionRequests = () => {
     const { t } = useTranslation();
@@ -44,7 +46,7 @@ const DataDeletionRequests = () => {
     };
 
     const handleProcess = async (requestId, status, reason = "") => {
-        if (!window.confirm(t('common.confirm_action'))) {
+        if (!await confirmDialog(t('common.confirm_action'))) {
             return;
         }
 

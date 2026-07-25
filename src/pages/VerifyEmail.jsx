@@ -10,7 +10,7 @@ const VerifyEmail = () => {
     const location = useLocation();
     const navigate = useNavigate();
     const [code, setCode] = useState('');
-    const [email] = useState(location.state?.email || '');
+    const [email] = useState(location.state?.email || sessionStorage.getItem('pendingVerificationEmail') || '');
     const [error, setError] = useState('');
     const [loading, setLoading] = useState(false);
 
@@ -19,7 +19,13 @@ const VerifyEmail = () => {
         setLoading(true);
         try {
             await authService.verifyEmail({ email, code });
-            navigate('/login', { state: { message: t('verify.success_message') } });
+            sessionStorage.removeItem('pendingVerificationEmail');
+            navigate('/login', {
+                state: {
+                    message: t('verify.success_message'),
+                    verifiedEmail: email
+                }
+            });
         } catch (err) {
             setError(err.response?.data?.message || t('verify.error_default'));
         } finally {

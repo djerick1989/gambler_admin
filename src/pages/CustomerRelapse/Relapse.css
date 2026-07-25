@@ -187,22 +187,22 @@
 }
 
 .relapse-commitment-modal {
-    width: min(560px, 100%);
+    width: min(520px, 100%);
     position: relative;
     border: 1px solid var(--primary);
     border-radius: 8px;
     background: #fff;
-    padding: 2.2rem 2rem;
+    padding: 2rem;
     text-align: center;
     box-shadow: 0 20px 50px rgba(15, 23, 42, 0.18);
 }
 
 .relapse-commitment-modal h2 {
-    margin: 0 auto 1.5rem;
-    max-width: 430px;
-    font-size: clamp(1.6rem, 3vw, 2.5rem);
-    line-height: 1.2;
-    font-weight: 500;
+    margin: 0 auto 1.35rem;
+    max-width: 390px;
+    font-size: clamp(1.25rem, 2.1vw, 1.8rem);
+    line-height: 1.28;
+    font-weight: 700;
 }
 
 .relapse-close {

@@ -6,6 +6,8 @@ import {
 } from 'lucide-react';
 import { i18nService, languageService } from '../../services/api';
 import { useTranslation } from 'react-i18next';
+import { confirmDialog } from '../../utils/dialog';
+
 
 const Keys = () => {
     const { t, i18n: i18nInstance } = useTranslation();
@@ -73,7 +75,7 @@ const Keys = () => {
     };
 
     const handleDeleteKey = async (keyId) => {
-        if (window.confirm("Are you sure you want to delete this key and all its translations?")) {
+        if (await confirmDialog("Are you sure you want to delete this key and all its translations?")) {
             try {
                 await i18nService.deleteKey(keyId);
                 fetchKeys();

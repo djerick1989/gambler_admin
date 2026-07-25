@@ -7,6 +7,8 @@ import { useNavigate } from 'react-router-dom';
 import { formService, mediaService } from '../../services/api';
 import { useTranslation } from 'react-i18next';
 import Modal from '../../components/Modal';
+import { confirmDialog } from '../../utils/dialog';
+
 
 const FormCategoryList = () => {
     const { t, i18n } = useTranslation();
@@ -110,7 +112,7 @@ const FormCategoryList = () => {
     };
 
     const handleDelete = async (id) => {
-        if (window.confirm(t('common.delete_confirm'))) {
+        if (await confirmDialog(t('common.delete_confirm'))) {
             try {
                 const response = await formService.deleteCategory(id, currentLanguageId);
                 if (response.status) {

@@ -19,6 +19,8 @@ import { debtService } from '../../services/api';
 import { useAuth } from '../../context/AuthContext';
 import { getLanguageId } from '../../utils/languages';
 import { currencies } from '../../utils/currencies';
+import { confirmDialog } from '../../utils/dialog';
+
 
 const DebtForm = () => {
     const { t, i18n } = useTranslation();
@@ -159,7 +161,7 @@ const DebtForm = () => {
     };
 
     const handleDeletePayment = async (paymentId) => {
-        if (window.confirm(t('debts.delete_confirm'))) {
+        if (await confirmDialog(t('debts.delete_confirm'))) {
             try {
                 const res = await debtService.deletePayment(paymentId);
                 if (res.status) {

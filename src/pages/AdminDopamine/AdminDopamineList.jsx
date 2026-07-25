@@ -16,6 +16,8 @@ import {
 import { getLanguageId } from '../../utils/languages';
 import { DOPAMINE_TYPE, normalizeTranslatedList, stripHtml, toArray, unwrapApiData } from '../CustomerDopamine/dopamineUtils';
 import './AdminDopamine.css';
+import { confirmDialog } from '../../utils/dialog';
+
 
 const typeIcons = {
     [DOPAMINE_TYPE.DOPAMINE]: Zap,
@@ -146,7 +148,7 @@ const AdminDopamineList = () => {
 
     const handleDeleteContent = async (type) => {
         const item = contentItems[type];
-        if (!item?.id || !window.confirm(t('dopamine_admin.delete_confirm'))) return;
+        if (!item?.id || !await confirmDialog(t('dopamine_admin.delete_confirm'))) return;
 
         await dopamineService.delete(item.id, languageId);
         await loadContent();
@@ -174,7 +176,7 @@ const AdminDopamineList = () => {
 
     const deleteAddiction = async (item) => {
         const id = getId(item, ['id', 'addictionId']);
-        if (!id || !window.confirm(t('dopamine_admin.delete_addiction_confirm'))) return;
+        if (!id || !await confirmDialog(t('dopamine_admin.delete_addiction_confirm'))) return;
 
         await addictionService.delete(id, languageId);
         await Promise.all([loadAddictions(), loadGames()]);
@@ -202,7 +204,7 @@ const AdminDopamineList = () => {
 
     const deleteGame = async (item) => {
         const id = getId(item, ['gameId', 'id']);
-        if (!id || !window.confirm(t('dopamine_admin.delete_game_confirm'))) return;
+        if (!id || !await confirmDialog(t('dopamine_admin.delete_game_confirm'))) return;
 
         await gameService.delete(id);
         await loadGames();
@@ -263,7 +265,7 @@ const AdminDopamineList = () => {
 
     const deleteFlow = async (flow) => {
         const id = getId(flow, ['id', 'dopamineFlowId', 'flowId']);
-        if (!id || !window.confirm(t('dopamine_admin.delete_flow_confirm'))) return;
+        if (!id || !await confirmDialog(t('dopamine_admin.delete_flow_confirm'))) return;
 
         await dopamineFlowService.delete(id);
         setFlows(prev => prev.filter(item => getId(item, ['id', 'dopamineFlowId', 'flowId']) !== id));

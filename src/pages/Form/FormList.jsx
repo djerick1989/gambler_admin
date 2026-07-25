@@ -7,6 +7,8 @@ import {
 import { formService } from '../../services/api';
 import { useTranslation } from 'react-i18next';
 import { isFreeForm } from '../../utils/subscription';
+import { confirmDialog } from '../../utils/dialog';
+
 
 const LANGUAGE_IDS = {
     en: '11e8ba3a-b290-4a2c-9dad-0f40e457f72c',
@@ -43,7 +45,7 @@ const FormList = () => {
     };
 
     const handleDelete = async (id) => {
-        if (window.confirm(t('common.delete_confirm'))) {
+        if (await confirmDialog(t('common.delete_confirm'))) {
             try {
                 const response = await formService.deleteForm(id);
                 if (response.status) {
