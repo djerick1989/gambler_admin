@@ -6,9 +6,9 @@ import urllib.error
 import urllib.request
 
 
-API_BASE = "https://ga-c0745f1cf0154a6cab5f8599d47e9b0c.ecs.us-east-2.on.aws"
+API_BASE = "https://api.ludopata.org"
 SPANISH_LANGUAGE_ID = "6892a523-0dc1-4e3b-9ddd-c9a558c7920b"
-DEFAULT_MEDIA_URL = "https://s3.us-east-2.amazonaws.com/ludopata.org/es.png"
+DEFAULT_MEDIA_URL = "https://s3.us-east-2.amazonaws.com/ludopata-prod-media-130356666336/es.png"
 
 
 def post_json(path, token, body, retries=3):

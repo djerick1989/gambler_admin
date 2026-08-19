@@ -5,7 +5,7 @@ import urllib.error
 import urllib.request
 
 
-API_BASE = "https://ga-c0745f1cf0154a6cab5f8599d47e9b0c.ecs.us-east-2.on.aws"
+API_BASE = "https://api.ludopata.org"
 SPANISH_LANGUAGE_ID = "6892a523-0dc1-4e3b-9ddd-c9a558c7920b"
 SELF_ASSESSMENT_CATEGORY_ID = "93afb95a-4631-4bd6-b305-9450b9950b47"
 AUTODIAGNOSIS_CATEGORY_ID = "a829a662-96cc-46ab-a693-9e40ac853fa5"

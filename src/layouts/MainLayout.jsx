@@ -260,7 +260,7 @@ const MainLayout = () => {
             }}>
                 <div style={{ padding: '1rem 1.5rem 0.75rem', display: 'flex', alignItems: 'center', gap: '0.75rem' }}>
                     <img
-                        src="https://s3.us-east-2.amazonaws.com/ludopata.org/logo_gambler.png"
+                        src="/assets/logo_gambler.png"
                         alt="Logo"
                         style={{ width: '40px', height: '40px', objectFit: 'contain' }}
                     />

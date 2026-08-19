@@ -1,18 +1,37 @@
 import { defineConfig } from 'vite'
 import react from '@vitejs/plugin-react'
 
+const apiTarget = process.env.VITE_API_BASE_URL || 'https://api.ludopata.org'
+
 // https://vite.dev/config/
 export default defineConfig({
   plugins: [react()],
   server: {
     proxy: {
       '/api': {
-        target: 'https://ga-c0745f1cf0154a6cab5f8599d47e9b0c.ecs.us-east-2.on.aws',
+        target: apiTarget,
         changeOrigin: true,
         secure: false,
       },
       '/chatHub': {
-        target: 'https://ga-c0745f1cf0154a6cab5f8599d47e9b0c.ecs.us-east-2.on.aws',
+        target: apiTarget,
+        changeOrigin: true,
+        secure: false,
+        ws: true,
+        configure: (proxy, _options) => {
+          proxy.on('error', (err, _req, _res) => {
+            console.log('proxy error', err);
+          });
+          proxy.on('proxyReq', (proxyReq, req, _res) => {
+            console.log('Sending Request to the Target:', req.method, req.url);
+          });
+          proxy.on('proxyRes', (proxyRes, req, _res) => {
+            console.log('Received Response from the Target:', proxyRes.statusCode, req.url);
+          });
+        },
+      },
+      '/healthAgentHub': {
+        target: apiTarget,
         changeOrigin: true,
         secure: false,
         ws: true,

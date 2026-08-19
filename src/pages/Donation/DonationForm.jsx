@@ -594,7 +594,7 @@ const DonationForm = () => {
                     {isCommunityDonation && (
                         <div style={{ display: 'flex', justifyContent: 'center', marginTop: '2rem' }}>
                             <img
-                                src="https://s3.us-east-2.amazonaws.com/ludopata.org/ruleta_20260213013600_6483f016.png"
+                                src="/assets/ruleta_20260213013600_6483f016.png"
                                 alt="Ruleta"
                                 style={{
                                     maxWidth: '400px',

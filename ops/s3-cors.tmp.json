@@ -1,0 +1,22 @@
+{
+    "CORSRules":  [
+                      {
+                          "MaxAgeSeconds":  3000,
+                          "AllowedHeaders":  [
+                                                 "*"
+                                             ],
+                          "AllowedOrigins":  [
+                                                 "http://localhost:5173",
+                                                 "https://ludopata.org",
+                                                 "https://www.ludopata.org"
+                                             ],
+                          "ExposeHeaders":  [
+                                                "ETag"
+                                            ],
+                          "AllowedMethods":  [
+                                                 "GET",
+                                                 "HEAD"
+                                             ]
+                      }
+                  ]
+}

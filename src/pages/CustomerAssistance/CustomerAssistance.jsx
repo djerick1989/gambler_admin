@@ -144,7 +144,7 @@ const AssistanceMessage = ({ message, user, locale, isSubscribed }) => {
     const isUser = role === 'user';
     const isAgent = role === 'agent';
     const content = message?.content || message?.message || '';
-    const avatar = isUser ? user?.avatar : 'https://s3.us-east-2.amazonaws.com/ludopata.org/logo_gambler.png';
+    const avatar = isUser ? user?.avatar : '/assets/logo_gambler.png';
     const displayName = isUser
         ? (user?.name || user?.fullName || user?.nickName || 'Customer')
         : isAgent ? (message?.actorName || message?.agentName || (locale === 'es' ? 'Agente' : 'Agent')) : 'Gambler Team';
@@ -522,7 +522,7 @@ const CustomerAssistance = () => {
                 <main className="assistance-chat">
                     <header className="assistance-chat-head">
                         <div className="assistance-team-mark">
-                            <img src="https://s3.us-east-2.amazonaws.com/ludopata.org/logo_gambler.png" alt="Gambler Team" />
+                            <img src="/assets/logo_gambler.png" alt="Gambler Team" />
                             <span />
                         </div>
                         <div>

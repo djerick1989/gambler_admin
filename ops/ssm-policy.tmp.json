@@ -1,0 +1,19 @@
+{
+    "Version":  "2012-10-17",
+    "Statement":  [
+                      {
+                          "Effect":  "Allow",
+                          "Resource":  [
+                                           "arn:aws:ssm:us-east-2:130356666336:parameter/ludopata/prod/DEEPL_API_KEY",
+                                           "arn:aws:ssm:us-east-2:130356666336:parameter/ludopata/prod/PASSWORD_KEY",
+                                           "arn:aws:ssm:us-east-2:130356666336:parameter/ludopata/prod/TOKEN_KEY",
+                                           "arn:aws:ssm:us-east-2:130356666336:parameter/ludopata/prod/OPEN_AI_KEY",
+                                           "arn:aws:ssm:us-east-2:130356666336:parameter/ludopata/prod/CONTEXT_DB_CONNECTION"
+                                       ],
+                          "Action":  [
+                                         "ssm:GetParameter",
+                                         "ssm:GetParameters"
+                                     ]
+                      }
+                  ]
+}

@@ -1,10 +1,11 @@
 import React, { createContext, useCallback, useContext, useEffect, useMemo, useRef, useState } from 'react';
 import * as signalR from '@microsoft/signalr';
 import { useAuth } from './AuthContext';
+import { API_BASE_URL } from '../services/api';
 
 const HealthAgentRealtimeContext = createContext(null);
 
-const HUB_URL = 'https://ga-c0745f1cf0154a6cab5f8599d47e9b0c.ecs.us-east-2.on.aws/healthAgentHub';
+const HUB_URL = `${API_BASE_URL}/healthAgentHub`;
 
 const normalizeId = (value) => String(value || '');
 

@@ -38,7 +38,7 @@ const Login = () => {
             <div className="glass-card animate-fade-in" style={{ width: '100%', maxWidth: '400px', padding: '2.5rem' }}>
                 <div style={{ textAlign: 'center', marginBottom: '2rem' }}>
                     <img
-                        src="https://s3.us-east-2.amazonaws.com/ludopata.org/logo_gambler.png"
+                        src="/assets/logo_gambler.png"
                         alt="Logo"
                         style={{ width: '80px', height: '80px', objectFit: 'contain', margin: '0 auto 1.5rem', display: 'block' }}
                     />

@@ -58,7 +58,7 @@ const CustomerHelpSupport = () => {
                 </div>
 
                 <div className="help-support-visual">
-                    <img src="https://s3.us-east-2.amazonaws.com/ludopata.org/logo_gambler.png" alt="Gambler" />
+                    <img src="/assets/logo_gambler.png" alt="Gambler" />
                     <div>
                         <strong>{t('help_support.faq_stat')}</strong>
                         <span>{t('help_support.faq_hint')}</span>

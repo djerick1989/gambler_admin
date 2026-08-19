@@ -2,7 +2,7 @@ import React, { createContext, useContext, useEffect, useState, useCallback, use
 import * as signalR from '@microsoft/signalr';
 import { useNotification } from './NotificationContext';
 import { useAuth } from './AuthContext';
-import { chatService } from '../services/api';
+import { API_BASE_URL, chatService } from '../services/api';
 
 const ChatContext = createContext();
 
@@ -14,7 +14,7 @@ export const useChat = () => {
     return context;
 };
 
-const HUB_URL = 'https://ga-c0745f1cf0154a6cab5f8599d47e9b0c.ecs.us-east-2.on.aws/chatHub';
+const HUB_URL = `${API_BASE_URL}/chatHub`;
 
 export const ChatProvider = ({ children }) => {
     const [typingUsers, setTypingUsers] = useState({}); // { [chatId]: { [userId]: boolean } }
