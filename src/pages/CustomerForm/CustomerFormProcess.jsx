@@ -187,6 +187,24 @@ const CustomerFormProcess = () => {
                 </h1>
             </div>
 
+            {/* Sin periodo de referencia, "A veces" no significa nada: hay que decir a qué
+                ventana de tiempo se refieren las preguntas. */}
+            {form.recallWindow && (
+                <div style={{
+                    textAlign: 'center',
+                    margin: '-1.5rem 0 2rem',
+                    padding: '0.65rem 1rem',
+                    background: 'rgba(212, 144, 0, 0.08)',
+                    border: '1px solid var(--primary)',
+                    borderRadius: '0.75rem',
+                    fontSize: '0.95rem',
+                    fontWeight: '600',
+                    color: 'var(--text-main)'
+                }}>
+                    {t(`forms.recall_window.${form.recallWindow.toLowerCase()}`, '')}
+                </div>
+            )}
+
             <div style={{ display: 'flex', flexDirection: 'column', gap: '1.5rem' }}>
                 {form.questions.sort((a,b) => a.order - b.order).map((q, idx) => {
                     const qText = q.translations?.find(t => t.languageId === currentLanguageId)?.questionText || q.questionText;

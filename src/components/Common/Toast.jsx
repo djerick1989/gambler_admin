@@ -1,14 +1,16 @@
 import React from 'react';
-import { MessageSquare, X, CheckCircle, AlertCircle, Info } from 'lucide-react';
+import { MessageSquare, X, CheckCircle, AlertCircle, Info, Award } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 
 const Toast = ({ notification, onRemove }) => {
     const navigate = useNavigate();
-    const { id, title, message, chatId, sender, type } = notification;
+    const { id, title, message, chatId, link, sender, type } = notification;
 
     const handleClick = () => {
         if (chatId) {
             navigate(`/chat/${chatId}`);
+        } else if (link) {
+            navigate(link);
         }
         onRemove(id);
     };
@@ -19,6 +21,9 @@ const Toast = ({ notification, onRemove }) => {
     if (type === 'success') {
         icon = <CheckCircle size={20} color="white" />;
         iconBg = '#10b981';
+    } else if (type === 'achievement') {
+        icon = <Award size={20} color="white" />;
+        iconBg = 'var(--primary, #D49000)';
     } else if (type === 'error') {
         icon = <AlertCircle size={20} color="white" />;
         iconBg = '#ef4444';

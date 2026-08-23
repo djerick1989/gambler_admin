@@ -14,12 +14,23 @@ i18n
             es: { translation: esTranslations }
         },
         fallbackLng: 'en',
+        supportedLngs: ['en', 'es'],
+        nonExplicitSupportedLngs: true,
+        load: 'languageOnly',
+        cleanCode: true,
+        returnNull: false,
         interpolation: {
             escapeValue: false
         },
         detection: {
-            order: ['localStorage', 'navigator'],
-            caches: ['localStorage']
+            order: ['querystring', 'localStorage', 'navigator', 'htmlTag'],
+            lookupQuerystring: 'lng',
+            lookupLocalStorage: 'i18nextLng',
+            caches: ['localStorage'],
+            convertDetectedLanguage: (lng) => {
+                if (!lng) return 'en';
+                return lng.toLowerCase().startsWith('es') ? 'es' : 'en';
+            }
         }
     });
 

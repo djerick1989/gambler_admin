@@ -3,6 +3,7 @@ import { Plus, User as UserIcon } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
 import { useAuth } from '../context/AuthContext';
 import PremiumAvatarBadge from './PremiumAvatarBadge';
+import { storyBackgroundToCss } from '../utils/storyBackgrounds';
 
 const StoryCard = ({ status, isAdd, onClick }) => {
     const { t } = useTranslation();
@@ -115,14 +116,14 @@ const StoryCard = ({ status, isAdd, onClick }) => {
                 left: 0,
                 width: '100%',
                 height: '100%',
-                background: type === 2
+                background: isVideo
                     ? 'black'
                     : type === 1
                         ? `url(${content}) center/cover`
-                        : 'linear-gradient(135deg, #6366f1 0%, #a855f7 100%)',
+                        : storyBackgroundToCss(status.background),
                 zIndex: 0
             }}>
-                {type === 2 && (
+                {isVideo && (
                     <video
                         src={content}
                         style={{ width: '100%', height: '100%', objectFit: 'cover' }}

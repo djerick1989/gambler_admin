@@ -100,7 +100,7 @@ const PostCard = ({ post, onEdit, onDelete }) => {
         if (navigator.share) {
             try {
                 await navigator.share({
-                    title: 'Gambler Community Post',
+                    title: 'Ludopata Community Post',
                     url: shareUrl
                 });
 

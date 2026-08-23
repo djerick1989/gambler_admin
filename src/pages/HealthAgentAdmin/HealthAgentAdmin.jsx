@@ -404,7 +404,7 @@ const HealthAgentAdmin = () => {
                                                 const isUserMessage = role === 'user';
                                                 return (
                                                     <article className={`health-thread-message ${role}`} key={item.id || `${role}-${item.createdAt}`}>
-                                                        <strong>{isUserMessage ? (selectedConversation.userNickName || 'Usuario') : role === 'agent' ? (item.actorName || item.agentName || 'Agente') : 'Gambler Team'}</strong>
+                                                        <strong>{isUserMessage ? (selectedConversation.userNickName || 'Usuario') : role === 'agent' ? (item.actorName || item.agentName || 'Agente') : 'Equipo Ludopata'}</strong>
                                                         {isUserMessage ? (
                                                             <p>{stripHtml(item.content)}</p>
                                                         ) : (

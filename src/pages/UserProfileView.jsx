@@ -141,12 +141,11 @@ const UserProfileView = () => {
                         {!gambler.user?.avatar && <User size={48} color="var(--text-muted)" />}
                     </div>
                     <div>
-                        <h1 style={{ fontSize: '1.875rem', fontWeight: '800', marginBottom: '0.25rem', color: 'var(--text-main)' }}>
-                            {gambler.user?.name || 'User'}
+                        {/* La aplicación identifica a las personas por su apodo; el nombre real
+                            solo lo conoce su dueño. */}
+                        <h1 style={{ fontSize: '1.875rem', fontWeight: '800', marginBottom: '1rem', color: 'var(--text-main)' }}>
+                            @{gambler.user?.nickName || t('common.unknown', 'Usuario')}
                         </h1>
-                        <p style={{ color: 'var(--primary)', fontWeight: '700', fontSize: '1.1rem', marginBottom: '1rem' }}>
-                            @{gambler.user?.nickName}
-                        </p>
                         <div
                             style={{ color: 'var(--text-muted)', lineHeight: '1.6' }}
                             dangerouslySetInnerHTML={{ __html: gambler.biography || `<p>${t('user_profile.no_bio')}</p>` }}

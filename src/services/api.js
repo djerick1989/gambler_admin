@@ -698,6 +698,28 @@ export const achievementService = {
   }
 };
 
+export const notificationService = {
+  getMyNotifications: async (page = 1, pageSize = 20, onlyUnread = false, languageId = null) => {
+    const response = await apiClient.get('/api/Notification', {
+      params: { page, pageSize, onlyUnread },
+      headers: languageId ? { LanguageId: languageId } : {}
+    });
+    return response.data;
+  },
+  getUnreadCount: async () => {
+    const response = await apiClient.get('/api/Notification/unreadCount');
+    return response.data;
+  },
+  markAsRead: async (notificationId) => {
+    const response = await apiClient.put(`/api/Notification/${notificationId}/read`);
+    return response.data;
+  },
+  markAllAsRead: async () => {
+    const response = await apiClient.put('/api/Notification/readAll');
+    return response.data;
+  }
+};
+
 export const paymentPlatformService = {
   create: async (data) => {
     const response = await apiClient.post('/api/PaymentPlatform/create', data);

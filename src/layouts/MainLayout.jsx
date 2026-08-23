@@ -56,8 +56,10 @@ const MainLayout = () => {
     const [premiumChecking, setPremiumChecking] = useState(false);
     const [healthQueueCount, setHealthQueueCount] = useState(0);
     const { user, logout, isSubscribed, refreshSubscription } = useAuth();
-    const { notifications, removeToast, addToast } = useNotification();
+    const { notifications, removeToast, addToast, unreadCount: unreadNotificationCount } = useNotification();
     const { setActiveChatId, totalUnreadCount } = useChat();
+    // La campana suma los chats sin leer y las notificaciones del servidor (logros).
+    const bellCount = totalUnreadCount + unreadNotificationCount;
     const location = useLocation();
     const navigate = useNavigate();
     const handledCheckoutSessionRef = React.useRef(null);
@@ -264,7 +266,7 @@ const MainLayout = () => {
                         alt="Logo"
                         style={{ width: '40px', height: '40px', objectFit: 'contain' }}
                     />
-                    <span style={{ fontSize: '1.25rem', fontWeight: '800', color: 'var(--text-main)' }}>The Gambler</span>
+                    <span style={{ fontSize: '1.25rem', fontWeight: '800', color: 'var(--text-main)' }}>Ludopata</span>
                 </div>
 
                 <nav className="sidebar-nav" style={{ flex: 1, padding: '0.6rem 1rem 1rem', overflowY: 'auto' }}>
@@ -341,8 +343,8 @@ const MainLayout = () => {
                                 alignItems: 'center'
                             }}
                         >
-                            <Bell size={22} color={totalUnreadCount > 0 ? '#ef4444' : 'var(--text-main)'} />
-                            {totalUnreadCount > 0 && (
+                            <Bell size={22} color={bellCount > 0 ? '#ef4444' : 'var(--text-main)'} />
+                            {bellCount > 0 && (
                                 <span style={{
                                     position: 'absolute',
                                     top: '-4px',

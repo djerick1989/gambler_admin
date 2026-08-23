@@ -1,8 +1,9 @@
 import React, { useState, useEffect } from 'react';
-import { Award, Loader2, Image as ImageIcon, CheckCircle2, Clock } from 'lucide-react';
+import { Award, Loader2, CheckCircle2 } from 'lucide-react';
 import { achievementService } from '../../services/api';
 import { useAuth } from '../../context/AuthContext';
 import { useTranslation } from 'react-i18next';
+import AchievementImage from '../../components/Achievement/AchievementImage';
 
 import { getLanguageId } from '../../utils/languages';
 
@@ -95,15 +96,15 @@ const UserAchievements = () => {
                                     border: `2px solid ${isCompleted ? '#10b981' : 'var(--glass-border)'}`,
                                     boxShadow: isCompleted ? '0 0 15px rgba(16, 185, 129, 0.3)' : 'none'
                                 }}>
-                                    <img
-                                        src={isCompleted ? achievement.imageUrlCompleted : achievement.imageUrlPending}
-                                        alt={title}
-                                        style={{ width: '100%', height: '100%', objectFit: 'contain' }}
-                                        onError={(e) => {
-                                            e.target.onerror = null;
-                                            e.target.src = 'https://via.placeholder.com/100?text=No+Image';
-                                        }}
-                                    />
+                                            <AchievementImage
+                                                src={
+                                                    isCompleted
+                                                        ? (achievement.imageUrlCompletedDisplay || achievement.imageUrlCompleted)
+                                                        : (achievement.imageUrlPendingDisplay || achievement.imageUrlPending)
+                                                }
+                                                alt={title}
+                                                isCompleted={isCompleted}
+                                            />
                                 </div>
 
                                 <div>

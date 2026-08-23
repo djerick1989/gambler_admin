@@ -58,7 +58,7 @@ const CustomerHelpSupport = () => {
                 </div>
 
                 <div className="help-support-visual">
-                    <img src="/assets/logo_gambler.png" alt="Gambler" />
+                    <img src="/assets/logo_gambler.png" alt="Ludopata" />
                     <div>
                         <strong>{t('help_support.faq_stat')}</strong>
                         <span>{t('help_support.faq_hint')}</span>

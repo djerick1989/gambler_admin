@@ -56,7 +56,8 @@
         "description": "Descripción",
         "no_description": "Sin descripción",
         "untitled": "Sin título",
-        "untitled_question": "Pregunta sin título"
+        "untitled_question": "Pregunta sin título",
+        "unknown": "Usuario"
     },
     "health_agent": {
         "menu": "Asistencia IA",
@@ -89,8 +90,74 @@
         }
     },
     "login": {
-        "title": "Bienvenido",
-        "subtitle": "Admin Panel de Gambler",
+        "title": "Ingresa a Ludopata",
+        "subtitle": "Continúa tu proceso y mantén cerca tus herramientas de apoyo.",
+        "landing_kicker": "Rompe el ciclo de apuestas antes del siguiente impulso",
+        "landing_title": "Recupera el control de tu dinero.",
+        "landing_subtitle": "Convierte la adrenalina en acciones concretas: registra deudas, reconoce impulsos, recibe apoyo y mide cada avance paso a paso.",
+        "landing_cta": "Crear mi cuenta gratis",
+        "landing_login_cta": "Ya tengo cuenta",
+        "landing_proof": "Empieza hoy sin pagar. Tu primer objetivo: ordenar lo que perdiste y proteger lo que aún tienes.",
+        "impact_label": "Indicadores del programa",
+        "impact_1_value": "24/7",
+        "impact_1_label": "apoyo cuando llega el impulso",
+        "impact_2_value": "$",
+        "impact_2_label": "control de deudas y gastos",
+        "impact_3_value": "Evalúa",
+        "impact_3_label": "riesgo y avances",
+        "visual_title": "Plan de control",
+        "visual_live": "Activo",
+        "visual_spent_label": "Dinero en riesgo",
+        "visual_spent_value": "$500",
+        "visual_reward": "Impulso detectado",
+        "visual_reward_value": "Alto",
+        "visual_plan": "Bloquea, respira y pide apoyo antes de apostar",
+        "visual_debt": "Deuda organizada",
+        "visual_support": "Acompañamiento humano",
+        "carousel_label": "Beneficios principales",
+        "carousel": {
+            "money": {
+                "title": "Protege tu dinero",
+                "description": "Visualiza deudas, pagos y decisiones antes de perder más."
+            },
+            "control": {
+                "title": "Corta el impulso",
+                "description": "Usa alertas, compromisos y estrategias en momentos críticos."
+            },
+            "time": {
+                "title": "Avanza día a día",
+                "description": "Sigue recaídas, progreso y nuevas metas sin empezar desde cero."
+            }
+        },
+        "benefits": {
+            "0": {
+                "title": "Deudas bajo control",
+                "description": "Organiza deudas, pagos y límites para ver el problema con números reales."
+            },
+            "1": {
+                "title": "Freno en momentos de riesgo",
+                "description": "Crea compromisos, registra recaídas y activa recordatorios antes de apostar."
+            },
+            "2": {
+                "title": "No lo enfrentes solo",
+                "description": "Conecta con asistencia, agentes humanos y una comunidad que entiende el problema."
+            }
+        },
+        "side_panel_title": "Empieza con una acción concreta",
+        "side_steps": {
+            "0": {
+                "title": "Ordena lo que perdiste",
+                "description": "Registra deudas y pagos para dejar de perseguir pérdidas."
+            },
+            "1": {
+                "title": "Detecta el próximo impulso",
+                "description": "Identifica señales y activa un freno antes de apostar."
+            },
+            "2": {
+                "title": "Pide apoyo a tiempo",
+                "description": "Usa asistencia y comunidad cuando sientas riesgo."
+            }
+        },
         "email_user": "Email / Usuario",
         "email_placeholder": "Ingresa tu correo o usuario",
         "password": "Contraseña",
@@ -104,7 +171,39 @@
     },
     "signup": {
         "title": "Crear Cuenta",
-        "subtitle": "Únete al panel de administración",
+        "subtitle": "Únete al programa de apoyo de Ludopata",
+        "landing_kicker": "Empieza gratis con un plan real",
+        "landing_title": "Regístrate para recuperar claridad antes del próximo impulso.",
+        "landing_subtitle": "Crea tu perfil, organiza deudas, registra compromisos y accede a una comunidad preparada para acompañarte paso a paso.",
+        "flow_title": "Cómo empiezas",
+        "flow": {
+            "0": "Crea tu perfil gratis",
+            "1": "Verifica tu correo",
+            "2": "Empieza con un plan"
+        },
+        "reasons_title": "Razones para registrarte",
+        "reasons": {
+            "0": {
+                "title": "Crea tu plan personal",
+                "description": "Define metas, límites y acciones concretas para momentos de riesgo."
+            },
+            "1": {
+                "title": "Ordena tus finanzas",
+                "description": "Registra deudas, pagos y prioridades para ver el problema con números reales."
+            },
+            "2": {
+                "title": "Recibe apoyo temprano",
+                "description": "Usa la asistencia inicial y conecta con comunidad desde el primer día."
+            }
+        },
+        "privacy_note": "Empieza gratis. Puedes avanzar a Premium cuando necesites acompañamiento más cercano.",
+        "form_hints_title": "Beneficios incluidos al registrarte",
+        "form_hints": {
+            "0": "Sin pago inicial",
+            "1": "Apoyo desde el primer día",
+            "2": "Herramientas para ordenar"
+        },
+        "form_note": "Tu primer objetivo: ordenar lo que pasó y proteger tu siguiente decisión.",
         "name": "Nombre",
         "lastName": "Apellido",
         "userName": "Usuario",
@@ -131,6 +230,10 @@
             "google_not_configured": "Google aún no está configurado",
             "x_not_configured": "X aún no está configurado",
             "external_auth_failed": "No se pudo completar la autenticación social"
+        },
+        "validation": {
+            "required": "Completa este campo.",
+            "email": "Ingresa un correo electrónico válido."
         },
         "errors": {
             "user_exists": "El usuario ya existe"
@@ -182,7 +285,7 @@
         "charts_placeholder": "Gráficos y Estadísticas Avanzadas (Placeholder)"
     },
     "sidebar": {
-        "title": "Gambler Admin"
+        "title": "Ludopata Admin"
     },
     "language_mgmt": {
         "title": "Gestión de Idiomas",
@@ -338,6 +441,21 @@
     },
     "stories": {
         "title": "Historias",
+        "choose_type": "¿Qué tipo de historia quieres crear?",
+        "type_media_desc": "Comparte una foto o un video",
+        "type_text_desc": "Escribe algo sobre un fondo de color",
+        "back": "Volver",
+        "your_story": "Tu historia",
+        "text_label": "Texto de la historia",
+        "background_label": "Color de fondo",
+        "file_label": "Archivo",
+        "drop_hint": "Arrastra una foto o un video, o haz clic para buscarlo",
+        "change_file": "Cambiar archivo",
+        "remove_file": "Quitar archivo",
+        "discard": "Descartar",
+        "sharing": "Compartiendo...",
+        "preview": "Previsualización",
+        "preview_empty": "Aún no has elegido un archivo",
         "create_title": "Crear historia",
         "type_media": "Foto/Video",
         "type_text": "Texto",
@@ -415,6 +533,10 @@
     },
     "notifications": {
         "title": "Centro de Notificaciones",
+        "achievements_section": "Logros conseguidos",
+        "achievement_unlocked": "¡Nuevo logro conseguido!",
+        "achievement_generic": "Has desbloqueado un logro nuevo.",
+        "mark_all_read": "Marcar todas como leídas",
         "all_clear": "Estás al día con todos tus chats.",
         "no_unread": "Sin mensajes nuevos",
         "empty_state": "No tienes mensajes pendientes en ninguna de tus conversaciones.",
@@ -425,7 +547,7 @@
     },
     "assistance": {
         "title": "Asistencia",
-        "team_name": "Gambler Team",
+        "team_name": "Equipo Ludopata",
         "health_agent_welcome": "Hola, soy tu asistente de apoyo emocional. Vamos paso a paso para ordenar lo que estas viviendo. Cuéntame en una frase qué necesitas ahora.",
         "active": "Activo",
         "new_conversation": "Nueva conversación",
@@ -726,8 +848,8 @@
         },
         "organization": {
             "title": "A la Organización",
-            "subtitle": "Apoya el mantenimiento y crecimiento de Gambler.",
-            "description": "Estas donaciones nos ayudan a mantener los servidores, desarrollar nuevas funcionalidades y asegurar que Gambler siga siendo la mejor plataforma para nuestra comunidad."
+            "subtitle": "Apoya el mantenimiento y crecimiento de Ludopata.",
+            "description": "Estas donaciones nos ayudan a mantener los servidores, desarrollar nuevas funcionalidades y asegurar que Ludopata siga siendo la mejor plataforma para nuestra comunidad."
         },
         "form": {
             "select_amount": "Selecciona el monto",
@@ -900,7 +1022,23 @@
         "review": "Revisar",
         "autodiagnosis": "Formularios",
         "open_placeholder": "Escribe tu respuesta aquí...",
-        "start_error": "No se pudo iniciar el formulario"
+        "start_error": "No se pudo iniciar el formulario",
+        "support_title": "Antes de seguir, hablemos de esto",
+        "support_body": "En tus respuestas indicaste que has tenido pensamientos de hacerte daño. Eso importa más que cualquier resultado de este formulario, y no tienes que manejarlo solo. Si sientes que estás en peligro ahora, contacta a los servicios de emergencia de tu país o a alguien de confianza de inmediato.",
+        "support_cta": "Hablar con un agente humano",
+        "orientation_disclaimer": "Esta es una orientación basada en tus respuestas, no un diagnóstico. Solo un profesional puede evaluar tu situación.",
+        "risk_band": {
+            "low": "Riesgo bajo",
+            "moderate": "Riesgo moderado",
+            "high": "Riesgo alto",
+            "severe": "Riesgo muy alto",
+            "critical": "Requiere atención inmediata"
+        },
+        "recall_window": {
+            "last_2_weeks": "Responde pensando en las últimas dos semanas",
+            "last_30_days": "Responde pensando en los últimos 30 días",
+            "last_12_months": "Responde pensando en los últimos 12 meses"
+        }
     },
     "subscriptions": {
         "title": "Suscripción",

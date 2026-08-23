@@ -56,7 +56,8 @@
         "description": "Description",
         "no_description": "No description",
         "untitled": "Untitled",
-        "untitled_question": "Untitled Question"
+        "untitled_question": "Untitled Question",
+        "unknown": "User"
     },
     "health_agent": {
         "menu": "AI Assistance",
@@ -89,8 +90,74 @@
         }
     },
     "login": {
-        "title": "Welcome",
-        "subtitle": "Gambler Admin Panel",
+        "title": "Sign in to Ludopata",
+        "subtitle": "Continue your process and keep your support tools close.",
+        "landing_kicker": "Break the gambling cycle before the next urge",
+        "landing_title": "Take back control of your money.",
+        "landing_subtitle": "Turn adrenaline into concrete actions: track debts, recognize urges, get support, and measure each step forward.",
+        "landing_cta": "Create my free account",
+        "landing_login_cta": "I already have an account",
+        "landing_proof": "Start today for free. Your first goal: organize what you lost and protect what you still have.",
+        "impact_label": "Program indicators",
+        "impact_1_value": "24/7",
+        "impact_1_label": "support when the urge hits",
+        "impact_2_value": "$",
+        "impact_2_label": "debt and spending control",
+        "impact_3_value": "Assess",
+        "impact_3_label": "risk and progress",
+        "visual_title": "Control plan",
+        "visual_live": "Active",
+        "visual_spent_label": "Money at risk",
+        "visual_spent_value": "$500",
+        "visual_reward": "Urge detected",
+        "visual_reward_value": "High",
+        "visual_plan": "Block, breathe, and ask for support before betting",
+        "visual_debt": "Debt organized",
+        "visual_support": "Human support",
+        "carousel_label": "Main benefits",
+        "carousel": {
+            "money": {
+                "title": "Protect your money",
+                "description": "See debts, payments, and decisions before losing more."
+            },
+            "control": {
+                "title": "Stop the urge",
+                "description": "Use alerts, commitments, and strategies in critical moments."
+            },
+            "time": {
+                "title": "Move day by day",
+                "description": "Track relapses, progress, and new goals without starting over."
+            }
+        },
+        "benefits": {
+            "0": {
+                "title": "Debts under control",
+                "description": "Organize debts, payments, and limits so the problem is visible in real numbers."
+            },
+            "1": {
+                "title": "A brake in risky moments",
+                "description": "Create commitments, track relapses, and activate reminders before betting."
+            },
+            "2": {
+                "title": "Do not face it alone",
+                "description": "Connect with assistance, human agents, and a community that understands the problem."
+            }
+        },
+        "side_panel_title": "Start with one concrete action",
+        "side_steps": {
+            "0": {
+                "title": "Organize what you lost",
+                "description": "Track debts and payments so you stop chasing losses."
+            },
+            "1": {
+                "title": "Catch the next urge",
+                "description": "Spot the signs and activate a brake before betting."
+            },
+            "2": {
+                "title": "Ask for support in time",
+                "description": "Use assistance and community when risk feels close."
+            }
+        },
         "email_user": "Email / Username",
         "email_placeholder": "Enter your email or username",
         "password": "Password",
@@ -104,7 +171,39 @@
     },
     "signup": {
         "title": "Create Account",
-        "subtitle": "Join the admin panel",
+        "subtitle": "Join the Ludopata support program",
+        "landing_kicker": "Start free with a real plan",
+        "landing_title": "Create your account to get clarity before the next urge.",
+        "landing_subtitle": "Build your profile, organize debts, set commitments, and access a community prepared to walk with you step by step.",
+        "flow_title": "How you start",
+        "flow": {
+            "0": "Create your free profile",
+            "1": "Verify your email",
+            "2": "Start with a plan"
+        },
+        "reasons_title": "Why create an account",
+        "reasons": {
+            "0": {
+                "title": "Create your personal plan",
+                "description": "Define goals, limits, and concrete actions for risky moments."
+            },
+            "1": {
+                "title": "Organize your finances",
+                "description": "Track debts, payments, and priorities so the problem becomes visible in real numbers."
+            },
+            "2": {
+                "title": "Get early support",
+                "description": "Use initial assistance and connect with the community from day one."
+            }
+        },
+        "privacy_note": "Start for free. Upgrade to Premium when you need closer support.",
+        "form_hints_title": "Benefits included when you register",
+        "form_hints": {
+            "0": "No payment upfront",
+            "1": "Support from day one",
+            "2": "Tools to get organized"
+        },
+        "form_note": "Your first goal: organize what happened and protect your next decision.",
         "name": "Name",
         "lastName": "Last Name",
         "userName": "Username",
@@ -131,6 +230,10 @@
             "google_not_configured": "Google is not configured yet",
             "x_not_configured": "X is not configured yet",
             "external_auth_failed": "Could not complete social authentication"
+        },
+        "validation": {
+            "required": "Please fill out this field.",
+            "email": "Please enter a valid email address."
         },
         "errors": {
             "user_exists": "User already exists"
@@ -182,7 +285,7 @@
         "charts_placeholder": "Advanced Charts and Statistics (Placeholder)"
     },
     "sidebar": {
-        "title": "Gambler Admin"
+        "title": "Ludopata Admin"
     },
     "language_mgmt": {
         "title": "Language Management",
@@ -338,6 +441,21 @@
     },
     "stories": {
         "title": "Stories",
+        "choose_type": "What kind of story do you want to create?",
+        "type_media_desc": "Share a photo or a video",
+        "type_text_desc": "Write something on a colored background",
+        "back": "Back",
+        "your_story": "Your story",
+        "text_label": "Story text",
+        "background_label": "Background color",
+        "file_label": "File",
+        "drop_hint": "Drag a photo or video here, or click to browse",
+        "change_file": "Change file",
+        "remove_file": "Remove file",
+        "discard": "Discard",
+        "sharing": "Sharing...",
+        "preview": "Preview",
+        "preview_empty": "No file selected yet",
         "create_title": "Create story",
         "type_media": "Photo/Video",
         "type_text": "Text",
@@ -415,6 +533,10 @@
     },
     "notifications": {
         "title": "Notification Center",
+        "achievements_section": "Achievements earned",
+        "achievement_unlocked": "New achievement unlocked!",
+        "achievement_generic": "You unlocked a new achievement.",
+        "mark_all_read": "Mark all as read",
         "all_clear": "You are all caught up with your chats.",
         "no_unread": "No new messages",
         "empty_state": "You don't have any pending messages in any of your conversations.",
@@ -425,7 +547,7 @@
     },
     "assistance": {
         "title": "Assistance",
-        "team_name": "Gambler Team",
+        "team_name": "Ludopata Team",
         "health_agent_welcome": "Hi, I am your emotional support assistant. We will go step by step to organize what you are going through. Tell me in one sentence what you need right now.",
         "active": "Active",
         "new_conversation": "New conversation",
@@ -726,8 +848,8 @@
         },
         "organization": {
             "title": "To the Organization",
-            "subtitle": "Support Gambler's maintenance and growth.",
-            "description": "These donations help us maintain servers, develop new features, and ensure Gambler remains the best platform for our community."
+            "subtitle": "Support Ludopata's maintenance and growth.",
+            "description": "These donations help us maintain servers, develop new features, and ensure Ludopata remains the best platform for our community."
         },
         "form": {
             "select_amount": "Select amount",
@@ -900,7 +1022,23 @@
         "review": "Review",
         "autodiagnosis": "Forms",
         "open_placeholder": "Write your answer here...",
-        "start_error": "The form could not be started"
+        "start_error": "The form could not be started",
+        "support_title": "Before we go on, let's talk about this",
+        "support_body": "Your answers say you have had thoughts of hurting yourself. That matters more than any result from this form, and you do not have to handle it alone. If you feel you are in danger right now, contact your local emergency services or someone you trust immediately.",
+        "support_cta": "Talk to a human agent",
+        "orientation_disclaimer": "This is orientation based on your answers, not a diagnosis. Only a professional can assess your situation.",
+        "risk_band": {
+            "low": "Low risk",
+            "moderate": "Moderate risk",
+            "high": "High risk",
+            "severe": "Very high risk",
+            "critical": "Needs immediate attention"
+        },
+        "recall_window": {
+            "last_2_weeks": "Answer thinking about the last two weeks",
+            "last_30_days": "Answer thinking about the last 30 days",
+            "last_12_months": "Answer thinking about the last 12 months"
+        }
     },
     "subscriptions": {
         "title": "Subscription",

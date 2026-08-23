@@ -1,104 +1,104 @@
 {
-    "executionRoleArn":  "arn:aws:iam::130356666336:role/ludopata-api-ecs-execution-role",
-    "networkMode":  "awsvpc",
-    "cpu":  "1024",
-    "requiresCompatibilities":  [
-                                    "FARGATE"
-                                ],
-    "containerDefinitions":  [
-                                 {
-                                     "name":  "ludopata-api",
-                                     "logConfiguration":  {
-                                                              "logDriver":  "awslogs",
-                                                              "options":  {
-                                                                              "awslogs-region":  "us-east-2",
-                                                                              "awslogs-stream-prefix":  "ecs",
-                                                                              "awslogs-group":  "/aws/ecs/ludopata-api"
-                                                                          }
-                                                          },
-                                     "environment":  [
-                                                         {
-                                                             "value":  "Development",
-                                                             "name":  "ASPNETCORE_ENVIRONMENT"
-                                                         },
-                                                         {
-                                                             "value":  "http://+:8080",
-                                                             "name":  "ASPNETCORE_URLS"
-                                                         },
-                                                         {
-                                                             "value":  "ludopata-prod-media-130356666336",
-                                                             "name":  "AwsS3__BucketName"
-                                                         },
-                                                         {
-                                                             "value":  "us-east-2",
-                                                             "name":  "AwsS3__Region"
-                                                         },
-                                                         {
-                                                             "value":  "true",
-                                                             "name":  "AwsS3__UsePresignedUrl"
-                                                         },
-                                                         {
-                                                             "value":  "60",
-                                                             "name":  "AwsS3__PresignedUrlExpiresMinutes"
-                                                         },
-                                                         {
-                                                             "value":  "false",
-                                                             "name":  "AwsS3__UsePublicReadAcl"
-                                                         },
-                                                         {
-                                                             "value":  "ludopata-prod-media-130356666336",
-                                                             "name":  "AWS_S3_BUCKET"
-                                                         },
-                                                         {
-                                                             "value":  "us-east-2",
-                                                             "name":  "AWS_S3_REGION"
-                                                         },
-                                                         {
-                                                             "value":  "false",
-                                                             "name":  "SIGNALR_REDIS_ENABLED"
-                                                         },
-                                                         {
-                                                             "value":  "524288000",
-                                                             "name":  "MEDIA_MAX_UPLOAD_BYTES"
-                                                         },
-                                                         {
-                                                             "value":  "20",
-                                                             "name":  "VIDEO_NORMALIZATION_TIMEOUT_MINUTES"
-                                                         }
-                                                     ],
-                                     "essential":  true,
-                                     "secrets":  [
-                                                     {
-                                                         "valueFrom":  "arn:aws:ssm:us-east-2:130356666336:parameter/ludopata/prod/DEEPL_API_KEY",
-                                                         "name":  "DEEPL_API_KEY"
-                                                     },
-                                                     {
-                                                         "valueFrom":  "arn:aws:ssm:us-east-2:130356666336:parameter/ludopata/prod/PASSWORD_KEY",
-                                                         "name":  "PASSWORD_KEY"
-                                                     },
-                                                     {
-                                                         "valueFrom":  "arn:aws:ssm:us-east-2:130356666336:parameter/ludopata/prod/TOKEN_KEY",
-                                                         "name":  "TOKEN_KEY"
-                                                     },
-                                                     {
-                                                         "valueFrom":  "arn:aws:ssm:us-east-2:130356666336:parameter/ludopata/prod/OPEN_AI_KEY",
-                                                         "name":  "OPEN_AI_KEY"
-                                                     },
-                                                     {
-                                                         "valueFrom":  "arn:aws:ssm:us-east-2:130356666336:parameter/ludopata/prod/CONTEXT_DB_CONNECTION",
-                                                         "name":  "CONTEXT_DB_CONNECTION"
-                                                     }
-                                                 ],
-                                     "image":  "130356666336.dkr.ecr.us-east-2.amazonaws.com/ludopata-api:latest",
-                                     "portMappings":  [
-                                                          {
-                                                              "protocol":  "tcp",
-                                                              "containerPort":  8080
-                                                          }
-                                                      ]
-                                 }
-                             ],
-    "family":  "ludopata-api-task",
-    "taskRoleArn":  "arn:aws:iam::130356666336:role/ludopata-api-ecs-task-role",
-    "memory":  "2048"
+  "family": "ludopata-api-task",
+  "executionRoleArn": "arn:aws:iam::130356666336:role/ludopata-api-ecs-execution-role",
+  "taskRoleArn": "arn:aws:iam::130356666336:role/ludopata-api-ecs-task-role",
+  "cpu": "1024",
+  "memory": "2048",
+  "networkMode": "awsvpc",
+  "containerDefinitions": [
+    {
+      "portMappings": [
+        {
+          "protocol": "tcp",
+          "containerPort": 8080
+        }
+      ],
+      "environment": [
+        {
+          "name": "ASPNETCORE_ENVIRONMENT",
+          "value": "Development"
+        },
+        {
+          "name": "ASPNETCORE_URLS",
+          "value": "http://+:8080"
+        },
+        {
+          "name": "AwsS3__BucketName",
+          "value": "ludopata-prod-media-130356666336"
+        },
+        {
+          "name": "AwsS3__Region",
+          "value": "us-east-2"
+        },
+        {
+          "name": "AwsS3__UsePresignedUrl",
+          "value": "true"
+        },
+        {
+          "name": "AwsS3__PresignedUrlExpiresMinutes",
+          "value": "60"
+        },
+        {
+          "name": "AwsS3__UsePublicReadAcl",
+          "value": "false"
+        },
+        {
+          "name": "AWS_S3_BUCKET",
+          "value": "ludopata-prod-media-130356666336"
+        },
+        {
+          "name": "AWS_S3_REGION",
+          "value": "us-east-2"
+        },
+        {
+          "name": "SIGNALR_REDIS_ENABLED",
+          "value": "false"
+        },
+        {
+          "name": "MEDIA_MAX_UPLOAD_BYTES",
+          "value": "524288000"
+        },
+        {
+          "name": "VIDEO_NORMALIZATION_TIMEOUT_MINUTES",
+          "value": "20"
+        }
+      ],
+      "essential": true,
+      "name": "ludopata-api",
+      "secrets": [
+        {
+          "name": "TOKEN_KEY",
+          "valueFrom": "arn:aws:ssm:us-east-2:130356666336:parameter/ludopata/prod/TOKEN_KEY"
+        },
+        {
+          "name": "DEEPL_API_KEY",
+          "valueFrom": "arn:aws:ssm:us-east-2:130356666336:parameter/ludopata/prod/DEEPL_API_KEY"
+        },
+        {
+          "name": "OPEN_AI_KEY",
+          "valueFrom": "arn:aws:ssm:us-east-2:130356666336:parameter/ludopata/prod/OPEN_AI_KEY"
+        },
+        {
+          "name": "CONTEXT_DB_CONNECTION",
+          "valueFrom": "arn:aws:ssm:us-east-2:130356666336:parameter/ludopata/prod/CONTEXT_DB_CONNECTION"
+        },
+        {
+          "name": "PASSWORD_KEY",
+          "valueFrom": "arn:aws:ssm:us-east-2:130356666336:parameter/ludopata/prod/PASSWORD_KEY"
+        }
+      ],
+      "image": "130356666336.dkr.ecr.us-east-2.amazonaws.com/ludopata-api:latest",
+      "logConfiguration": {
+        "options": {
+          "awslogs-region": "us-east-2",
+          "awslogs-stream-prefix": "ecs",
+          "awslogs-group": "/aws/ecs/ludopata-api"
+        },
+        "logDriver": "awslogs"
+      }
+    }
+  ],
+  "requiresCompatibilities": [
+    "FARGATE"
+  ]
 }

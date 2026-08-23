@@ -69,7 +69,7 @@ export const ChatProvider = ({ children }) => {
     }, [user]);
 
     useEffect(() => {
-        baseDocumentTitleRef.current = document.title || 'gambler_admin';
+        baseDocumentTitleRef.current = document.title || 'Ludopata';
         const favicon = document.querySelector("link[rel~='icon']");
         baseFaviconHrefRef.current = favicon?.href || null;
     }, []);
@@ -146,7 +146,7 @@ export const ChatProvider = ({ children }) => {
     }, []);
 
     useEffect(() => {
-        const baseTitle = baseDocumentTitleRef.current || 'gambler_admin';
+        const baseTitle = baseDocumentTitleRef.current || 'Ludopata';
         const favicon = getFaviconLink();
 
         if (totalUnreadCount > 0) {

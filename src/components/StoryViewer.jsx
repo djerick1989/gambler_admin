@@ -7,6 +7,7 @@ import { useAuth } from '../context/AuthContext';
 import StoryReactionsModal from './StoryReactionsModal';
 import PremiumAvatarBadge from './PremiumAvatarBadge';
 import { confirmDialog } from '../utils/dialog';
+import { storyBackgroundToCss } from '../utils/storyBackgrounds';
 
 
 const StoryViewer = ({ isOpen, onClose, initialStatus, allStatuses, onDeleteSuccess }) => {
@@ -276,7 +277,7 @@ const StoryViewer = ({ isOpen, onClose, initialStatus, allStatuses, onDeleteSucc
                             display: 'flex',
                             alignItems: 'center',
                             justifyContent: 'center',
-                            background: status.type === 0 ? 'linear-gradient(135deg, #6366f1 0%, #a855f7 100%)' : 'black'
+                            background: status.type === 0 ? storyBackgroundToCss(status.background) : 'black'
                         }}>
                             {status.type === 2 || (status.type === 1 && /\.(mp4|mov|webm|quicktime)(\?.*)?$/i.test(status.content)) ? (
                                 <video

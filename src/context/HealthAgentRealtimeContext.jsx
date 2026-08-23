@@ -9,13 +9,22 @@ const HUB_URL = `${API_BASE_URL}/healthAgentHub`;
 
 const normalizeId = (value) => String(value || '');
 
+const isNegotiationAbort = (err) => {
+    const message = String(err?.message || err || '').toLowerCase();
+    return message.includes('stopped during negotiation') ||
+        message.includes('aborterror') ||
+        message.includes('aborted');
+};
+
 export const HealthAgentRealtimeProvider = ({ children }) => {
     const { user } = useAuth();
     const [isConnected, setIsConnected] = useState(false);
     const [agentPresence, setAgentPresence] = useState([]);
     const connectionRef = useRef(null);
+    const connectionUserIdRef = useRef('');
     const connectingRef = useRef(false);
     const joinedConversationsRef = useRef(new Set());
+    const userId = normalizeId(user?.userId || user?.UserId || user?.id || user?.Id);
 
     const upsertPresence = useCallback((agent) => {
         if (!agent?.userId) return;
@@ -29,11 +38,12 @@ export const HealthAgentRealtimeProvider = ({ children }) => {
 
     useEffect(() => {
         const token = localStorage.getItem('token');
-        if (!token || !user) {
+        if (!token || !userId) {
             if (connectionRef.current) {
                 connectionRef.current.stop().catch(() => { });
                 connectionRef.current = null;
             }
+            connectionUserIdRef.current = '';
             connectingRef.current = false;
             joinedConversationsRef.current.clear();
             setIsConnected(false);
@@ -41,7 +51,23 @@ export const HealthAgentRealtimeProvider = ({ children }) => {
             return;
         }
 
-        if (connectingRef.current || connectionRef.current?.state === signalR.HubConnectionState.Connected) return;
+        if (connectionRef.current && connectionUserIdRef.current && connectionUserIdRef.current !== userId) {
+            connectionRef.current.stop().catch(() => { });
+            connectionRef.current = null;
+            connectionUserIdRef.current = '';
+            connectingRef.current = false;
+            joinedConversationsRef.current.clear();
+            setIsConnected(false);
+        }
+
+        const currentState = connectionRef.current?.state;
+        if (connectingRef.current ||
+            currentState === signalR.HubConnectionState.Connected ||
+            currentState === signalR.HubConnectionState.Connecting ||
+            currentState === signalR.HubConnectionState.Reconnecting) {
+            return;
+        }
+
         connectingRef.current = true;
 
         const hubConnection = new signalR.HubConnectionBuilder()
@@ -54,6 +80,9 @@ export const HealthAgentRealtimeProvider = ({ children }) => {
             .withAutomaticReconnect()
             .configureLogging(signalR.LogLevel.Warning)
             .build();
+
+        connectionRef.current = hubConnection;
+        connectionUserIdRef.current = userId;
 
         hubConnection.on('HealthConversationUpdated', (conversation) => {
             window.dispatchEvent(new CustomEvent('health-agent:conversation-updated', { detail: conversation }));
@@ -79,32 +108,42 @@ export const HealthAgentRealtimeProvider = ({ children }) => {
 
         hubConnection.onreconnecting(() => setIsConnected(false));
         hubConnection.onclose(() => {
-            connectionRef.current = null;
-            connectingRef.current = false;
-            joinedConversationsRef.current.clear();
-            setIsConnected(false);
+            if (connectionRef.current === hubConnection) {
+                connectionRef.current = null;
+                connectionUserIdRef.current = '';
+                connectingRef.current = false;
+                joinedConversationsRef.current.clear();
+                setIsConnected(false);
+            }
         });
 
         hubConnection.start()
             .then(() => {
-                connectionRef.current = hubConnection;
+                if (connectionRef.current !== hubConnection) {
+                    hubConnection.stop().catch(() => { });
+                    return;
+                }
                 connectingRef.current = false;
                 setIsConnected(true);
             })
             .catch((err) => {
-                console.error('Health agent realtime connection failed:', err);
-                connectingRef.current = false;
-                setIsConnected(false);
+                if (!isNegotiationAbort(err)) {
+                    console.error('Health agent realtime connection failed:', err);
+                }
+                if (connectionRef.current === hubConnection) {
+                    connectionRef.current = null;
+                    connectionUserIdRef.current = '';
+                    connectingRef.current = false;
+                    joinedConversationsRef.current.clear();
+                    setIsConnected(false);
+                }
             });
 
         return () => {
-            hubConnection.stop().catch(() => { });
-            if (connectionRef.current === hubConnection) {
-                connectionRef.current = null;
-            }
-            connectingRef.current = false;
+            // React remonta efectos en desarrollo; detener aqui corta la negociacion
+            // de SignalR. La conexion se cierra al cerrar sesion o cambiar de usuario.
         };
-    }, [upsertPresence, user]);
+    }, [upsertPresence, userId]);
 
     const joinConversation = useCallback(async (conversationId) => {
         const id = normalizeId(conversationId);

@@ -147,7 +147,7 @@ const AssistanceMessage = ({ message, user, locale, isSubscribed }) => {
     const avatar = isUser ? user?.avatar : '/assets/logo_gambler.png';
     const displayName = isUser
         ? (user?.name || user?.fullName || user?.nickName || 'Customer')
-        : isAgent ? (message?.actorName || message?.agentName || (locale === 'es' ? 'Agente' : 'Agent')) : 'Gambler Team';
+        : isAgent ? (message?.actorName || message?.agentName || (locale === 'es' ? 'Agente' : 'Agent')) : (locale === 'es' ? 'Equipo Ludopata' : 'Ludopata Team');
 
     return (
         <article className={`assistance-message ${isUser ? 'user' : isAgent ? 'agent' : 'assistant'}`}>
@@ -522,7 +522,7 @@ const CustomerAssistance = () => {
                 <main className="assistance-chat">
                     <header className="assistance-chat-head">
                         <div className="assistance-team-mark">
-                            <img src="/assets/logo_gambler.png" alt="Gambler Team" />
+                            <img src="/assets/logo_gambler.png" alt={t('assistance.team_name')} />
                             <span />
                         </div>
                         <div>

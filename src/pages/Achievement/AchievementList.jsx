@@ -1,11 +1,11 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import {
-    Plus, Search, Edit2, Trash2, Award,
-    ChevronLeft, ChevronRight, Loader2, Image as ImageIcon
+    Plus, Search, Edit2, Trash2, Award, Loader2
 } from 'lucide-react';
 import { achievementService } from '../../services/api';
 import { useTranslation } from 'react-i18next';
+import AchievementImage from '../../components/Achievement/AchievementImage';
 
 import { getLanguageId } from '../../utils/languages';
 import { confirmDialog } from '../../utils/dialog';
@@ -143,11 +143,13 @@ const AchievementList = () => {
                                                 border: '1px solid var(--glass-border)',
                                                 position: 'relative'
                                             }}>
-                                                {ach.imageUrlCompleted ? (
-                                                    <img src={ach.imageUrlCompleted} alt={title} style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
-                                                ) : (
-                                                    <ImageIcon size={24} color="var(--text-muted)" />
-                                                )}
+                                    <AchievementImage
+                                        src={ach.imageUrlCompletedDisplay || ach.imageUrlCompleted}
+                                        alt={title}
+                                        isCompleted
+                                        iconSize={24}
+                                        style={{ width: '100%', height: '100%', objectFit: 'cover' }}
+                                        />
                                                 <div style={{ position: 'absolute', bottom: 0, left: 0, right: 0, background: 'rgba(16, 185, 129, 0.8)', color: 'white', fontSize: '10px', textAlign: 'center' }}>Active</div>
                                             </div>
 
@@ -164,11 +166,12 @@ const AchievementList = () => {
                                                 border: '1px solid var(--glass-border)',
                                                 position: 'relative'
                                             }}>
-                                                {ach.imageUrlPending ? (
-                                                    <img src={ach.imageUrlPending} alt={title} style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
-                                                ) : (
-                                                    <ImageIcon size={24} color="var(--text-muted)" />
-                                                )}
+                                    <AchievementImage
+                                        src={ach.imageUrlPendingDisplay || ach.imageUrlPending}
+                                        alt={title}
+                                        iconSize={24}
+                                        style={{ width: '100%', height: '100%', objectFit: 'cover' }}
+                                        />
                                                 <div style={{ position: 'absolute', bottom: 0, left: 0, right: 0, background: 'rgba(239, 68, 68, 0.8)', color: 'white', fontSize: '10px', textAlign: 'center' }}>Inactive</div>
                                             </div>
                                         </div>

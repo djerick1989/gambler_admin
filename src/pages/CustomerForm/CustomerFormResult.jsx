@@ -1,10 +1,11 @@
 import React, { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
-import { ArrowLeft, Loader2, AlertTriangle, CheckCircle2 } from 'lucide-react';
+import { ArrowLeft, Loader2, AlertTriangle, CheckCircle2, LifeBuoy, Headphones } from 'lucide-react';
 import { formResponseService, formService } from '../../services/api';
 import { useTranslation } from 'react-i18next';
 import { useAuth } from '../../context/AuthContext';
 import { isFreeForm } from '../../utils/subscription';
+import { FormRiskBands } from '../../utils/formRiskBands';
 
 const CustomerFormResult = () => {
     const { t, i18n } = useTranslation();
@@ -64,6 +65,38 @@ const CustomerFormResult = () => {
             setLoading(false);
         }
     };
+
+    // Se muestra antes que cualquier resultado cuando la persona marcó el ítem de seguridad.
+    // Los números de emergencia cambian por país, así que aquí se ofrece la vía que la
+    // plataforma sí controla: el apoyo humano de la app.
+    const ImmediateSupportPanel = () => (
+        <div style={{
+            border: '2px solid #ef4444',
+            background: 'rgba(239, 68, 68, 0.08)',
+            borderRadius: '1rem',
+            padding: '1.5rem',
+            marginBottom: '2rem',
+            textAlign: 'left'
+        }}>
+            <div style={{ display: 'flex', alignItems: 'center', gap: '0.6rem', marginBottom: '0.75rem' }}>
+                <LifeBuoy size={24} color="#ef4444" />
+                <h3 style={{ margin: 0, fontSize: '1.15rem', fontWeight: '800', color: 'var(--text-main)' }}>
+                    {t('forms.support_title')}
+                </h3>
+            </div>
+            <p style={{ margin: '0 0 1rem', fontSize: '1rem', lineHeight: '1.6', color: 'var(--text-main)' }}>
+                {t('forms.support_body')}
+            </p>
+            <button
+                onClick={() => navigate('/customer/assistance')}
+                className="btn btn-primary"
+                style={{ display: 'inline-flex', alignItems: 'center', gap: '0.5rem' }}
+            >
+                <Headphones size={18} />
+                {t('forms.support_cta')}
+            </button>
+        </div>
+    );
 
     // Gauge Component (Matches Admin Report)
     const RiskGauge = ({ value }) => {
@@ -170,6 +203,18 @@ const CustomerFormResult = () => {
         );
     }
 
+    // Los análisis generados antes del sistema de puntuación guardaron el riesgo como un número
+    // suelto, sin banda ni puntaje. Se siguen mostrando con ese número para no dejar sin resultado
+    // a quien vuelve a ver un formulario que ya había respondido.
+    const legacyRisk = Number(analysis.riskLevel);
+    const hasLegacyRisk = !Number.isNaN(legacyRisk) && analysis.riskLevel !== null && analysis.riskLevel !== '';
+    const gaugeValue = typeof analysis.scorePercent === 'number'
+        ? analysis.scorePercent
+        : (hasLegacyRisk ? legacyRisk : null);
+    const bandLabel = typeof analysis.scorePercent === 'number'
+        ? t(`forms.risk_band.${(analysis.riskLevel || '').toLowerCase()}`, analysis.riskLevel || '')
+        : (hasLegacyRisk ? t(`forms.risk_band.${FormRiskBands.forPercent(legacyRisk)}`) : '');
+
     return (
         <div style={{ paddingBottom: '4rem' }}>
             <div style={{ position: 'relative', display: 'flex', alignItems: 'center', justifyContent: 'center', marginBottom: '2.5rem' }}>
@@ -187,7 +232,19 @@ const CustomerFormResult = () => {
             </div>
 
             <div className="glass-card" style={{ padding: '2.5rem', marginBottom: '2rem', textAlign: 'center' }}>
-                <RiskGauge value={analysis.riskLevel} />
+                {analysis.requiresImmediateSupport && <ImmediateSupportPanel />}
+
+                {typeof gaugeValue === 'number' && (
+                    <>
+                        <RiskGauge value={gaugeValue} />
+                        <div style={{ marginTop: '1rem', fontSize: '1.1rem', fontWeight: '700', color: 'var(--text-main)' }}>
+                            {bandLabel}
+                        </div>
+                        <div style={{ marginTop: '0.35rem', fontSize: '0.85rem', color: 'var(--text-muted)' }}>
+                            {t('forms.orientation_disclaimer')}
+                        </div>
+                    </>
+                )}
             </div>
 
             <div className="glass-card" style={{ padding: '2.5rem', marginBottom: '3rem' }}>

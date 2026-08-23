@@ -1,7 +1,8 @@
 import React, { useState, useEffect } from 'react';
-import { Award, Plus, Loader2, CheckCircle2, XCircle, Search, Trash2 } from 'lucide-react';
+import { Award, Plus, Loader2, CheckCircle2, XCircle, Search } from 'lucide-react';
 import { achievementService } from '../../services/api';
 import { useTranslation } from 'react-i18next';
+import AchievementImage from './AchievementImage';
 
 import { getLanguageId } from '../../utils/languages';
 
@@ -116,11 +117,17 @@ const GamblerAchievementManager = ({ gamblerId }) => {
                                 border: '1px solid var(--glass-border)'
                             }}>
                                 <div style={{ display: 'flex', alignItems: 'center', gap: '1rem' }}>
-                                    <img
-                                        src={isCompleted ? achievement.imageUrlCompleted : achievement.imageUrlPending}
-                                        alt={title}
-                                        style={{ width: '40px', height: '40px', objectFit: 'contain' }}
-                                    />
+                                            <AchievementImage
+                                                src={
+                                                    isCompleted
+                                                        ? (achievement.imageUrlCompletedDisplay || achievement.imageUrlCompleted)
+                                                        : (achievement.imageUrlPendingDisplay || achievement.imageUrlPending)
+                                                }
+                                                alt={title}
+                                                isCompleted={isCompleted}
+                                                iconSize={18}
+                                                style={{ width: '40px', height: '40px', objectFit: 'contain', borderRadius: '8px' }}
+                                            />
                                     <div>
                                         <h4 style={{ fontWeight: '600', fontSize: '0.95rem' }}>{title}</h4>
                                         {isCompleted && completedAt && (
@@ -221,7 +228,13 @@ const GamblerAchievementManager = ({ gamblerId }) => {
                                             transition: 'background 0.2s'
                                         }} onMouseOver={(e) => e.currentTarget.style.background = 'rgba(255,255,255,0.08)'}
                                             onMouseOut={(e) => e.currentTarget.style.background = 'rgba(255,255,255,0.03)'}>
-                                            <img src={ach.imageUrlCompleted} alt="" style={{ width: '32px', height: '32px', objectFit: 'contain' }} />
+                                                <AchievementImage
+                                                    src={ach.imageUrlCompletedDisplay || ach.imageUrlCompleted}
+                                                    alt={translation?.value || ach.title || ''}
+                                                    isCompleted
+                                                    iconSize={16}
+                                                    style={{ width: '32px', height: '32px', objectFit: 'contain', borderRadius: '6px' }}
+                                                />
                                             <span>{translation?.value || ach.title}</span>
                                         </div>
                                     );

@@ -1,22 +1,22 @@
 {
-    "CORSRules":  [
-                      {
-                          "MaxAgeSeconds":  3000,
-                          "AllowedHeaders":  [
-                                                 "*"
-                                             ],
-                          "AllowedOrigins":  [
-                                                 "http://localhost:5173",
-                                                 "https://ludopata.org",
-                                                 "https://www.ludopata.org"
-                                             ],
-                          "ExposeHeaders":  [
-                                                "ETag"
-                                            ],
-                          "AllowedMethods":  [
-                                                 "GET",
-                                                 "HEAD"
-                                             ]
-                      }
-                  ]
+  "CORSRules": [
+    {
+      "ExposeHeaders": [
+        "ETag"
+      ],
+      "AllowedHeaders": [
+        "*"
+      ],
+      "MaxAgeSeconds": 3000,
+      "AllowedMethods": [
+        "GET",
+        "HEAD"
+      ],
+      "AllowedOrigins": [
+        "http://localhost:5173",
+        "https://ludopata.org",
+        "https://www.ludopata.org"
+      ]
+    }
+  ]
 }

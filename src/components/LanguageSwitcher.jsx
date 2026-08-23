@@ -2,9 +2,11 @@ import React, { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Globe, ChevronDown } from 'lucide-react';
 
-const LanguageSwitcher = () => {
+const LanguageSwitcher = ({ style = {} }) => {
     const { i18n } = useTranslation();
     const [isOpen, setIsOpen] = useState(false);
+    const currentLanguage = i18n.resolvedLanguage || i18n.language || 'en';
+    const currentCode = currentLanguage.split('-')[0].toUpperCase();
 
     const changeLanguage = (lng) => {
         i18n.changeLanguage(lng);
@@ -12,7 +14,7 @@ const LanguageSwitcher = () => {
     };
 
     return (
-        <div style={{ position: 'absolute', top: '1rem', right: '1rem', zIndex: 1000 }}>
+        <div style={{ position: 'absolute', top: '1rem', right: '1rem', zIndex: 1000, ...style }}>
             <div className="relative inline-block text-left">
                 <button
                     onClick={() => setIsOpen(!isOpen)}
@@ -30,7 +32,7 @@ const LanguageSwitcher = () => {
                     }}
                 >
                     <Globe size={16} />
-                    <span>{i18n.language ? i18n.language.toUpperCase() : 'EN'}</span>
+                    <span>{currentCode}</span>
                     <ChevronDown size={14} />
                 </button>
 

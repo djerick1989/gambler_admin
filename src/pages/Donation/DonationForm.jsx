@@ -43,7 +43,6 @@ const DonationForm = () => {
         gamblerId: gambler.gamblerId,
         userId: gambler.userId || gambler.user?.userId,
         nickName: gambler.nickName || gambler.user?.nickName,
-        name: gambler.name || gambler.user?.name,
         avatar: gambler.avatar || gambler.user?.avatar,
         isPremium: gambler.isPremium || gambler.user?.isPremium || false,
         totalDebt: gambler.totalDebt || 0
@@ -316,7 +315,7 @@ const DonationForm = () => {
                 message,
                 donationType: type,
                 isAnonymous,
-                donorName: isAnonymous ? 'Anonymous' : (user?.name || user?.nickName || 'Guest'),
+                donorName: isAnonymous ? 'Anonymous' : (user?.nickName || 'Guest'),
                 beneficiaries: beneficiariesPayload,
                 successUrl: `${window.location.origin}/donations?stripe=success`,
                 cancelUrl: `${window.location.origin}/donations/new/${type}?stripe=cancel`
