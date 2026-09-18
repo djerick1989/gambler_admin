@@ -1,7 +1,8 @@
 import React, { useState, useEffect } from 'react';
-import { X, Search, Check } from 'lucide-react';
+import { X, Search, Check, User } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
 import { gamblerService, chatService } from '../../services/api';
+import PremiumAvatarBadge from '../PremiumAvatarBadge';
 
 const CreateGroupModal = ({ onClose, onGroupCreated }) => {
     const { t } = useTranslation();
@@ -11,6 +12,8 @@ const CreateGroupModal = ({ onClose, onGroupCreated }) => {
     const [selectedUsers, setSelectedUsers] = useState([]);
     const [loading, setLoading] = useState(false);
     const [creating, setCreating] = useState(false);
+    // Avatares cuya imagen no cargo: se cae al icono en lugar de dejar el circulo vacio.
+    const [failedAvatars, setFailedAvatars] = useState({});
 
     useEffect(() => {
         fetchUsers();
@@ -151,9 +154,58 @@ const CreateGroupModal = ({ onClose, onGroupCreated }) => {
                                             border: selectedUsers.includes(u.userId) ? '1px solid rgba(212, 144, 0, 0.3)' : '1px solid transparent'
                                         }}
                                     >
-                                        <div style={{ width: '32px', height: '32px', borderRadius: '50%', background: u.user?.avatar ? `url(${u.user.avatar}) center/cover` : '#e2e8f0' }} />
-                                        <div style={{ flex: 1 }}>
-                                            <div style={{ color: 'var(--text-main)', fontSize: '0.9rem' }}>{u.user?.nickName || u.user?.name}</div>
+                                        {/* La corona va en un contenedor aparte: el círculo recorta
+                                            su contenido para la imagen, y ese recorte también se
+                                            comería la corona, que sobresale del borde. */}
+                                        <div style={{ position: 'relative', flexShrink: 0 }}>
+                                            {u.user?.isPremium && (
+                                                <PremiumAvatarBadge size={17} top={-6} left={-5} />
+                                            )}
+
+                                            {/* Con <img> en lugar de fondo CSS: si la imagen falla
+                                                o tarda, se cae al icono en vez de dejar un círculo
+                                                vacío para siempre. */}
+                                            <div style={{
+                                                width: '34px',
+                                                height: '34px',
+                                                borderRadius: '50%',
+                                                overflow: 'hidden',
+                                                position: 'relative',
+                                                background: 'rgba(212, 144, 0, 0.12)',
+                                                border: '1px solid var(--stroke)',
+                                                display: 'flex',
+                                                alignItems: 'center',
+                                                justifyContent: 'center'
+                                            }}>
+                                                <User size={17} color="var(--primary)" />
+                                                {u.user?.avatar && !failedAvatars[u.userId] && (
+                                                    <img
+                                                        src={u.user.avatar}
+                                                        alt=""
+                                                        loading="lazy"
+                                                        onError={() => setFailedAvatars(prev => ({ ...prev, [u.userId]: true }))}
+                                                        style={{
+                                                            position: 'absolute',
+                                                            inset: 0,
+                                                            width: '100%',
+                                                            height: '100%',
+                                                            objectFit: 'cover'
+                                                        }}
+                                                    />
+                                                )}
+                                            </div>
+                                        </div>
+                                        <div style={{ flex: 1, minWidth: 0 }}>
+                                            <div style={{
+                                                color: 'var(--text-main)',
+                                                fontSize: '0.9rem',
+                                                fontWeight: '600',
+                                                overflow: 'hidden',
+                                                textOverflow: 'ellipsis',
+                                                whiteSpace: 'nowrap'
+                                            }}>
+                                                @{u.user?.nickName || t('common.unknown', 'Usuario')}
+                                            </div>
                                         </div>
                                         {selectedUsers.includes(u.userId) && <Check size={16} color="var(--primary)" />}
                                     </div>

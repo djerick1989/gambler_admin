@@ -5,9 +5,31 @@ import { ArrowRight, CheckCircle2, Facebook, HeartHandshake, ShieldCheck, Target
 import { useTranslation } from 'react-i18next';
 import LanguageSwitcher from '../components/LanguageSwitcher';
 
+/**
+ * Codigos que devuelve el servidor traducidos a algo que una persona pueda leer.
+ *
+ * El servidor manda codigos y no frases a proposito: distingue si lo repetido es el correo o el
+ * apodo, para poder decir cual de los dos hay que cambiar. Lo que faltaba era esta tabla, asi que
+ * el codigo salia tal cual a la pantalla.
+ *
+ * Se conserva la frase antigua "user already exists" porque puede seguir llegando de instalaciones
+ * que aun no se hayan actualizado.
+ */
 const SIGNUP_ERROR_KEYS = {
+    'email_already_registered': 'signup.errors.email_taken',
+    'nickname_already_taken': 'signup.errors.nickname_taken',
+    'nickname_taken': 'signup.errors.nickname_taken',
+    'nickname already in use': 'signup.errors.nickname_taken',
     'user already exists': 'signup.errors.user_exists'
 };
+
+/**
+ * Reconoce un codigo interno: mayusculas, numeros y guiones bajos, sin espacios.
+ *
+ * Sirve de red de seguridad. Si manana el servidor anade un codigo que no este en la tabla, es
+ * preferible un mensaje generico a soltarle CODIGO_EN_MAYUSCULAS a quien intenta registrarse.
+ */
+const esCodigoInterno = (texto) => /^[A-Z0-9_]+$/.test(texto.trim());
 
 const SHOW_SOCIAL_SIGNUP = false;
 
@@ -84,7 +106,14 @@ const Signup = () => {
             const backendMessage = payload?.errorMessage || payload?.message || (typeof payload?.data === 'string' ? payload.data : null);
             const normalizedMessage = backendMessage?.trim().toLowerCase();
             const translationKey = SIGNUP_ERROR_KEYS[normalizedMessage];
-            setError(translationKey ? t(translationKey) : backendMessage || t('signup.error_default'));
+
+            if (translationKey) {
+                setError(t(translationKey));
+            } else if (backendMessage && !esCodigoInterno(backendMessage)) {
+                setError(backendMessage);
+            } else {
+                setError(t('signup.error_default'));
+            }
         } finally {
             setLoading(false);
         }
@@ -94,6 +123,9 @@ const Signup = () => {
 
   return (
     <div className="login-container signup-marketing-page">
+      {/* Mismo lugar que en login, recuperar y restablecer contraseña: arriba a la derecha de la
+          página, no dentro de la tarjeta. */}
+      <LanguageSwitcher />
       <section className="signup-story-panel animate-fade-in">
                 <div className="landing-kicker">
                     <ShieldCheck size={18} />
@@ -101,6 +133,11 @@ const Signup = () => {
                 </div>
                 <h1 className="signup-story-title">{t('signup.landing_title')}</h1>
                 <p className="signup-story-subtitle">{t('signup.landing_subtitle')}</p>
+                {/* Aquí sí tiene sentido: el formulario de esta página es de registro, así que
+                    quien ya tiene cuenta necesita una salida hacia el login. */}
+                <div className="landing-actions">
+                    <Link to="/login" className="landing-secondary-cta">{t('signup.landing_login_cta')}</Link>
+                </div>
                 <div className="signup-start-flow" aria-label={t('signup.flow_title')}>
                     {[0, 1, 2].map((index) => (
                         <div className="signup-flow-step" key={index}>
@@ -130,9 +167,6 @@ const Signup = () => {
             </section>
 
       <div className="glass-card animate-fade-in signup-card">
-        <div className="signup-language-row">
-          <LanguageSwitcher style={{ position: 'static', top: 'auto', right: 'auto' }} />
-        </div>
         <div className="signup-card-header">
           <img src="/assets/logo_gambler.png" alt="Logo" className="landing-login-logo" />
                     <h1>{t('signup.title')}</h1>
@@ -179,7 +213,7 @@ const Signup = () => {
                         <CheckCircle2 size={16} />
                         <span>{t('signup.form_note')}</span>
                     </div>
-                    <button type="submit" className="btn btn-primary signup-submit" style={{ gridColumn: 'span 2', marginTop: '1rem' }} disabled={loading}>
+                    <button type="submit" className="btn btn-primary signup-submit" style={{ gridColumn: 'span 2' }} disabled={loading}>
                         {loading ? t('signup.button_loading') : t('signup.button')}
                         {!loading && <ArrowRight size={20} />}
                     </button>
@@ -205,7 +239,7 @@ const Signup = () => {
                     )}
                 </form>
 
-                <div style={{ marginTop: '2rem', textAlign: 'center', fontSize: '0.875rem', color: 'var(--text-muted)' }}>
+                <div style={{ marginTop: '1rem', textAlign: 'center', fontSize: '0.875rem', color: 'var(--text-muted)' }}>
                     {t('signup.has_account')} <Link to="/login" style={{ color: 'var(--primary)', textDecoration: 'none', fontWeight: '600' }}>{t('signup.login')}</Link>
                 </div>
             </div>

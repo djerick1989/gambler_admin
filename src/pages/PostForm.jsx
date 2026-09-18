@@ -7,6 +7,9 @@ import {
     Save, X, Type, Video, Plus, Globe, Smile, Play
 } from 'lucide-react';
 import EmojiPicker, { Theme as EmojiTheme } from 'emoji-picker-react';
+import SocialEmbed from '../components/SocialEmbed';
+import { SUPPORTED_SOCIAL_PLATFORMS } from '../utils/socialEmbeds';
+import { useSocialEmbed } from '../hooks/useSocialEmbed';
 import {
     DndContext,
     closestCenter,
@@ -28,6 +31,7 @@ import { useAuth } from '../context/AuthContext';
 import { useTranslation } from 'react-i18next';
 import { useNotification } from '../context/NotificationContext';
 import { getApiErrorMessage, isSubscriptionRequiredError } from '../utils/subscription';
+import { optimizarImagen } from '../utils/imageOptimizer';
 
 const LANGUAGE_IDS = {
     en: '11e8ba3a-b290-4a2c-9dad-0f40e457f72c',
@@ -158,7 +162,7 @@ const SortableMediaItem = ({ media, index, onRemove, onPreview }) => {
                     </button>
                 </div>
             ) : (
-                <img src={media.mediaUrl} alt="" style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
+                <img src={media.previewUrl || media.mediaUrl} alt="" style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
             )}
             <button
                 type="button"
@@ -186,7 +190,12 @@ const SortableMediaItem = ({ media, index, onRemove, onPreview }) => {
     );
 };
 
-const PostForm = ({ id: propId, onSuccess, autoOpenMedia }) => {
+/** Texto real de un contenido de Quill, sin etiquetas ni espacios duros. */
+const tieneTexto = (html = '') => (
+    html.replace(/<[^>]*>/g, '').replace(/&nbsp;/gi, ' ').trim().length > 0
+);
+
+const PostForm = ({ id: propId, onSuccess, autoOpenMedia, onDirtyChange }) => {
     const { t, i18n } = useTranslation();
     const navigate = useNavigate();
     const { id: paramId } = useParams();
@@ -217,6 +226,44 @@ const PostForm = ({ id: propId, onSuccess, autoOpenMedia }) => {
         postMediaList: []
     });
     const [showEmojiPicker, setShowEmojiPicker] = useState(false);
+
+    // Las URL blob: de la vista previa siguen ocupando memoria hasta que se revocan, así que se
+    // liberan al desmontar; el ref evita que el efecto de limpieza se ate a cada cambio de la lista.
+    const mediaListRef = useRef([]);
+    useEffect(() => {
+        mediaListRef.current = formData.postMediaList;
+    }, [formData.postMediaList]);
+    useEffect(() => () => {
+        mediaListRef.current.forEach(media => media?.previewUrl && URL.revokeObjectURL(media.previewUrl));
+    }, []);
+
+    // El contenido se mira con retraso a propósito: mientras alguien escribe una URL, cada tecla
+    // produciría un identificador distinto y el iframe se recargaría en cada pulsación.
+    const [debouncedContent, setDebouncedContent] = useState('');
+
+    useEffect(() => {
+        const t = setTimeout(() => setDebouncedContent(formData.contentHtml || ''), 600);
+        return () => clearTimeout(t);
+    }, [formData.contentHtml]);
+
+    // Los acortadores de Facebook se expanden contra el servidor antes de incrustarlos.
+    const previewEmbed = useSocialEmbed(debouncedContent);
+
+    // Quien contiene el formulario necesita saber si hay algo que se perdería al cerrar.
+    useEffect(() => {
+        if (!onDirtyChange) return;
+        onDirtyChange(tieneTexto(formData.contentHtml) || formData.postMediaList.length > 0);
+    }, [formData.contentHtml, formData.postMediaList, onDirtyChange]);
+
+    // Hay un enlace pero no es de una plataforma reconocida: conviene decirlo, si no la persona
+    // no entiende por qué el suyo no se previsualiza.
+    const hasUnsupportedLink = useMemo(() => {
+        if (previewEmbed || !debouncedContent) return false;
+        const contenedor = document.createElement('div');
+        contenedor.innerHTML = debouncedContent;
+        const texto = contenedor.textContent || '';
+        return /https?:\/\/\S+/.test(texto) || contenedor.querySelector('a[href]') !== null;
+    }, [debouncedContent, previewEmbed]);
 
     const isAdmin = user?.role === 1 || user?.role === 2;
 
@@ -321,20 +368,29 @@ const PostForm = ({ id: propId, onSuccess, autoOpenMedia }) => {
             percent: 0,
             uploadedBytes: 0,
             totalBytes: files.reduce((sum, file) => sum + file.size, 0),
-            etaSeconds: null
+            etaSeconds: null,
+            preparando: true
         });
+
+        // Las fotos se aligeran antes de empezar, no sobre la marcha: asi el total de bytes que se
+        // van a subir se conoce de antemano y la barra dice la verdad en vez de encogerse a mitad.
+        const preparados = [];
+        for (const original of files) {
+            preparados.push(await optimizarImagen(original));
+        }
 
         const uploadStartedAt = Date.now();
         let completedBytes = 0;
 
         try {
             const newMediaList = [...formData.postMediaList];
-            const totalBytes = files.reduce((sum, file) => sum + file.size, 0);
+            const totalBytes = preparados.reduce((sum, file) => sum + file.size, 0);
 
-            for (const file of files) {
+            for (const file of preparados) {
                 const isVideo = file.type.startsWith('video');
                 const thumbnailUrl = isVideo ? await createVideoThumbnail(file) : null;
                 const response = await mediaService.upload(file, {
+                    skipOptimization: true,
                     onUploadProgress: (progressEvent) => {
                         const currentLoaded = progressEvent.loaded || 0;
                         const uploadedBytes = Math.min(completedBytes + currentLoaded, totalBytes);
@@ -347,7 +403,8 @@ const PostForm = ({ id: propId, onSuccess, autoOpenMedia }) => {
                             percent: totalBytes ? Math.min(Math.round((uploadedBytes / totalBytes) * 100), 100) : 0,
                             uploadedBytes,
                             totalBytes,
-                            etaSeconds: bytesPerSecond > 0 ? remainingBytes / bytesPerSecond : null
+                            etaSeconds: bytesPerSecond > 0 ? remainingBytes / bytesPerSecond : null,
+                            preparando: false
                         });
                     }
                 });
@@ -357,6 +414,10 @@ const PostForm = ({ id: propId, onSuccess, autoOpenMedia }) => {
                         postMediaId: "",
                         postId: isEditing ? id : "",
                         mediaUrl: response.data.url,
+                        // La URL del bucket es privada: solo funciona firmada, y el backend la firma
+                        // al leer la publicacion (PostCase.ResolvePostMediaUrls). Para la vista previa
+                        // usamos el archivo que ya esta en el navegador.
+                        previewUrl: isVideo ? null : URL.createObjectURL(file),
                         thumbnailUrl,
                         height: 0,
                         width: 0,
@@ -383,6 +444,8 @@ const PostForm = ({ id: propId, onSuccess, autoOpenMedia }) => {
     };
 
     const removeMedia = (index) => {
+        const removed = formData.postMediaList[index];
+        if (removed?.previewUrl) URL.revokeObjectURL(removed.previewUrl);
         setFormData(prev => ({
             ...prev,
             postMediaList: prev.postMediaList.filter((_, i) => i !== index)
@@ -425,10 +488,12 @@ const PostForm = ({ id: propId, onSuccess, autoOpenMedia }) => {
 
         setSaving(true);
         try {
-            const mediaWithOrder = formData.postMediaList.map((m, index) => ({
-                ...m,
-                order: index
-            }));
+            const mediaWithOrder = formData.postMediaList.map((m, index) => {
+                const media = { ...m, order: index };
+                // previewUrl es una URL blob: local, no tiene sentido fuera de este navegador.
+                delete media.previewUrl;
+                return media;
+            });
 
             if (isEditing) {
                 const updatedMediaList = mediaWithOrder.map(m => ({
@@ -599,6 +664,40 @@ const PostForm = ({ id: propId, onSuccess, autoOpenMedia }) => {
                                         </div>
                                     )}
                                 </div>
+
+                                {/* El editor muestra el enlace como texto plano, así que sin esto
+                                    no hay forma de saber que se va a convertir en contenido. */}
+                                {previewEmbed && (
+                                    <div style={{ marginTop: '1rem' }}>
+                                        <div style={{
+                                            display: 'flex',
+                                            alignItems: 'center',
+                                            gap: '0.4rem',
+                                            marginBottom: '0.15rem',
+                                            fontSize: '0.75rem',
+                                            fontWeight: '700',
+                                            letterSpacing: '0.04em',
+                                            textTransform: 'uppercase',
+                                            color: 'var(--text-muted)'
+                                        }}>
+                                            <Globe size={13} />
+                                            {t('posts.embed_preview', { platform: previewEmbed.label })}
+                                        </div>
+                                        {/* La vista previa del editor no ancla nada: quien esta escribiendo no esta viendo un video. */}
+                                        <SocialEmbed embed={previewEmbed} allowMiniPlayer={false} />
+                                    </div>
+                                )}
+
+                                {hasUnsupportedLink && (
+                                    <p style={{
+                                        marginTop: '0.75rem',
+                                        fontSize: '0.8rem',
+                                        color: 'var(--text-muted)',
+                                        lineHeight: '1.5'
+                                    }}>
+                                        {t('posts.embed_unsupported', { platforms: SUPPORTED_SOCIAL_PLATFORMS.join(', ') })}
+                                    </p>
+                                )}
                             </div>
                         </div>
                     </div>
@@ -686,7 +785,7 @@ const PostForm = ({ id: propId, onSuccess, autoOpenMedia }) => {
                                     }}>
                                         <div style={{ display: 'flex', alignItems: 'center', gap: '0.6rem', color: 'var(--text-main)', fontWeight: 700 }}>
                                             <Loader2 size={18} className="animate-spin" color="var(--primary)" />
-                                        {uploadIsProcessing ? 'Procesando' : 'Subiendo'} {uploadProgress?.fileName || 'archivo'}...
+                                        {uploadProgress?.preparando ? 'Preparando' : uploadIsProcessing ? 'Procesando' : 'Subiendo'} {uploadProgress?.fileName || 'archivo'}...
                                         </div>
                                     <div style={{ height: '10px', borderRadius: '999px', background: '#f3e5bd', overflow: 'hidden' }}>
                                         <div style={{

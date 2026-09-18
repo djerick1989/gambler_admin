@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { Link } from 'react-router-dom';
-import { Heart, MessageSquare, MoreVertical, Edit2, Trash2, Calendar, User, Share2 } from 'lucide-react';
+import { Heart, MessageSquare, MoreHorizontal, Edit2, Trash2, Calendar, User, Share2, Flag, EyeOff } from 'lucide-react';
 import PostMediaGrid from './PostMediaGrid';
 import PostComments from './PostComments';
 import PostViewersModal from './PostViewersModal';
@@ -8,10 +8,14 @@ import { useAuth } from '../context/AuthContext';
 import { postViewedService, postLikeService, postSharedService } from '../services/api';
 import PostSharedViewersModal from './PostSharedViewersModal';
 import { useTranslation } from 'react-i18next';
+import SocialEmbed from './SocialEmbed';
+import { stripEmbedMarkup, stripEmbedUrlFromHtml } from '../utils/socialEmbeds';
+import { useSocialEmbed } from '../hooks/useSocialEmbed';
 import 'react-quill-new/dist/quill.snow.css';
 import PremiumAvatarBadge from './PremiumAvatarBadge';
+import ReportPostModal from './ReportPostModal';
 
-const PostCard = ({ post, onEdit, onDelete }) => {
+const PostCard = ({ post, onEdit, onDelete, priority = false }) => {
     const { t, i18n } = useTranslation();
     const { user, loading: authLoading, isSubscribed } = useAuth();
     const [isExpanded, setIsExpanded] = useState(false);
@@ -26,12 +30,18 @@ const PostCard = ({ post, onEdit, onDelete }) => {
     const [showShareModal, setShowShareModal] = useState(false);
     const [showShareTooltip, setShowShareTooltip] = useState(false);
     const [showActionsMenu, setShowActionsMenu] = useState(false);
+    const [showReportModal, setShowReportModal] = useState(false);
     const cardRef = useRef(null);
     const hasReportedView = useRef(false);
     const tooltipTimeoutRef = useRef(null);
     const shareTooltipTimeoutRef = useRef(null);
 
     const isAdmin = user?.role === 1 || user?.role === 2;
+    const isOwnPost = String(post.userId) === String(user?.userId);
+    const canManagePost = isAdmin || isOwnPost;
+    // Nadie reporta su propia publicacion, y la administracion tiene la pantalla de moderacion.
+    const canReportPost = Boolean(user?.userId) && !isOwnPost && !isAdmin;
+    const isUnderReview = post.moderationStatus === 'UNDER_REVIEW';
     const postAuthorIsPremium = Boolean(post.user?.isPremium ?? post.user?.IsPremium) ||
         (isSubscribed && String(post.userId) === String(user?.userId));
 
@@ -263,7 +273,22 @@ const PostCard = ({ post, onEdit, onDelete }) => {
     const translationContent = post.postTranslations?.[0]?.contentHtml;
     const rawContent = sanitizeHtml(translationContent || post.contentHtml || post.content || "");
 
-    const contentText = stripHtml(rawContent);
+    // Si el texto trae un enlace de una red social reconocida, se incrusta su contenido debajo.
+    const socialEmbed = useSocialEmbed(rawContent);
+
+    // El enlace ya se muestra incrustado: repetirlo como texto crudo arriba es justo lo que las
+    // redes sociales no hacen. Si la publicación era solo el enlace, no queda texto y el bloque
+    // no se renderiza.
+    const displayContent = React.useMemo(() => {
+        if (!socialEmbed) return rawContent;
+
+        // Primero el fragmento de insercion entero (se lleva la URL dentro), y despues la URL
+        // suelta, para cuando la persona pego solo el enlace.
+        const sinMarcado = stripEmbedMarkup(rawContent);
+        return stripEmbedUrlFromHtml(sinMarcado, socialEmbed.matchedUrl);
+    }, [rawContent, socialEmbed]);
+
+    const contentText = stripHtml(displayContent);
     const shouldTruncate = contentText.length > 200;
 
     return (
@@ -311,7 +336,10 @@ const PostCard = ({ post, onEdit, onDelete }) => {
                 </div>
 
                 <div className="post-actions-container" style={{ position: 'relative' }}>
-                    {(isAdmin || user?.userId === post.userId) && (
+                    {/* El menú se muestra siempre; lo que cambia son las opciones de adentro.
+                        Editar y eliminar solo para el autor (o administración), reportar solo
+                        para publicaciones ajenas. */}
+                    {(canManagePost || canReportPost) && (
                         <>
                             <button
                                 onClick={() => setShowActionsMenu(!showActionsMenu)}
@@ -325,7 +353,7 @@ const PostCard = ({ post, onEdit, onDelete }) => {
                                     transition: 'all 0.2s'
                                 }}
                             >
-                                <MoreVertical size={20} />
+                                <MoreHorizontal size={20} />
                             </button>
 
                             {showActionsMenu && (
@@ -339,9 +367,41 @@ const PostCard = ({ post, onEdit, onDelete }) => {
                                     borderRadius: '0.75rem',
                                     padding: '0.5rem',
                                     zIndex: 100,
-                                    minWidth: '150px',
+                                    minWidth: '190px',
                                     boxShadow: '0 10px 25px -5px rgba(0, 0, 0, 0.1)'
                                 }}>
+                                    {canReportPost && (
+                                        <button
+                                            onClick={() => {
+                                                setShowReportModal(true);
+                                                setShowActionsMenu(false);
+                                            }}
+                                            style={{
+                                                display: 'flex',
+                                                alignItems: 'center',
+                                                gap: '0.75rem',
+                                                width: '100%',
+                                                padding: '0.75rem',
+                                                background: 'none',
+                                                border: 'none',
+                                                borderRadius: '0.5rem',
+                                                color: 'var(--text-main)',
+                                                cursor: 'pointer',
+                                                textAlign: 'left',
+                                                transition: 'background 0.2s'
+                                            }}
+                                            onMouseEnter={(e) => e.currentTarget.style.background = '#f1f5f9'}
+                                            onMouseLeave={(e) => e.currentTarget.style.background = 'none'}
+                                        >
+                                            <Flag size={16} />
+                                            <span style={{ fontSize: '0.875rem', fontWeight: '500' }}>
+                                                {t('posts.report.action')}
+                                            </span>
+                                        </button>
+                                    )}
+
+                                    {canManagePost && (
+                                    <>
                                     <button
                                         onClick={() => {
                                             onEdit(post);
@@ -392,12 +452,42 @@ const PostCard = ({ post, onEdit, onDelete }) => {
                                         <Trash2 size={16} />
                                         <span style={{ fontSize: '0.875rem', fontWeight: '500' }}>{t('common.delete')}</span>
                                     </button>
+                                    </>
+                                    )}
                                 </div>
                             )}
                         </>
                     )}
                 </div>
             </div>
+
+            {showReportModal && (
+                <ReportPostModal
+                    postId={post.postId}
+                    onClose={() => setShowReportModal(false)}
+                />
+            )}
+
+            {/* Quien la escribió y la administración siguen viéndola, así que hay que decirles por
+                qué nadie más la ve. */}
+            {isUnderReview && (
+                <div style={{
+                    display: 'flex',
+                    alignItems: 'flex-start',
+                    gap: '0.6rem',
+                    padding: '0.8rem 1rem',
+                    marginBottom: '1rem',
+                    borderRadius: '0.7rem',
+                    border: '1px solid rgba(212, 144, 0, 0.35)',
+                    background: 'rgba(212, 144, 0, 0.08)',
+                    color: 'var(--text-main)',
+                    fontSize: '0.88rem',
+                    lineHeight: 1.45
+                }}>
+                    <EyeOff size={17} color="var(--primary)" style={{ flexShrink: 0, marginTop: '1px' }} />
+                    <span>{t('posts.report.under_review_notice')}</span>
+                </div>
+            )}
 
             {/* Content Preview / Full Content */}
             <div style={{ marginBottom: '1rem' }}>
@@ -445,7 +535,7 @@ const PostCard = ({ post, onEdit, onDelete }) => {
                         pointer-events: none;
                     }
                 `}</style>
-                {rawContent && (
+                {contentText.trim() && (
                     <div className={`rich-text-content-wrapper ${!isExpanded && shouldTruncate ? 'truncated' : ''}`}>
                         <div
                             className="rich-text-content ql-editor"
@@ -455,10 +545,12 @@ const PostCard = ({ post, onEdit, onDelete }) => {
                                 color: 'var(--text-main)',
                                 fontWeight: '400'
                             }}
-                            dangerouslySetInnerHTML={{ __html: rawContent }}
+                            dangerouslySetInnerHTML={{ __html: displayContent }}
                         />
                     </div>
                 )}
+
+                {socialEmbed && <SocialEmbed embed={socialEmbed} />}
 
                 {shouldTruncate && (
                     <button
@@ -471,7 +563,7 @@ const PostCard = ({ post, onEdit, onDelete }) => {
             </div>
 
             {/* Media */}
-            <PostMediaGrid mediaList={post.postMedia} />
+            <PostMediaGrid mediaList={post.postMedia} priority={priority} />
 
             {/* Footer / Interactions */}
             <div style={{
@@ -495,7 +587,6 @@ const PostCard = ({ post, onEdit, onDelete }) => {
                                 bottom: '100%',
                                 left: '0',
                                 marginBottom: '0px',
-                                paddingBottom: '8px',
                                 background: '#FFFFFF',
                                 border: '1px solid var(--stroke)',
                                 borderRadius: '0.5rem',
@@ -590,7 +681,6 @@ const PostCard = ({ post, onEdit, onDelete }) => {
                                 bottom: '100%',
                                 left: '0',
                                 marginBottom: '0px',
-                                paddingBottom: '8px',
                                 background: '#FFFFFF',
                                 border: '1px solid var(--stroke)',
                                 borderRadius: '0.5rem',

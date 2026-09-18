@@ -1,4 +1,5 @@
 import axios from 'axios';
+import { optimizarImagen } from '../utils/imageOptimizer';
 
 export const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || 'https://api.ludopata.org';
 
@@ -128,9 +129,13 @@ export const languageService = {
 };
 
 export const mediaService = {
+  // Se optimiza aqui y no en cada pantalla a proposito: hay trece sitios que suben archivos, y
+  // cualquiera que se anada manana pasa por esta funcion sin que nadie tenga que acordarse.
   upload: async (file, options = {}) => {
+    const archivo = options.skipOptimization ? file : await optimizarImagen(file);
+
     const formData = new FormData();
-    formData.append('file', file);
+    formData.append('file', archivo);
     const response = await apiClient.post('/api/Media/upload', formData, {
       headers: {
         'Content-Type': 'multipart/form-data',
@@ -621,6 +626,18 @@ export const healthAgentService = {
   }
 };
 
+export const socialLinkService = {
+  /**
+   * Expande un enlace corto de red social a su URL canónica.
+   * El navegador no puede hacerlo por su cuenta: Facebook no permite leer la redirección desde
+   * otro origen, así que la sigue el servidor.
+   */
+  resolve: async (url) => {
+    const response = await apiClient.get('/api/SocialLink/resolve', { params: { url } });
+    return response.data;
+  }
+};
+
 export const userFeedbackService = {
   create: async (data) => {
     const response = await apiClient.post('/api/UserFeedback', data);
@@ -694,6 +711,23 @@ export const achievementService = {
   },
   getGamblerAchievements: async (gamblerId) => {
     const response = await apiClient.get(`/api/Achievement/getGamblerAchievements/${gamblerId}`);
+    return response.data;
+  }
+};
+
+export const postModerationService = {
+  reportPost: async (postId, payload) => {
+    const response = await apiClient.post(`/api/PostModeration/report/${postId}`, payload);
+    return response.data;
+  },
+  getReportedPosts: async (page = 1, pageSize = 10, onlyUnderReview = false) => {
+    const response = await apiClient.get('/api/PostModeration/reported', {
+      params: { page, pageSize, onlyUnderReview }
+    });
+    return response.data;
+  },
+  applyDecision: async (postId, decision) => {
+    const response = await apiClient.put(`/api/PostModeration/decision/${postId}`, { decision });
     return response.data;
   }
 };
@@ -921,6 +955,14 @@ export const formAnalysisService = {
 };
 
 export const debtService = {
+  getMovements: async (id) => {
+    const response = await apiClient.get(`/api/Debt/${id}/movements`);
+    return response.data;
+  },
+  updateIncome: async (gamblerId, data) => {
+    const response = await apiClient.put(`/api/Debt/gambler/${gamblerId}/income`, data);
+    return response.data;
+  },
   getCurrencies: async (languageId = null) => {
     const headers = languageId ? { LanguageId: languageId } : {};
     const response = await apiClient.get('/api/Debt/currencies', { headers });
@@ -1000,12 +1042,28 @@ export const strategyService = {
     const response = await apiClient.get(`/api/Strategy/${id}`, { headers });
     return response.data;
   },
-  getPopularStrategies: async (page = 1, pageSize = 10, languageId = null) => {
+  getPopularStrategies: async (page = 1, pageSize = 10, languageId = null, gamblerId = null) => {
     const headers = languageId ? { LanguageId: languageId } : {};
     const response = await apiClient.get('/api/Strategy/popular', {
+      params: { page, pageSize, ...(gamblerId ? { gamblerId } : {}) },
+      headers
+    });
+    return response.data;
+  },
+  getSavedStrategies: async (gamblerId, page = 1, pageSize = 10, languageId = null) => {
+    const headers = languageId ? { LanguageId: languageId } : {};
+    const response = await apiClient.get(`/api/Strategy/saved/${gamblerId}`, {
       params: { page, pageSize },
       headers
     });
+    return response.data;
+  },
+  saveStrategy: async (id, gamblerId) => {
+    const response = await apiClient.post(`/api/Strategy/${id}/save`, null, { params: { gamblerId } });
+    return response.data;
+  },
+  unsaveStrategy: async (id, gamblerId) => {
+    const response = await apiClient.delete(`/api/Strategy/${id}/save`, { params: { gamblerId } });
     return response.data;
   },
   updateStrategy: async (id, data, languageId = null) => {

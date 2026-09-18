@@ -2,7 +2,12 @@ import React, { useEffect } from 'react';
 import { createPortal } from 'react-dom';
 import { X } from 'lucide-react';
 
-const Modal = ({ isOpen, onClose, title, children, maxWidth = '600px' }) => {
+/**
+ * @param {boolean} closeOnBackdrop Si un clic en la zona gris cierra el modal. Por defecto sí, que
+ *   es lo esperable en un modal de solo lectura. Se pone en false donde hay algo escrito que se
+ *   perdería: ahí un clic despistado fuera del recuadro no puede tirar el trabajo de la persona.
+ */
+const Modal = ({ isOpen, onClose, title, children, maxWidth = '600px', closeOnBackdrop = true }) => {
     useEffect(() => {
         if (isOpen) {
             document.body.style.overflow = 'hidden';
@@ -33,7 +38,7 @@ const Modal = ({ isOpen, onClose, title, children, maxWidth = '600px' }) => {
                 padding: '1rem',
                 animation: 'modalFadeIn 0.3s ease-out'
             }}
-            onClick={onClose}
+            onClick={closeOnBackdrop ? onClose : undefined}
         >
             <style>{`
                 @keyframes modalFadeIn {

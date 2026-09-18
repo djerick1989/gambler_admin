@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useMemo } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import {
     AlertCircle,
@@ -18,6 +18,7 @@ import { useTranslation } from 'react-i18next';
 import { debtService } from '../../services/api';
 import { useAuth } from '../../context/AuthContext';
 import { getLanguageId } from '../../utils/languages';
+import { extraPaymentImpact, isNegativeAmortization, monthlyInterest, progressPercent, projectPayoff, totalPaid } from '../../utils/debtMath';
 import { currencies } from '../../utils/currencies';
 import { confirmDialog } from '../../utils/dialog';
 
@@ -43,15 +44,42 @@ const DebtForm = () => {
         monthlyInstallment: "",
         loanDate: new Date().toISOString().split('T')[0],
         paymentDay: 1,
+        paymentFrequency: "Monthly",
         currency: "USD"
     });
 
+    // Se recalcula mientras la persona escribe: el momento util para avisar de que una cuota no
+    // amortiza es antes de guardarla, no meses despues al ver que el saldo no baja.
+    const projection = useMemo(() => {
+        const balance = Number(formData.currentBalance);
+        const rate = Number(formData.annualInterestRate);
+        const installment = Number(formData.monthlyInstallment);
+        const frequency = formData.paymentFrequency || "Monthly";
+        if (!balance || balance <= 0) return null;
+
+        return {
+            frequency,
+            interest: monthlyInterest(balance, rate, frequency),
+            trapped: isNegativeAmortization(balance, rate, installment, frequency),
+            payoff: installment > 0 ? projectPayoff(balance, rate, installment, frequency) : null
+        };
+    }, [formData.currentBalance, formData.annualInterestRate, formData.monthlyInstallment, formData.paymentFrequency]);
+
     const [payments, setPayments] = useState([]);
+    const [movements, setMovements] = useState([]);
     const [newPayment, setNewPayment] = useState({
         amount: "",
         paymentDate: new Date().toISOString().split('T')[0],
         notes: ""
     });
+
+    // Cuanto adelanta abonar mas que la cuota, mientras se escribe el importe.
+    const paymentImpact = useMemo(() => extraPaymentImpact({
+        currentBalance: formData.currentBalance,
+        annualInterestRate: formData.annualInterestRate,
+        monthlyInstallment: formData.monthlyInstallment,
+        paymentFrequency: formData.paymentFrequency
+    }, newPayment.amount), [formData, newPayment.amount]);
 
     const [apiCurrencies, setApiCurrencies] = useState([]);
 
@@ -95,10 +123,18 @@ const DebtForm = () => {
                     monthlyInstallment: d.monthlyInstallment,
                     loanDate: d.loanDate.split('T')[0],
                     paymentDay: d.paymentDay,
+                    paymentFrequency: d.paymentFrequency || "Monthly",
                     currency: d.currency,
                     status: d.status
                 });
                 setPayments(d.payments || []);
+                // El libro se pide aparte: no todas las pantallas lo necesitan.
+                try {
+                    const ledger = await debtService.getMovements(id);
+                    if (ledger.status) setMovements(Array.isArray(ledger.data) ? ledger.data : []);
+                } catch (ledgerError) {
+                    console.error(ledgerError);
+                }
             }
         } catch (err) {
             console.error(err);
@@ -203,6 +239,11 @@ const DebtForm = () => {
         }).format(amount || 0);
     };
 
+    const formatProjectionDate = (date) => date.toLocaleDateString(
+        i18n.language === 'es' ? 'es-ES' : 'en-US',
+        { month: 'long', year: 'numeric' }
+    );
+
     if (loading) {
         return (
             <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '80vh' }}>
@@ -211,7 +252,9 @@ const DebtForm = () => {
         );
     }
 
-    const progress = (formData.status === 'Cancelled') ? 100 : Math.min(100, Math.max(0, 100 - (formData.currentBalance / formData.initialAmount * 100)));
+        // El progreso se mide contra lo que realmente hay que pagar, no contra el importe inicial:
+    // con intereses el saldo puede superarlo y el calculo anterior se quedaba clavado en cero.
+    const progress = (formData.status === 'Cancelled') ? 100 : progressPercent(totalPaid(payments), formData.currentBalance);
     const currencyCode = formData.currency || 'USD';
 
     return (
@@ -413,7 +456,82 @@ const DebtForm = () => {
                     </div>
                 </div>
 
-                {/* Dia de Pago */}
+                {projection && (
+                    <div
+                        role="status"
+                        style={{
+                            display: 'flex',
+                            gap: '0.9rem',
+                            alignItems: 'flex-start',
+                            padding: '1.1rem 1.25rem',
+                            borderRadius: '1.25rem',
+                            marginBottom: '1.5rem',
+                            border: `1px solid ${projection.trapped ? 'rgba(220, 38, 38, 0.35)' : 'rgba(22, 163, 74, 0.3)'}`,
+                            background: projection.trapped ? 'rgba(254, 226, 226, 0.6)' : 'rgba(220, 252, 231, 0.5)'
+                        }}
+                    >
+                        {projection.trapped
+                            ? <AlertCircle size={22} color="#b91c1c" style={{ flexShrink: 0, marginTop: '2px' }} />
+                            : <CheckCircle2 size={22} color="#15803d" style={{ flexShrink: 0, marginTop: '2px' }} />}
+
+                        <div style={{ minWidth: 0 }}>
+                            <p style={{ margin: 0, fontWeight: '800', color: projection.trapped ? '#991b1b' : '#166534' }}>
+                                {projection.trapped
+                                    ? t('debts.warning_never_paid')
+                                    : t('debts.projection_title')}
+                            </p>
+                            <p style={{ margin: '0.35rem 0 0', fontSize: '0.92rem', color: 'var(--text-main)' }}>
+                                {projection.trapped
+                                    ? t('debts.warning_never_paid_detail', {
+                                        interest: formatCurrency(projection.interest)
+                                    })
+                                    : projection.payoff
+                                        ? t('debts.projection_detail', {
+                                            months: projection.payoff.months,
+                                            date: formatProjectionDate(projection.payoff.payoffDate),
+                                            interest: formatCurrency(projection.payoff.totalInterest)
+                                        })
+                                        : t('debts.projection_incomplete')}
+                            </p>
+                        </div>
+                    </div>
+                )}
+
+                {/* Frecuencia: la deuda informal cobra por semana o por dia, no solo por mes. */}
+                <div className="form-group" style={{ marginBottom: '1.5rem' }}>
+                    <label style={{ display: 'block', marginBottom: '0.75rem', fontWeight: '700', color: 'var(--text-muted)' }}>
+                        {t('debts.frequency')}
+                    </label>
+                    <div style={{ display: 'flex', gap: '0.5rem', flexWrap: 'wrap' }}>
+                        {['Monthly', 'Biweekly', 'Weekly', 'Daily'].map(option => (
+                            <button
+                                key={option}
+                                type="button"
+                                onClick={() => setFormData(prev => ({ ...prev, paymentFrequency: option }))}
+                                aria-pressed={formData.paymentFrequency === option}
+                                style={{
+                                    padding: '0.6rem 1.1rem',
+                                    borderRadius: '0.75rem',
+                                    border: 'none',
+                                    cursor: 'pointer',
+                                    fontWeight: '700',
+                                    background: formData.paymentFrequency === option ? 'var(--primary)' : 'rgba(0,0,0,0.05)',
+                                    color: formData.paymentFrequency === option ? 'white' : 'var(--text-muted)'
+                                }}
+                            >
+                                {t(`debts.frequency_${option.toLowerCase()}`)}
+                            </button>
+                        ))}
+                    </div>
+                    {formData.paymentFrequency !== 'Monthly' && (
+                        <p style={{ margin: '0.6rem 0 0', fontSize: '0.85rem', color: 'var(--text-muted)' }}>
+                            {t('debts.frequency_hint_non_monthly')}
+                        </p>
+                    )}
+                </div>
+
+                {/* Dia de Pago: solo tiene sentido en las deudas mensuales. */}
+                {formData.paymentFrequency === 'Monthly' && (
                 <div className="form-group">
                     <label style={{ display: 'block', marginBottom: '0.75rem', fontWeight: '700', color: 'var(--text-muted)' }}>
                         {t('debts.payment_day')}
@@ -430,6 +548,7 @@ const DebtForm = () => {
                         style={{ width: '100%', padding: '1.25rem', borderRadius: '1.25rem', border: '1px solid var(--glass-border)', background: 'white', color: 'var(--text-main)', fontSize: '1.1rem', fontWeight: '700' }}
                     />
                 </div>
+                )}
 
                 {/* Historial de Pagos (Solo en Edit) */}
                 {isEdit && (
@@ -486,6 +605,54 @@ const DebtForm = () => {
                                     )}
                                 </tbody>
                             </table>
+                        </div>
+                    </div>
+                )}
+
+                {/* Libro de movimientos: la explicacion del saldo, asiento por asiento. */}
+                {isEdit && movements.length > 0 && (
+                    <div style={{ marginTop: '2rem' }}>
+                        <label style={{ fontWeight: '800', fontSize: '1.1rem', color: 'var(--text-main)', display: 'block', marginBottom: '0.5rem' }}>
+                            {t('debts.ledger_title')}
+                        </label>
+                        <p style={{ margin: '0 0 1rem', fontSize: '0.88rem', color: 'var(--text-muted)' }}>
+                            {t('debts.ledger_subtitle')}
+                        </p>
+                        <div className="glass-card" style={{ borderRadius: '1.25rem', overflow: 'hidden' }}>
+                            {movements.map(movement => {
+                                const grows = movement.amount > 0;
+                                return (
+                                    <div
+                                        key={movement.id}
+                                        style={{
+                                            display: 'flex',
+                                            justifyContent: 'space-between',
+                                            alignItems: 'center',
+                                            gap: '1rem',
+                                            padding: '0.85rem 1.1rem',
+                                            borderBottom: '1px solid var(--glass-border)'
+                                        }}
+                                    >
+                                        <div style={{ minWidth: 0 }}>
+                                            <p style={{ margin: 0, fontWeight: '700', fontSize: '0.92rem' }}>
+                                                {t(`debts.movement_${movement.type.toLowerCase()}`)}
+                                            </p>
+                                            <p style={{ margin: '0.15rem 0 0', fontSize: '0.78rem', color: 'var(--text-muted)' }}>
+                                                {new Date(movement.occurredAt).toLocaleDateString()}
+                                                {movement.notes ? ` · ${movement.notes}` : ''}
+                                            </p>
+                                        </div>
+                                        <div style={{ textAlign: 'right', flexShrink: 0 }}>
+                                            <p style={{ margin: 0, fontWeight: '800', color: grows ? '#b91c1c' : '#15803d' }}>
+                                                {grows ? '+' : '−'}{formatCurrency(Math.abs(movement.amount))}
+                                            </p>
+                                            <p style={{ margin: '0.15rem 0 0', fontSize: '0.78rem', color: 'var(--text-muted)' }}>
+                                                {formatCurrency(movement.balanceAfter)}
+                                            </p>
+                                        </div>
+                                    </div>
+                                );
+                            })}
                         </div>
                     </div>
                 )}
@@ -557,8 +724,18 @@ const DebtForm = () => {
                                         style={{ width: '100%', padding: '1.25rem 1.25rem 1.25rem 4rem', borderRadius: '1.25rem', border: '1px solid var(--glass-border)', fontSize: '1.25rem', fontWeight: '800' }}
                                     />
                                 </div>
+                                {/* Un abono por encima de la cuota es un esfuerzo extra: conviene que
+                                    la persona vea que le devuelve, no solo que baje el saldo. */}
+                                {paymentImpact && (
+                                    <p style={{ margin: '0.6rem 0 0', fontSize: '0.85rem', fontWeight: '700', color: '#15803d', textAlign: 'center' }}>
+                                        {t('debts.extra_payment_impact', {
+                                            months: paymentImpact.monthsSaved,
+                                            interest: formatCurrency(paymentImpact.interestSaved)
+                                        })}
+                                    </p>
+                                )}
                             </div>
-                            
+
                             <div className="form-group">
                                 <label style={{ display: 'block', marginBottom: '0.5rem', fontWeight: '700', color: 'var(--text-muted)', textAlign: 'center' }}>{t('debts.payment_date')}</label>
                                 <input 

@@ -1,70 +1,6 @@
-import React from 'react';
+import React, { lazy, Suspense } from 'react';
 import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
 import Login from './pages/Login';
-import Signup from './pages/Signup';
-import VerifyEmail from './pages/VerifyEmail';
-import SocialAuthCallback from './pages/SocialAuthCallback';
-import RecoveryPassword from './pages/RecoveryPassword';
-import ResetPassword from './pages/ResetPassword';
-import Dashboard from './pages/Dashboard';
-import Language from './pages/Language';
-import OnBoarding from './pages/OnBoarding';
-import OnBoardingForm from './pages/OnBoardingForm';
-import Namespaces from './pages/I18n/Namespaces';
-import Keys from './pages/I18n/Keys';
-import KeyForm from './pages/I18n/KeyForm';
-import NewsList from './pages/NewsList';
-import NewsForm from './pages/NewsForm';
-import NewsGallery from './pages/NewsGallery';
-import NewsDetail from './pages/NewsDetail';
-import GamblerList from './pages/GamblerList';
-import GamblerDetail from './pages/GamblerDetail';
-import PostList from './pages/PostList';
-import PostForm from './pages/PostForm';
-import MediaList from './pages/MediaList';
-import NotificationsPage from './pages/Notifications/NotificationsPage';
-import AchievementList from './pages/Achievement/AchievementList';
-import AchievementForm from './pages/Achievement/AchievementForm';
-import UserAchievements from './pages/Achievement/UserAchievements';
-import Profile from './pages/Profile';
-import UserProfileView from './pages/UserProfileView';
-import DataDeletionRequests from './pages/DataDeletionRequests';
-import ChatPage from './pages/Chat/ChatPage';
-import PaymentPlatformList from './pages/PaymentPlatformList';
-import PaymentPlatformForm from './pages/PaymentPlatformForm';
-import DonationList from './pages/Donation/DonationList';
-import DonationForm from './pages/Donation/DonationForm';
-import DonationLeaderboard from './pages/Donation/DonationLeaderboard';
-import FormList from './pages/Form/FormList';
-import FormCategoryList from './pages/Form/FormCategoryList';
-import FormForm from './pages/Form/FormForm';
-import FormQuestions from './pages/Form/FormQuestions';
-import FormResponseList from './pages/Form/FormResponseList';
-import FormResponseDetail from './pages/Form/FormResponseDetail';
-import FormResponseReport from './pages/Form/FormResponseReport';
-import CustomerFormList from './pages/CustomerForm/CustomerFormList';
-import CustomerFormProcess from './pages/CustomerForm/CustomerFormProcess';
-import CustomerFormResult from './pages/CustomerForm/CustomerFormResult';
-import DebtList from './pages/CustomerDebt/DebtList';
-import DebtForm from './pages/CustomerDebt/DebtForm';
-import DebtPolicy from './pages/CustomerDebt/DebtPolicy';
-import StrategyList from './pages/CustomerStrategy/StrategyList';
-import StrategyForm from './pages/CustomerStrategy/StrategyForm';
-import StrategyVoters from './pages/CustomerStrategy/StrategyVoters';
-import DopamineList from './pages/CustomerDopamine/DopamineList';
-import DopamineDetail from './pages/CustomerDopamine/DopamineDetail';
-import DopamineControl from './pages/CustomerDopamine/DopamineControl';
-import CustomerAssistance from './pages/CustomerAssistance/CustomerAssistance';
-import CustomerHelpSupport from './pages/HelpSupport/CustomerHelpSupport';
-import CustomerFAQ from './pages/HelpSupport/CustomerFAQ';
-import AdminFeedbackList from './pages/HelpSupport/AdminFeedbackList';
-import HealthAgentAdmin from './pages/HealthAgentAdmin/HealthAgentAdmin';
-import AdminDopamineList from './pages/AdminDopamine/AdminDopamineList';
-import AdminDopamineForm from './pages/AdminDopamine/AdminDopamineForm';
-import RelapseList from './pages/CustomerRelapse/RelapseList';
-import RelapseForm from './pages/CustomerRelapse/RelapseForm';
-import RelapseConclusion from './pages/CustomerRelapse/RelapseConclusion';
-import SubscriptionPage from './pages/SubscriptionPage';
 import MainLayout from './layouts/MainLayout';
 import { AuthProvider, useAuth } from './context/AuthContext';
 import { ChatProvider } from './context/ChatContext';
@@ -72,6 +8,79 @@ import { HealthAgentRealtimeProvider } from './context/HealthAgentRealtimeContex
 import { NotificationProvider } from './context/NotificationContext';
 import { DialogProvider } from './context/DialogContext';
 import { useTranslation } from 'react-i18next';
+
+
+// Cada pantalla se descarga cuando alguien la abre, no al entrar. Antes el navegador tenia que
+// traerse el editor de texto, el selector de emojis y las graficas para poder pintar el muro.
+const Signup = lazy(() => import('./pages/Signup'));
+const VerifyEmail = lazy(() => import('./pages/VerifyEmail'));
+const SocialAuthCallback = lazy(() => import('./pages/SocialAuthCallback'));
+const RecoveryPassword = lazy(() => import('./pages/RecoveryPassword'));
+const ResetPassword = lazy(() => import('./pages/ResetPassword'));
+const Dashboard = lazy(() => import('./pages/Dashboard'));
+const Language = lazy(() => import('./pages/Language'));
+const OnBoarding = lazy(() => import('./pages/OnBoarding'));
+const OnBoardingForm = lazy(() => import('./pages/OnBoardingForm'));
+const Namespaces = lazy(() => import('./pages/I18n/Namespaces'));
+const Keys = lazy(() => import('./pages/I18n/Keys'));
+const KeyForm = lazy(() => import('./pages/I18n/KeyForm'));
+const NewsList = lazy(() => import('./pages/NewsList'));
+const NewsForm = lazy(() => import('./pages/NewsForm'));
+const NewsGallery = lazy(() => import('./pages/NewsGallery'));
+const NewsDetail = lazy(() => import('./pages/NewsDetail'));
+const GamblerList = lazy(() => import('./pages/GamblerList'));
+const GamblerDetail = lazy(() => import('./pages/GamblerDetail'));
+const PostList = lazy(() => import('./pages/PostList'));
+const PostForm = lazy(() => import('./pages/PostForm'));
+const MediaList = lazy(() => import('./pages/MediaList'));
+const PostModerationList = lazy(() => import('./pages/PostModeration/PostModerationList'));
+const NotificationsPage = lazy(() => import('./pages/Notifications/NotificationsPage'));
+const AchievementList = lazy(() => import('./pages/Achievement/AchievementList'));
+const AchievementForm = lazy(() => import('./pages/Achievement/AchievementForm'));
+const UserAchievements = lazy(() => import('./pages/Achievement/UserAchievements'));
+const Profile = lazy(() => import('./pages/Profile'));
+const UserProfileView = lazy(() => import('./pages/UserProfileView'));
+const DataDeletionRequests = lazy(() => import('./pages/DataDeletionRequests'));
+const ChatPage = lazy(() => import('./pages/Chat/ChatPage'));
+const PaymentPlatformList = lazy(() => import('./pages/PaymentPlatformList'));
+const PaymentPlatformForm = lazy(() => import('./pages/PaymentPlatformForm'));
+const DonationList = lazy(() => import('./pages/Donation/DonationList'));
+const DonationForm = lazy(() => import('./pages/Donation/DonationForm'));
+const DonationLeaderboard = lazy(() => import('./pages/Donation/DonationLeaderboard'));
+const FormList = lazy(() => import('./pages/Form/FormList'));
+const FormCategoryList = lazy(() => import('./pages/Form/FormCategoryList'));
+const FormForm = lazy(() => import('./pages/Form/FormForm'));
+const FormQuestions = lazy(() => import('./pages/Form/FormQuestions'));
+const FormResponseList = lazy(() => import('./pages/Form/FormResponseList'));
+const FormResponseDetail = lazy(() => import('./pages/Form/FormResponseDetail'));
+const FormResponseReport = lazy(() => import('./pages/Form/FormResponseReport'));
+const CustomerFormList = lazy(() => import('./pages/CustomerForm/CustomerFormList'));
+const CustomerFormProcess = lazy(() => import('./pages/CustomerForm/CustomerFormProcess'));
+const CustomerFormResult = lazy(() => import('./pages/CustomerForm/CustomerFormResult'));
+const DebtList = lazy(() => import('./pages/CustomerDebt/DebtList'));
+const DebtForm = lazy(() => import('./pages/CustomerDebt/DebtForm'));
+const DebtPolicy = lazy(() => import('./pages/CustomerDebt/DebtPolicy'));
+const StrategyList = lazy(() => import('./pages/CustomerStrategy/StrategyList'));
+const StrategyForm = lazy(() => import('./pages/CustomerStrategy/StrategyForm'));
+const StrategyVoters = lazy(() => import('./pages/CustomerStrategy/StrategyVoters'));
+const DopamineList = lazy(() => import('./pages/CustomerDopamine/DopamineList'));
+const DopamineDetail = lazy(() => import('./pages/CustomerDopamine/DopamineDetail'));
+const DopamineControl = lazy(() => import('./pages/CustomerDopamine/DopamineControl'));
+const CustomerAssistance = lazy(() => import('./pages/CustomerAssistance/CustomerAssistance'));
+const CustomerHelpSupport = lazy(() => import('./pages/HelpSupport/CustomerHelpSupport'));
+const CustomerFAQ = lazy(() => import('./pages/HelpSupport/CustomerFAQ'));
+const AdminFeedbackList = lazy(() => import('./pages/HelpSupport/AdminFeedbackList'));
+const HealthAgentAdmin = lazy(() => import('./pages/HealthAgentAdmin/HealthAgentAdmin'));
+const AdminDopamineList = lazy(() => import('./pages/AdminDopamine/AdminDopamineList'));
+const AdminDopamineForm = lazy(() => import('./pages/AdminDopamine/AdminDopamineForm'));
+const RelapseList = lazy(() => import('./pages/CustomerRelapse/RelapseList'));
+const RelapseForm = lazy(() => import('./pages/CustomerRelapse/RelapseForm'));
+const RelapseConclusion = lazy(() => import('./pages/CustomerRelapse/RelapseConclusion'));
+const SubscriptionPage = lazy(() => import('./pages/SubscriptionPage'));
+
+const CargandoPantalla = () => (
+  <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '100vh', color: 'var(--text-muted)' }} />
+);
 
 const ProtectedRoute = ({ children }) => {
   const { t } = useTranslation();
@@ -116,6 +125,7 @@ function App() {
           <ChatProvider>
             <HealthAgentRealtimeProvider>
             <Router>
+              <Suspense fallback={<CargandoPantalla />}>
               <Routes>
               <Route path="/login" element={<Login />} />
               <Route path="/signup" element={<Signup />} />
@@ -160,6 +170,7 @@ function App() {
                 <Route path="posts/edit/:id" element={<PostForm />} />
 
                 <Route path="media" element={<AdminRoute><MediaList /></AdminRoute>} />
+                <Route path="post-moderation" element={<AdminRoute><PostModerationList /></AdminRoute>} />
                 <Route path="profile" element={<Profile />} />
                 <Route path="user/:userId" element={<UserProfileView />} />
                 <Route path="chat" element={<ChatPage />} />
@@ -231,6 +242,7 @@ function App() {
 
               </Route>
               </Routes>
+              </Suspense>
             </Router>
             </HealthAgentRealtimeProvider>
           </ChatProvider>

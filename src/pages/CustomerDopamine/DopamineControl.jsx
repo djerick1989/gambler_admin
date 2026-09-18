@@ -507,7 +507,14 @@ const DopamineControl = () => {
         return addictions.find(item => getEntityId(item, ['addictionId']) === addictionId) || normalizedAddiction;
     };
 
-    const loadFlowIntoWizard = (flowItem, readOnly = false) => {
+    /**
+     * Carga un flujo existente en el asistente.
+     *
+     * `startStep` decide dónde se abre: desde "Ver flujo" se empieza por el principio para poder
+     * recorrerlo, pero al marcar una adicción que ya tiene flujo hay que avanzar, igual que ocurre
+     * al crear uno nuevo. Quedarse en la misma pantalla parece que el clic no hizo nada.
+     */
+    const loadFlowIntoWizard = (flowItem, readOnly = false, startStep = 0) => {
         const flowCommitment = flowItem?.commitment || {};
         const flowIsCompleted = isFlowCompleted(flowItem);
         setSelectedAddiction(getAddictionForFlow(flowItem));
@@ -526,7 +533,7 @@ const DopamineControl = () => {
         setReadOnlyFlow(readOnly || flowIsCompleted);
         setShowNewFlow(true);
         setMaxStepReached(3);
-        setStep(0);
+        setStep(startStep);
         window.scrollTo({ top: 0, behavior: 'smooth' });
     };
 
@@ -578,9 +585,12 @@ const DopamineControl = () => {
     const handleAddictionSelect = async (addiction) => {
         if (saving) return;
         const nextAddictionId = getEntityId(addiction, ['addictionId']);
+        // Ya hay un flujo para esta adicción: se retoma donde estaba, en lectura si ya se firmó y
+        // editable si sigue en proceso. Avanza igual que un flujo nuevo, para que marcar la casilla
+        // tenga siempre el mismo efecto visible.
         const existingFlow = flowHistory.find(item => getFlowAddictionId(item) === nextAddictionId);
         if (existingFlow) {
-            loadFlowIntoWizard(existingFlow, isFlowCompleted(existingFlow));
+            loadFlowIntoWizard(existingFlow, isFlowCompleted(existingFlow), 1);
             return;
         }
 
@@ -825,6 +835,16 @@ const DopamineControl = () => {
                                 })}
                             </div>
                             {saving && <p className="dopamine-step-hint">{t('common.loading')}</p>}
+
+                            {/* En lectura las casillas están deshabilitadas, así que este paso se
+                                quedaba sin salida: no se puede marcar nada para avanzar. */}
+                            {readOnlyFlow && selectedAddiction && (
+                                <div style={{ marginTop: '1.5rem' }}>
+                                    <button className="dopamine-primary-action" onClick={() => advanceToStep(1)}>
+                                        {t('common.next', 'Siguiente')}
+                                    </button>
+                                </div>
+                            )}
                         </>
                     )}
 
@@ -940,9 +960,19 @@ const DopamineControl = () => {
                                     <p>{t('dopamine.process_intro')}</p>
                                     <ol>
                                         <li>{t('dopamine.process_notifications')}</li>
-                                        <li>{t('dopamine.process_report')}</li>
+                                        <li>
+                                            {t('dopamine.process_report')}
+                                            {/* El plazo aclara los dos puntos de arriba, así que va con ellos y no
+                                                pegado al botón: lo último que alguien lee antes de comprometerse a
+                                                dejar de jugar no debería ser una nota sobre tiempos de respuesta.
+                                                A quien ya está suscrito no se le enseña: es un límite que no le toca. */}
+                                            {!isSubscribed && (
+                                                <span className="dopamine-response-time">
+                                                    {t('dopamine.response_time_note')}
+                                                </span>
+                                            )}
+                                        </li>
                                     </ol>
-                                    <p>{t('dopamine.subscription_note')}</p>
                                 </div>
                                 <button className="dopamine-primary-action" disabled={!readOnlyFlow && (saving || selectedGameIds.length === 0 || !motivation.trim())} onClick={handleReflectionNext}>
                                     {saving ? t('common.loading') : readOnlyFlow ? t('common.next', 'Siguiente') : t('dopamine.make_commitment')}

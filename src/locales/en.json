@@ -87,7 +87,42 @@
             "content": "Content",
             "media": "Gallery",
             "empty_error": "Please provide at least some text or an image/video"
-        }
+        },
+        "embed_title": "embedded content",
+        "embed_open_in": "View on {{platform}}",
+        "embed_preview": "This is how the {{platform}} content will look",
+        "embed_unsupported": "Only content from {{platforms}} is embedded. Other links are published as text.",
+        "report": {
+            "action": "Report post",
+            "title": "Report post",
+            "subtitle": "Tell us what is wrong with it. An administrator reviews it; the author is not told who reported it.",
+            "comment_label": "Details (optional)",
+            "comment_placeholder": "Add context that helps us understand the report.",
+            "privacy_note": "Your report is confidential. If several people report the same post, it stops being publicly visible while it is reviewed.",
+            "submit": "Send report",
+            "success": "Thanks. We got your report and will review it.",
+            "already_reported": "You had already reported this post.",
+            "error": "The report could not be sent. Please try again.",
+            "under_review_notice": "This post is under review after community reports. For now only you and the administrators can see it.",
+            "reasons": {
+                "sexual_content": "Sexual content",
+                "violence": "Violence",
+                "harassment": "Harassment or hate",
+                "gambling_promotion": "Promotes betting or casinos",
+                "self_harm": "Self-harm or suicide",
+                "spam": "Spam or scam",
+                "other": "Something else against the policy"
+            }
+        },
+        "embed_short_link_title": "This {{platform}} post could not be shown here",
+        "embed_short_link_help": "The link you pasted is a short link and {{platform}} does not allow embedding it. Open the post and copy the link from the address bar so it shows inside the app.",
+        "mini_player_hint": "The video keeps playing in the corner.",
+        "mini_player_back": "Back to the video",
+        "mini_player_close": "Close the player",
+        "loading_more": "Loading more posts...",
+        "load_more_error": "We could not load more posts.",
+        "end_of_feed": "You have reached the end.",
+        "discard_confirm": "Discard this post? Everything you wrote will be lost."
     },
     "login": {
         "title": "Sign in to Ludopata",
@@ -96,7 +131,6 @@
         "landing_title": "Take back control of your money.",
         "landing_subtitle": "Turn adrenaline into concrete actions: track debts, recognize urges, get support, and measure each step forward.",
         "landing_cta": "Create my free account",
-        "landing_login_cta": "I already have an account",
         "landing_proof": "Start today for free. Your first goal: organize what you lost and protect what you still have.",
         "impact_label": "Program indicators",
         "impact_1_value": "24/7",
@@ -158,8 +192,8 @@
                 "description": "Use assistance and community when risk feels close."
             }
         },
-        "email_user": "Email / Username",
-        "email_placeholder": "Enter your email or username",
+        "email_user": "Email",
+        "email_placeholder": "Enter your email",
         "password": "Password",
         "password_placeholder": "••••••••",
         "button": "Sign In",
@@ -196,7 +230,7 @@
                 "description": "Use initial assistance and connect with the community from day one."
             }
         },
-        "privacy_note": "Start for free. Upgrade to Premium when you need closer support.",
+        "privacy_note": "You can upgrade to Premium when you need closer support.",
         "form_hints_title": "Benefits included when you register",
         "form_hints": {
             "0": "No payment upfront",
@@ -236,8 +270,11 @@
             "email": "Please enter a valid email address."
         },
         "errors": {
+            "email_taken": "That email already has an account. Sign in or use another email.",
+            "nickname_taken": "That username is already taken. Please choose another.",
             "user_exists": "User already exists"
-        }
+        },
+        "landing_login_cta": "I already have an account"
     },
     "reset_password": {
         "title": "New Password",
@@ -510,6 +547,9 @@
         "title": "User Profile",
         "posts_by": "Posts by {{name}}",
         "no_bio": "This user hasn't added a biography yet.",
+        "not_found": "We could not find this profile.",
+        "post_count_one": "1 post",
+        "post_count_other": "{{count}} posts",
         "view_profile": "View Profile"
     },
     "chat": {
@@ -543,7 +583,12 @@
         "go_to_chat": "Go to chats",
         "pending_one": "1 pending message",
         "pending_many": "{{count}} pending messages",
-        "new_message": "New message received."
+        "new_message": "New message received.",
+        "alerts_section": "Alerts",
+        "debt_due_soon": "Your installment is due soon",
+        "debt_due_today": "Your installment is due today",
+        "debt_overdue": "Installment overdue with no payment recorded",
+        "debt_generic": "Review your debts"
     },
     "assistance": {
         "title": "Assistance",
@@ -604,17 +649,44 @@
             "index_title": "Help topics",
             "sections": [
                 {
-                    "id": "gambling-addiction",
+                    "id": "urgencia",
+                    "icon": "🚨",
+                    "title": "If you need help right now",
+                    "questions": [
+                        {
+                            "number": 1,
+                            "question": "I feel like I am about to gamble right now. What should I do?",
+                            "answer": [
+                                "Step away from your phone, your computer, or the place where you usually gamble, and tell someone you trust.",
+                                "Open the “Assistance” section and write what you are feeling: it walks you through it step by step to bring the urge down.",
+                                "Review your saved strategies and the commitment you signed: they are there for exactly this moment.",
+                                "If the urge is very strong, call a family member, a friend, or your local emergency services."
+                            ]
+                        },
+                        {
+                            "number": 2,
+                            "question": "What should I do if I have thoughts of hurting myself?",
+                            "answer": "That matters more than any result or record inside the app. If you feel you are in danger right now, contact your local emergency services or someone you trust immediately. The application is not an emergency service and does not replace crisis care. Inside the app you can write in the “Assistance” section, and if you have a Premium plan you can ask for a human agent from our team to step in."
+                        },
+                        {
+                            "number": 3,
+                            "question": "Can I talk to a real person instead of an automated assistant?",
+                            "answer": "The “Assistance” conversation always starts with a virtual assistant. From there, Premium users can tap “Talk to a human agent” so our team joins the conversation. This option is not available on the free plan: if you need to reach a person, write to us from “Help and Support”. Our team is not available 24 hours a day, so in an emergency always turn to your local emergency services first."
+                        }
+                    ]
+                },
+                {
+                    "id": "ludopatia",
                     "icon": "🧠",
                     "title": "About gambling addiction",
                     "questions": [
                         {
-                            "number": 1,
+                            "number": 4,
                             "question": "What is gambling addiction?",
                             "answer": "Gambling addiction is an impulse control disorder where a person cannot resist the need to gamble, even when it negatively affects their personal, work, family, or financial life."
                         },
                         {
-                            "number": 2,
+                            "number": 5,
                             "question": "What are the most common signs that I have a gambling problem?",
                             "answer": [
                                 "Betting more money than you can afford to lose.",
@@ -625,105 +697,303 @@
                             ]
                         },
                         {
-                            "number": 3,
+                            "number": 6,
                             "question": "Can gambling addiction be cured?",
                             "answer": "Gambling addiction is a disorder that can be controlled with professional help, personal commitment, and the right support. Many people are able to stop gambling and live a full life."
                         },
                         {
-                            "number": 4,
+                            "number": 7,
                             "question": "What should I do if a family member or friend has gambling addiction?",
                             "answer": "The best approach is to support them without judgment, encourage them to seek help, and avoid lending them money to gamble. You can also guide them to use the application or contact a specialist."
                         }
                     ]
                 },
                 {
-                    "id": "application",
+                    "id": "aplicacion",
                     "icon": "📱",
                     "title": "About the application",
                     "questions": [
                         {
-                            "number": 5,
+                            "number": 8,
                             "question": "Does the application replace professional help?",
-                            "answer": "No. The app is a support, reflection, and accompaniment tool, but it does not replace psychological or medical therapy. We always recommend reaching out to health professionals."
+                            "answer": "No. The app is a support, reflection, and accompaniment tool, but it does not replace psychological therapy or medical treatment. It is not an emergency service either. We always recommend reaching out to health professionals."
                         },
                         {
-                            "number": 6,
-                            "question": "What resources will I find inside the app?",
+                            "number": 9,
+                            "question": "What will I find inside the app?",
                             "answer": [
-                                "Self-assessment tools.",
-                                "Practical tips to reduce relapses.",
-                                "Motivation and wellness exercises.",
-                                "Strategies that have helped others stop gambling.",
-                                "A community where you can find stories and experiences from people who have also faced gambling addiction.",
-                                "Support line and specialist contacts."
+                                "Self-assessment forms with a results report.",
+                                "Conversational assistance for difficult moments, with human support available on the Premium plan.",
+                                "A relapse log with a conclusion and advice to get back on track.",
+                                "A personal commitment you sign within the dopamine control module, with follow-up on your process.",
+                                "Your own strategies and those shared by the community to stop gambling.",
+                                "Debt tracking: creditors, installments, payments, and outstanding balance.",
+                                "A community where you can share your experience, comment, and chat with other people.",
+                                "Achievements that recognize your progress and participation."
                             ]
                         },
                         {
-                            "number": 7,
-                            "question": "What should I do if I have an emergency and feel like I am going to relapse?",
-                            "answer": "The app includes an “assistance” section with immediate advice, support contacts, and reminders of your goals. We also recommend calling a family member or a help line."
+                            "number": 10,
+                            "question": "How does the Assistance section work? Am I talking to an artificial intelligence?",
+                            "answer": "Yes, assistance runs on a virtual assistant powered by artificial intelligence, designed to accompany you and help you make sense of what you are going through. It is not a health professional and it does not provide diagnoses. On the Premium plan you can ask for a human agent from our team to join the conversation; in that case, that person reads the history of that conversation in order to help you."
                         },
                         {
-                            "number": 8,
+                            "number": 11,
                             "question": "Can I use the application if I do not have gambling addiction?",
                             "answer": "Yes. The app is also useful if you want to learn about gambling addiction, support a loved one, or prevent risky behavior."
                         },
                         {
-                            "number": 9,
-                            "question": "What happens if I relapse?",
-                            "answer": "A relapse does not mean failure. It is part of the recovery process. The app will allow you to record the experience, reflect on it, and receive guidance to get back on track."
-                        }
-                    ]
-                },
-                {
-                    "id": "privacy",
-                    "icon": "🔒",
-                    "title": "About privacy and security",
-                    "questions": [
-                        {
-                            "number": 10,
-                            "question": "Will my personal data be safe?",
-                            "answer": "Yes. The application protects your information with security systems and does not share your data with third parties without your consent."
-                        },
-                        {
-                            "number": 11,
-                            "question": "Does the app track my location or movements?",
-                            "answer": "No, unless you authorize it for specific features, such as locating nearby help groups. Privacy is always a priority."
-                        },
-                        {
                             "number": 12,
-                            "question": "Who can see my information inside the app?",
-                            "answer": "Only you can see your evaluation, commitment, and chat information. If you decide to share stories or strategies with the community, other users will be able to see that information."
-                        }
-                    ]
-                },
-                {
-                    "id": "costs-support",
-                    "icon": "💰",
-                    "title": "About costs and support",
-                    "questions": [
+                            "question": "What happens if I relapse?",
+                            "answer": "A relapse does not mean failure: it is part of the recovery process. The app lets you record what happened (date, amount, emotion, and trigger), reflect on it, and receive a conclusion with advice to get back on track."
+                        },
                         {
                             "number": 13,
-                            "question": "Is the application free?",
-                            "answer": [
-                                "The app has a free version with basic resources.",
-                                "There is also a premium version with additional tracking and support tools."
-                            ]
+                            "question": "What languages is the app available in, and how do I change the language?",
+                            "answer": "The application is available in Spanish and English. You can change the language from your profile or from the language selector; the change applies to the whole app, including these frequently asked questions."
                         },
                         {
                             "number": 14,
-                            "question": "How can I access the premium version?",
-                            "answer": "You can subscribe from the app using a credit card, debit card, or secure digital wallet."
-                        },
+                            "question": "Will the app send me notifications?",
+                            "answer": "Yes. You will receive notifications about new messages in your chats, achievements you unlock, and reminders related to your process, such as due dates for the debts you have recorded. You can review them in the Notification Center."
+                        }
+                    ]
+                },
+                {
+                    "id": "cuenta",
+                    "icon": "👤",
+                    "title": "Account and access",
+                    "questions": [
                         {
                             "number": 15,
-                            "question": "What should I do if I have a technical problem with the application?",
-                            "answer": "In the “Help and Support” section you will find a contact form or email to report errors and receive assistance."
+                            "question": "How do I create my account?",
+                            "answer": "You can sign up with your email address and a password, or sign in directly with your Google or Facebook account. If you sign up with email, we will send you a 6-digit code to verify your address before you can use the app."
                         },
                         {
                             "number": 16,
-                            "question": "Where can I find more help outside the application?",
-                            "answer": "The app includes a directory of emergency numbers, local and international support groups, and professionals specialized in gambling addiction."
+                            "question": "I am not receiving the verification code. What should I do?",
+                            "answer": "Check your junk or spam folder and make sure the address is spelled correctly. On the verification screen you can tap “Resend code” to get a new one. If it still does not arrive, write to us from “Help and Support” and tell us the email address you signed up with."
+                        },
+                        {
+                            "number": 17,
+                            "question": "I forgot my password. How do I recover it?",
+                            "answer": "On the sign-in screen, go to “Recover password” and enter your email: we will send you a code to create a new password. If you signed in with Google or Facebook you do not have a password in our app, so you must sign in with that same button."
+                        },
+                        {
+                            "number": 18,
+                            "question": "Can I change my profile details?",
+                            "answer": "Yes. From “Profile” you can update your personal details, your photo, and your nickname, which is the name the rest of the community sees."
+                        },
+                        {
+                            "number": 19,
+                            "question": "How do I delete my account and my personal data?",
+                            "answer": "From “Profile”, in the danger zone, you can submit a data deletion request. Our team reviews it and confirms the outcome; if for some reason it cannot be applied, you will receive the reason. Deletion is permanent: your records, assessments, posts, and conversations are lost and cannot be recovered. If you have an active subscription, cancel it first so it does not renew."
+                        }
+                    ]
+                },
+                {
+                    "id": "suscripcion",
+                    "icon": "💳",
+                    "title": "Subscription and payments",
+                    "questions": [
+                        {
+                            "number": 20,
+                            "question": "Is the application free?",
+                            "answer": "Yes, you can use the app on a free plan. There is also a Premium plan with full access to every tracking and support tool."
+                        },
+                        {
+                            "number": 21,
+                            "question": "What exactly does the free plan include?",
+                            "answer": [
+                                "Up to 10 community posts.",
+                                "One conversation with assistance, with a maximum of 5 messages from you.",
+                                "One signed commitment within the dopamine control module.",
+                                "One relapse record.",
+                                "Reading and voting on community strategies, without being able to create your own.",
+                                "Self-assessment forms and human agent assistance are reserved for the Premium plan."
+                            ]
+                        },
+                        {
+                            "number": 22,
+                            "question": "What do I get with the Premium plan?",
+                            "answer": [
+                                "Posts, assistance conversations, commitments, and relapse records without the free plan limits.",
+                                "Assistance with support from a human agent on our team.",
+                                "Access to the self-assessment forms and their reports.",
+                                "The ability to create your own strategies.",
+                                "Priority in support and in the follow-up of your case."
+                            ]
+                        },
+                        {
+                            "number": 23,
+                            "question": "Is there a free trial?",
+                            "answer": "Yes. The first time you subscribe you get a 7-day free trial of the Premium plan, and you can cancel during that period if you decide not to continue."
+                        },
+                        {
+                            "number": 24,
+                            "question": "What plans are available and how can I pay?",
+                            "answer": "You can choose a monthly, quarterly, semiannual, or annual plan; longer plans are discounted against the monthly price. Payments are processed through Stripe, our payment gateway, and you can use a credit card, a debit card, or supported digital wallets. We do not store your card details."
+                        },
+                        {
+                            "number": 25,
+                            "question": "How do I cancel my subscription?",
+                            "answer": "From the subscription section you can cancel automatic renewal at any time. You do not lose access immediately: you keep Premium features until the expiry date of the period you already paid for, and after that your account returns to the free plan."
+                        },
+                        {
+                            "number": 26,
+                            "question": "If I go back to the free plan, do I lose what I recorded?",
+                            "answer": "No. Your information (relapses, debts, commitments, posts, and strategies) stays in your account. What applies again are the free plan limits for creating new content and access to Premium-only features."
+                        },
+                        {
+                            "number": 27,
+                            "question": "I have a problem with a charge, or I want to request a refund",
+                            "answer": "Write to us from “Help and Support” with the date of the charge and the plan you purchased, and we will review your case together with our payment gateway. If what you want is to avoid the next charge, simply cancel automatic renewal from the subscription section."
+                        }
+                    ]
+                },
+                {
+                    "id": "comunidad",
+                    "icon": "💬",
+                    "title": "Community, posts, and chats",
+                    "questions": [
+                        {
+                            "number": 28,
+                            "question": "Who sees what I post in the community?",
+                            "answer": "Everything you post in the community is visible to other people using the app, along with your nickname and profile photo. Do not post details you would not want to share, such as your address, your phone number, or your account information."
+                        },
+                        {
+                            "number": 29,
+                            "question": "Can I participate anonymously?",
+                            "answer": "Your posts always appear with your profile nickname and photo, not anonymously. If you prefer not to be identifiable, choose a nickname that is not your real name and a photo that does not expose you."
+                        },
+                        {
+                            "number": 30,
+                            "question": "What content is not allowed?",
+                            "answer": [
+                                "Promoting betting, casinos, or any gambling platform.",
+                                "Sexual content.",
+                                "Violence.",
+                                "Harassment, insults, or hate speech.",
+                                "Content that encourages self-harm or suicide.",
+                                "Spam, scams, or attempts to sell products and services."
+                            ]
+                        },
+                        {
+                            "number": 31,
+                            "question": "How do I report a post?",
+                            "answer": "In the post menu, choose “Report post”, select the reason, and add details if you want. Your report is confidential: the person who posted is not told who reported them. When five different people report the same post, it stops being publicly visible while the administration reviews it."
+                        },
+                        {
+                            "number": 32,
+                            "question": "Someone reported my post. What happens now?",
+                            "answer": "While it is under review, only you and the administration can see the post. After the review, it is either restored and becomes public again, or permanently removed if it breaks the community rules. If an account accumulates several removed posts, it may be shut down."
+                        },
+                        {
+                            "number": 33,
+                            "question": "Can I chat with other people?",
+                            "answer": "Yes. You can start one-to-one conversations with other users or create group chats. Keep in mind that everyone taking part in a chat can read everything you write there."
+                        }
+                    ]
+                },
+                {
+                    "id": "herramientas",
+                    "icon": "🧰",
+                    "title": "Tracking tools",
+                    "questions": [
+                        {
+                            "number": 34,
+                            "question": "What is the debt tracker for?",
+                            "answer": "It keeps your creditors, amounts, interest, installments, and payments in one place, so you can see how much you still owe and when your next payment is due. The application is not a financial institution: it does not charge, lend, or process real payments; it only organizes the information you enter, so its accuracy depends on the data you record."
+                        },
+                        {
+                            "number": 35,
+                            "question": "What is the dopamine control commitment?",
+                            "answer": "It is a personal statement where you identify the games that affect you, your reasons for quitting, and the actions you will take, and that you sign inside the app. It is a commitment to yourself, with motivational and follow-up value; it is not a legally binding document."
+                        },
+                        {
+                            "number": 36,
+                            "question": "Why should I record my relapses?",
+                            "answer": "Recording a relapse helps you spot patterns: when it happened, how much money was involved, and which emotion and trigger were behind it. With that information you receive a conclusion with recommendations and, over time, you can see your own progress."
+                        },
+                        {
+                            "number": 37,
+                            "question": "What are strategies and who can see them?",
+                            "answer": "They are concrete resources that help you avoid gambling. When you create a strategy you choose whether to share it with the whole community or keep it private; private ones are visible only to you. You can also vote on other people’s strategies to highlight the most useful ones."
+                        },
+                        {
+                            "number": 38,
+                            "question": "What are achievements?",
+                            "answer": "They are recognitions you unlock as you progress and take part in the community. You will get a notification when you earn a new one, and you can see them all in the “My Achievements” section."
+                        },
+                        {
+                            "number": 39,
+                            "question": "What are donations?",
+                            "answer": "They are voluntary contributions you can make to sustain the community and fund the subscription prizes raffled among users. They are entirely optional: they do not affect your access to the app or your recovery process."
+                        }
+                    ]
+                },
+                {
+                    "id": "privacidad",
+                    "icon": "🔒",
+                    "title": "Privacy and security",
+                    "questions": [
+                        {
+                            "number": 40,
+                            "question": "Is my personal data safe?",
+                            "answer": "Yes. Your information is transmitted and stored securely, and access is restricted to authorized staff who need to review it in order to provide the service. We never sell your data, and we never share it with betting companies, advertisers, or insurers."
+                        },
+                        {
+                            "number": 41,
+                            "question": "Who can see my information inside the app?",
+                            "answer": [
+                                "Only you can see your debts, your relapses, your commitments, your private strategies, and your form results.",
+                                "Your posts, comments, and public strategies are visible to the rest of the community.",
+                                "Chat messages are visible to the people taking part in that conversation.",
+                                "Assistance conversations are processed by our virtual assistant; if you request human support, the agent from our team handling your case reads that conversation.",
+                                "The administration can review reported posts, messages sent to support, and data deletion requests."
+                            ]
+                        },
+                        {
+                            "number": 42,
+                            "question": "Do you share my data with third parties?",
+                            "answer": "We do not sell your information and we do not share it for advertising purposes. We do work with providers that make the service possible and that process data on our behalf: Stripe handles subscription payments, and an artificial intelligence provider processes assistance conversations. These providers may only use that data to deliver that service to us."
+                        },
+                        {
+                            "number": 43,
+                            "question": "Does the app track my location?",
+                            "answer": "No. The application does not access your location or track your movements."
+                        },
+                        {
+                            "number": 44,
+                            "question": "I share my phone with someone else. How do I protect my information?",
+                            "answer": "Sign out when you finish using the app, protect the device with a passcode or your fingerprint, and do not save your password in a shared browser. Keep in mind that anyone with access to your open session can see your personal records."
+                        }
+                    ]
+                },
+                {
+                    "id": "soporte",
+                    "icon": "🆘",
+                    "title": "Support and external help",
+                    "questions": [
+                        {
+                            "number": 45,
+                            "question": "What should I do if I have a technical problem or a suggestion?",
+                            "answer": "Go to “Help and Support” and use the form to describe what happened: a technical failure, a problem with your account or subscription, or a suggestion to improve the app. Our team reviews every message and contacts you at your account email address."
+                        },
+                        {
+                            "number": 46,
+                            "question": "How long does it take to get a reply?",
+                            "answer": "We review every message in the order it arrives, prioritizing Premium users and urgent cases. We are not available 24 hours a day, so if it is an emergency, turn to your local emergency services or to someone you trust."
+                        },
+                        {
+                            "number": 47,
+                            "question": "Where can I find professional help outside the application?",
+                            "answer": "We recommend talking to your primary care doctor or a psychologist specialized in addictions, and looking up your country’s public mental health services and gambling support groups, such as Gamblers Anonymous, which exist in many cities and also online. In a situation of immediate risk, contact your local emergency services."
+                        },
+                        {
+                            "number": 48,
+                            "question": "Where can I read the terms of use and the privacy policy?",
+                            "answer": "You can review them at any time from the legal information section of the app. If you have questions about how we handle your information or want to exercise your rights over your data, write to us from “Help and Support”."
                         }
                     ]
                 }
@@ -1117,7 +1387,13 @@
         "opening_checkout": "Opening checkout",
         "plan_change_confirm": "You will be charged ${{price}} now for the {{plan}} plan and your estimated new expiration date will be {{expiry}}. Do you want to continue?",
         "plan_change_success": "Your plan was updated successfully.",
-        "plan_change_error": "The plan change could not be started."
+        "plan_change_error": "The plan change could not be started.",
+        "eyebrow": "Full access",
+        "recommended": "Recommended",
+        "per_month_equivalent": "Works out to ${{price}} per month",
+        "save_percent": "Save {{percent}}%",
+        "subscribe_for": "Subscribe for ${{price}}",
+        "secure_payment": "Secure payment"
     },
     "debts": {
         "title": "Debts",
@@ -1160,7 +1436,51 @@
         "currency": "Currency",
         "status": "Status",
         "yes": "Yes",
-        "no": "No"
+        "no": "No",
+        "warning_never_paid": "With this installment, this debt never gets paid off",
+        "warning_never_paid_detail": "Interest alone adds {{interest}} every month, so the installment does not cover it and the balance grows even if you pay on time. You need an installment above that amount to start reducing the debt.",
+        "projection_title": "This is your plan",
+        "projection_detail": "You finish paying in {{months}} months, in {{date}}, having paid {{interest}} in interest.",
+        "projection_incomplete": "Enter the monthly installment to see how long it takes to pay off.",
+        "strategy_label": "Attack order",
+        "strategy_snowball": "Snowball",
+        "strategy_avalanche": "Avalanche",
+        "strategy_due_date": "Next due date",
+        "strategy_hint_snowball": "Smallest debt first. It takes a little longer, but you cross one off the list sooner and that helps you keep going.",
+        "strategy_hint_avalanche": "Highest interest first. This is what costs you the least money overall.",
+        "strategy_hint_due_date": "Sorted by the closest payment date.",
+        "strategy_saving": "Avalanche would save you {{amount}} in interest.",
+        "payoff_never": "At the current installment, this debt is not going down",
+        "payoff_months": "{{months}} months left",
+        "paid_of_total": "{{paid}} of {{total}}",
+        "frequency": "Payment frequency",
+        "frequency_monthly": "Monthly",
+        "frequency_biweekly": "Biweekly",
+        "frequency_weekly": "Weekly",
+        "frequency_daily": "Daily",
+        "frequency_hint_non_monthly": "Cycles are counted from the loan date.",
+        "ledger_title": "Movements",
+        "ledger_subtitle": "Where your balance comes from, movement by movement.",
+        "movement_disbursement": "Debt created",
+        "movement_interest": "Cycle interest",
+        "movement_payment": "Payment",
+        "movement_fee": "Fee",
+        "movement_adjustment": "Adjustment",
+        "extra_payment_impact": "This payment brings you {{months}} months closer and saves you {{interest}} in interest.",
+        "dti_label": "Of your income goes to debt",
+        "dti_ok": "You have {{remaining}} left each month after paying the installments.",
+        "dti_warning": "It is tight: {{remaining}} left each month. Best not to take on more debt.",
+        "dti_critical": "This is not sustainable: only {{remaining}} left each month. Get help to renegotiate.",
+        "income_prompt_title": "How much do you earn each month?",
+        "income_prompt_text": "With that we can tell you what share of your income goes to debt. It is optional and only you see it.",
+        "income_placeholder": "Monthly income",
+        "income_save": "Save",
+        "income_change": "Change",
+        "gambling_impact_title": "The last {{months}} months",
+        "gambling_impact_text": "You lost {{gambled}} gambling across {{relapses}} relapses. In the same period your debt grew {{growth}} in interest alone.",
+        "compliance_streak": "{{count}} cycles on track",
+        "compliance_overdue": "Installment pending",
+        "export": "Export"
     },
     "strategies": {
         "title": "Strategies",
@@ -1184,7 +1504,25 @@
         "voters_title": "People who reacted",
         "voters_count": "total interactions",
         "likes": "LIKES",
-        "dislikes": "DISLIKES"
+        "dislikes": "DISLIKES",
+        "empty_popular": "No strategies have been shared by the community yet.",
+        "saved_tab": "SAVED",
+        "saved_short": "Saved",
+        "save_action": "Save",
+        "unsave_action": "Remove from saved",
+        "saved": "Saved to your strategies",
+        "unsaved": "Removed from your strategies",
+        "save_error": "The strategy could not be saved",
+        "search_placeholder": "Search the strategies",
+        "vote_up": "It worked for me",
+        "vote_down": "It did not work for me",
+        "vote_remove": "Remove my vote",
+        "empty_saved": "You have not saved any strategy yet. Save the ones you want close at hand.",
+        "search_empty": "No strategies match your search.",
+        "confirm_vote_up": "Mark that this strategy worked for you? Your nickname will appear among those who voted.",
+        "confirm_vote_down": "Mark that this strategy did not work for you? Your nickname will appear among those who voted.",
+        "confirm_change_to_up": "You had marked that it did not work. Change your vote to say it did work?",
+        "confirm_change_to_down": "You had marked that it worked. Change your vote to say it did not work?"
     },
     "dopamine": {
         "title": "Dopamine",
@@ -1243,7 +1581,6 @@
         "process_intro": "If you continue with the process,",
         "process_notifications": "We will send personalized notifications that help you leave your addiction.",
         "process_report": "We will study your case based on the information you provide and send you a report with solutions to improve your life.",
-        "subscription_note": "Subscribed users will be our priority. We will also handle all cases, although response times will be slower for free users.",
         "make_commitment": "Make Commitment",
         "commitment_text_intro": "I, <strong>{{name}}</strong>, recognize that casino gambling has created negative consequences in my life: financial, emotional, family, and personal.",
         "commitment_date_intro": "For this reason, I commit to stop playing in casinos starting on:",
@@ -1277,7 +1614,8 @@
         "delete_flow_confirm": "Do you want to delete this flow? Only incomplete flows can be deleted.",
         "flow_deleted_success": "Flow deleted successfully",
         "flow_delete_error": "The flow could not be deleted",
-        "flow_error": "The dopamine flow could not be updated"
+        "flow_error": "The dopamine flow could not be updated",
+        "response_time_note": " On the free plan the reply may take a little longer."
     },
     "dopamine_admin": {
         "title": "Dopamine Management",
@@ -1375,5 +1713,36 @@
         "SEK": "Swedish Krona",
         "NOK": "Norwegian Krone",
         "DKK": "Danish Krone"
+    },
+    "moderation": {
+        "menu": "Moderation",
+        "title": "Reported posts",
+        "subtitle": "Review community reports and decide on each post.",
+        "filter_under_review": "Under review",
+        "filter_all": "All reported",
+        "report_count": "{{count}} reports",
+        "author_reported_posts": "{{count}} reported posts from this person",
+        "media_count": "{{count}} attachments",
+        "comments_count": "See {{count}} comments from reporters",
+        "no_text": "No text, attachments only.",
+        "under_review_at": "Under review since",
+        "restore": "Restore",
+        "remove": "Take down",
+        "confirm_restore_title": "Restore post",
+        "confirm_restore": "It becomes public again and its reports are discarded. Continue?",
+        "confirm_remove_title": "Take down post",
+        "confirm_remove": "The post stops being available to everyone, including its author. Continue?",
+        "restored": "Post restored.",
+        "removed": "Post taken down.",
+        "decision_error": "The decision could not be applied.",
+        "load_error": "Reported posts could not be loaded.",
+        "empty_title": "Nothing to review",
+        "empty_subtitle": "There are no posts with pending reports.",
+        "footer_note": "A post goes under review automatically when 5 distinct people report it. The reported-post count per author helps decide whether to disable the account, which is done manually.",
+        "status": {
+            "published": "Public",
+            "under_review": "Under review",
+            "removed": "Taken down"
+        }
     }
 }

@@ -888,6 +888,13 @@
     list-style-position: outside;
 }
 
+/* El plazo de respuesta acompaña a la promesa, en un tono más bajo: es una aclaración, no una
+   advertencia, y no debe competir con el texto del compromiso. */
+.dopamine-response-time {
+    color: #6b7280;
+    font-size: 0.92rem;
+}
+
 .dopamine-commitment-text li {
     margin-bottom: 0.55rem;
     padding-left: 0.25rem;

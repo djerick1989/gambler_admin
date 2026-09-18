@@ -5,8 +5,43 @@ import { useChat } from '../../context/ChatContext';
 import { useAuth } from '../../context/AuthContext';
 import { chatService } from '../../services/api';
 import { useNotification } from '../../context/NotificationContext';
-import { MessageSquare, BellOff, ArrowRight, User, Award, CheckCheck } from 'lucide-react';
+import { MessageSquare, BellOff, ArrowRight, User, Award, CheckCheck, CalendarClock, AlertTriangle } from 'lucide-react';
 import { formatChatTimestamp } from '../../utils/dateUtils';
+
+// Cada tipo de notificacion decide su icono, su texto y a donde lleva. El backend solo manda el
+// tipo y el nombre de la entidad (el logro o el acreedor); el mensaje se arma aqui, traducido.
+const NOTIFICATION_PRESENTATION = {
+    ACHIEVEMENT: {
+        icon: Award,
+        titleKey: 'notifications.achievement_unlocked',
+        fallbackKey: 'notifications.achievement_generic',
+        route: '/achievements',
+        accent: 'var(--primary)'
+    },
+    DEBT_PAYMENT_DUE: {
+        icon: CalendarClock,
+        titleKey: 'notifications.debt_due_soon',
+        fallbackKey: 'notifications.debt_generic',
+        route: '/customer/debts',
+        accent: 'var(--primary)'
+    },
+    DEBT_PAYMENT_TODAY: {
+        icon: CalendarClock,
+        titleKey: 'notifications.debt_due_today',
+        fallbackKey: 'notifications.debt_generic',
+        route: '/customer/debts',
+        accent: 'var(--primary)'
+    },
+    DEBT_PAYMENT_OVERDUE: {
+        icon: AlertTriangle,
+        titleKey: 'notifications.debt_overdue',
+        fallbackKey: 'notifications.debt_generic',
+        route: '/customer/debts',
+        accent: '#dc2626'
+    }
+};
+
+const getPresentation = (type) => NOTIFICATION_PRESENTATION[type] || NOTIFICATION_PRESENTATION.ACHIEVEMENT;
 
 const NotificationsPage = () => {
     const { t, i18n } = useTranslation();
@@ -50,9 +85,7 @@ const NotificationsPage = () => {
         if (!notification.isRead) {
             markAsRead(notification.notificationId);
         }
-        if (notification.type === 'ACHIEVEMENT') {
-            navigate('/achievements');
-        }
+        navigate(getPresentation(notification.type).route);
     };
 
     if (loading) {
@@ -97,7 +130,7 @@ const NotificationsPage = () => {
                         gap: '1rem'
                     }}>
                         <h2 style={{ fontSize: '1.1rem', fontWeight: '700', margin: 0 }}>
-                            {t('notifications.achievements_section')}
+                            {t('notifications.alerts_section')}
                         </h2>
                         {unreadNotificationCount > 0 && (
                             <button
@@ -118,7 +151,11 @@ const NotificationsPage = () => {
                     </div>
 
                     <div style={{ display: 'flex', flexDirection: 'column', gap: '0.75rem' }}>
-                        {serverNotifications.map(notification => (
+                        {serverNotifications.map(notification => {
+                            const presentation = getPresentation(notification.type);
+                            const Icon = presentation.icon;
+
+                            return (
                             <div
                                 key={notification.notificationId}
                                 className="glass-card"
@@ -129,7 +166,7 @@ const NotificationsPage = () => {
                                     alignItems: 'center',
                                     gap: '1rem',
                                     transition: 'transform 0.2s',
-                                    borderLeft: `4px solid ${notification.isRead ? 'transparent' : 'var(--primary)'}`,
+                                    borderLeft: `4px solid ${notification.isRead ? 'transparent' : presentation.accent}`,
                                     opacity: notification.isRead ? 0.7 : 1
                                 }}
                                 onMouseOver={(e) => e.currentTarget.style.transform = 'translateY(-2px)'}
@@ -146,13 +183,13 @@ const NotificationsPage = () => {
                                     justifyContent: 'center',
                                     flexShrink: 0
                                 }}>
-                                    <Award size={24} color="var(--primary)" />
+                                    <Icon size={24} color={presentation.accent} />
                                 </div>
 
                                 <div style={{ flex: 1, minWidth: 0 }}>
                                     <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', gap: '0.5rem' }}>
                                         <h4 style={{ margin: 0, fontSize: '1.05rem' }}>
-                                            {t('notifications.achievement_unlocked')}
+                                            {t(presentation.titleKey)}
                                         </h4>
                                         <span style={{ fontSize: '0.75rem', color: 'var(--text-muted)', flexShrink: 0 }}>
                                             {formatChatTimestamp(notification.createdAt, t, i18nLocale)}
@@ -166,13 +203,14 @@ const NotificationsPage = () => {
                                         textOverflow: 'ellipsis',
                                         whiteSpace: 'nowrap'
                                     }}>
-                                        {notification.title || t('notifications.achievement_generic')}
+                                        {notification.title || t(presentation.fallbackKey)}
                                     </p>
                                 </div>
 
                                 <ArrowRight size={20} style={{ opacity: 0.3 }} />
                             </div>
-                        ))}
+                            );
+                        })}
                     </div>
                 </div>
             )}

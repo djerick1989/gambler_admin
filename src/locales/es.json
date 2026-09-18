@@ -87,7 +87,42 @@
             "content": "Contenido",
             "media": "Galería",
             "empty_error": "Por favor, agrega al menos algo de texto o una imagen/video"
-        }
+        },
+        "embed_title": "contenido incrustado",
+        "embed_open_in": "Ver en {{platform}}",
+        "embed_preview": "Así se va a ver el contenido de {{platform}}",
+        "embed_unsupported": "Solo se muestra el contenido de {{platforms}}. Los demás enlaces se publican como texto.",
+        "report": {
+            "action": "Reportar publicación",
+            "title": "Reportar publicación",
+            "subtitle": "Contanos qué problema tiene. La revisa la administración; no se le avisa a quien la publicó que fuiste vos.",
+            "comment_label": "Detalle (opcional)",
+            "comment_placeholder": "Agregá contexto que ayude a entender el reporte.",
+            "privacy_note": "Tu reporte es confidencial. Si varias personas reportan la misma publicación, deja de mostrarse públicamente mientras se revisa.",
+            "submit": "Enviar reporte",
+            "success": "Gracias. Recibimos tu reporte y lo vamos a revisar.",
+            "already_reported": "Ya habías reportado esta publicación.",
+            "error": "No se pudo enviar el reporte. Intentá de nuevo.",
+            "under_review_notice": "Esta publicación está en revisión por reportes de la comunidad. Por ahora solo la ves vos y la administración.",
+            "reasons": {
+                "sexual_content": "Contenido sexual",
+                "violence": "Violencia",
+                "harassment": "Acoso u odio",
+                "gambling_promotion": "Promociona apuestas o casinos",
+                "self_harm": "Autolesión o suicidio",
+                "spam": "Spam o estafa",
+                "other": "Otra cosa contra las políticas"
+            }
+        },
+        "embed_short_link_title": "No se pudo mostrar la publicación de {{platform}} aquí",
+        "embed_short_link_help": "El enlace que pegaste es un enlace corto y {{platform}} no permite incrustarlo. Abre la publicación y copia el enlace de la barra de direcciones para que se vea dentro de la app.",
+        "mini_player_hint": "El video sigue reproduciéndose en la esquina.",
+        "mini_player_back": "Volver al video",
+        "mini_player_close": "Cerrar el reproductor",
+        "loading_more": "Cargando más publicaciones...",
+        "load_more_error": "No pudimos cargar más publicaciones.",
+        "end_of_feed": "Has llegado al final.",
+        "discard_confirm": "¿Descartar esta publicación? Se perderá lo que has escrito."
     },
     "login": {
         "title": "Ingresa a Ludopata",
@@ -96,7 +131,6 @@
         "landing_title": "Recupera el control de tu dinero.",
         "landing_subtitle": "Convierte la adrenalina en acciones concretas: registra deudas, reconoce impulsos, recibe apoyo y mide cada avance paso a paso.",
         "landing_cta": "Crear mi cuenta gratis",
-        "landing_login_cta": "Ya tengo cuenta",
         "landing_proof": "Empieza hoy sin pagar. Tu primer objetivo: ordenar lo que perdiste y proteger lo que aún tienes.",
         "impact_label": "Indicadores del programa",
         "impact_1_value": "24/7",
@@ -158,8 +192,8 @@
                 "description": "Usa asistencia y comunidad cuando sientas riesgo."
             }
         },
-        "email_user": "Email / Usuario",
-        "email_placeholder": "Ingresa tu correo o usuario",
+        "email_user": "Email",
+        "email_placeholder": "Ingresa tu correo",
         "password": "Contraseña",
         "password_placeholder": "••••••••",
         "button": "Iniciar Sesión",
@@ -196,7 +230,7 @@
                 "description": "Usa la asistencia inicial y conecta con comunidad desde el primer día."
             }
         },
-        "privacy_note": "Empieza gratis. Puedes avanzar a Premium cuando necesites acompañamiento más cercano.",
+        "privacy_note": "Puedes avanzar a Premium cuando necesites acompañamiento más cercano.",
         "form_hints_title": "Beneficios incluidos al registrarte",
         "form_hints": {
             "0": "Sin pago inicial",
@@ -236,8 +270,11 @@
             "email": "Ingresa un correo electrónico válido."
         },
         "errors": {
+            "email_taken": "Ese correo ya tiene una cuenta. Inicia sesión o usa otro correo.",
+            "nickname_taken": "Ese nombre de usuario ya está en uso. Elige otro.",
             "user_exists": "El usuario ya existe"
-        }
+        },
+        "landing_login_cta": "Ya tengo cuenta"
     },
     "reset_password": {
         "title": "Nueva Contraseña",
@@ -510,6 +547,9 @@
         "title": "Perfil de Usuario",
         "posts_by": "Publicaciones de {{name}}",
         "no_bio": "Este usuario no tiene biografía aún.",
+        "not_found": "No encontramos este perfil.",
+        "post_count_one": "1 publicación",
+        "post_count_other": "{{count}} publicaciones",
         "view_profile": "Ver Perfil"
     },
     "chat": {
@@ -543,7 +583,12 @@
         "go_to_chat": "Ir a los chats",
         "pending_one": "1 mensaje pendiente",
         "pending_many": "{{count}} mensajes pendientes",
-        "new_message": "Nuevo mensaje recibido."
+        "new_message": "Nuevo mensaje recibido.",
+        "alerts_section": "Avisos",
+        "debt_due_soon": "Tu cuota vence pronto",
+        "debt_due_today": "Tu cuota vence hoy",
+        "debt_overdue": "Cuota vencida sin registrar pago",
+        "debt_generic": "Revisa tus deudas"
     },
     "assistance": {
         "title": "Asistencia",
@@ -604,17 +649,44 @@
             "index_title": "Temas de ayuda",
             "sections": [
                 {
+                    "id": "urgencia",
+                    "icon": "🚨",
+                    "title": "Si necesitas ayuda ahora",
+                    "questions": [
+                        {
+                            "number": 1,
+                            "question": "Siento que voy a apostar en este momento, ¿qué hago?",
+                            "answer": [
+                                "Aléjate del teléfono, la computadora o del lugar donde sueles apostar y avisa a alguien de confianza.",
+                                "Entra a la sección “Asistencia” y escribe lo que estás sintiendo: te acompaña paso a paso para bajar la intensidad del impulso.",
+                                "Revisa tus estrategias guardadas y el compromiso que firmaste: están ahí justo para este momento.",
+                                "Si el impulso es muy fuerte, llama a un familiar, a un amigo o a los servicios de emergencia de tu país."
+                            ]
+                        },
+                        {
+                            "number": 2,
+                            "question": "¿Qué hago si tengo pensamientos de hacerme daño?",
+                            "answer": "Eso importa más que cualquier resultado o registro dentro de la app. Si sientes que estás en peligro ahora mismo, contacta de inmediato a los servicios de emergencia de tu país o a alguien de confianza. La aplicación no es un servicio de emergencias ni sustituye la atención en crisis. Dentro de la app puedes escribir en la sección “Asistencia”, y si tienes plan Premium puedes pedir que te atienda un agente humano de nuestro equipo."
+                        },
+                        {
+                            "number": 3,
+                            "question": "¿Puedo hablar con una persona real y no con un asistente automático?",
+                            "answer": "La conversación de “Asistencia” comienza siempre con un asistente virtual. Desde ahí, los usuarios Premium pueden pulsar “Hablar con un agente humano” para que nuestro equipo entre en la conversación. En el plan gratuito esta opción no está disponible: si necesitas contactar con una persona, escríbenos desde “Ayuda y Soporte”. Nuestro equipo no atiende las 24 horas, así que ante una emergencia acude siempre primero a los servicios de emergencia de tu país."
+                        }
+                    ]
+                },
+                {
                     "id": "ludopatia",
                     "icon": "🧠",
                     "title": "Sobre la ludopatía",
                     "questions": [
                         {
-                            "number": 1,
+                            "number": 4,
                             "question": "¿Qué es la ludopatía?",
                             "answer": "La ludopatía es un trastorno del control de los impulsos en el que la persona no puede resistir la necesidad de jugar, incluso cuando eso afecta negativamente su vida personal, laboral, familiar o económica."
                         },
                         {
-                            "number": 2,
+                            "number": 5,
                             "question": "¿Cuáles son las señales más comunes de que tengo un problema con el juego?",
                             "answer": [
                                 "Apostar más dinero del que puedes permitirte perder.",
@@ -625,12 +697,12 @@
                             ]
                         },
                         {
-                            "number": 3,
+                            "number": 6,
                             "question": "¿La ludopatía tiene cura?",
                             "answer": "La ludopatía es un trastorno que puede controlarse con ayuda profesional, compromiso personal y apoyo adecuado. Muchas personas logran dejar de jugar y llevar una vida plena."
                         },
                         {
-                            "number": 4,
+                            "number": 7,
                             "question": "¿Qué hago si un familiar o amigo es ludópata?",
                             "answer": "Lo más recomendable es apoyarlo sin juzgar, invitarlo a buscar ayuda y evitar prestarle dinero para apostar. También puedes orientarlo a usar la aplicación o a contactar con un especialista."
                         }
@@ -642,88 +714,286 @@
                     "title": "Sobre la aplicación",
                     "questions": [
                         {
-                            "number": 5,
+                            "number": 8,
                             "question": "¿La aplicación sustituye la ayuda profesional?",
-                            "answer": "No. La app es una herramienta de apoyo, reflexión y acompañamiento, pero no reemplaza la terapia psicológica ni médica. Siempre recomendamos acudir a profesionales de la salud."
+                            "answer": "No. La app es una herramienta de apoyo, reflexión y acompañamiento, pero no reemplaza la terapia psicológica ni el tratamiento médico. Tampoco es un servicio de emergencias. Siempre recomendamos acudir a profesionales de la salud."
                         },
                         {
-                            "number": 6,
-                            "question": "¿Qué recursos encontraré dentro de la app?",
+                            "number": 9,
+                            "question": "¿Qué encontraré dentro de la app?",
                             "answer": [
-                                "Herramientas de autoevaluación.",
-                                "Consejos prácticos para reducir recaídas.",
-                                "Ejercicios de motivación y bienestar.",
-                                "Estrategias que le han funcionado a otros para dejar de apostar.",
-                                "Una comunidad en donde podrás encontrar anécdotas y experiencias de personas que también fueron ludópatas.",
-                                "Contactos de líneas de apoyo y especialistas."
+                                "Formularios de autoevaluación con un informe de resultados.",
+                                "Asistencia conversacional para los momentos difíciles, con opción de apoyo humano en el plan Premium.",
+                                "Registro de recaídas con una conclusión y consejos para retomar tu camino.",
+                                "Un compromiso personal firmado dentro del control de dopamina, con seguimiento de tu proceso.",
+                                "Estrategias propias y de la comunidad para dejar de apostar.",
+                                "Control de deudas: acreedores, cuotas, pagos y saldo pendiente.",
+                                "Una comunidad donde puedes publicar tu experiencia, comentar y chatear con otras personas.",
+                                "Logros que reconocen tu avance y tu participación."
                             ]
                         },
                         {
-                            "number": 7,
-                            "question": "¿Qué hago si tengo una urgencia y siento que voy a recaer?",
-                            "answer": "La app cuenta con una sección de “asistencia” con consejos inmediatos, contactos de apoyo y recordatorios de tus objetivos. También se recomienda llamar a un familiar o a una línea de ayuda."
+                            "number": 10,
+                            "question": "¿Cómo funciona la sección de Asistencia? ¿Estoy hablando con una inteligencia artificial?",
+                            "answer": "Sí, la asistencia funciona con un asistente virtual basado en inteligencia artificial, diseñado para acompañarte y ayudarte a ordenar lo que estás viviendo. No es un profesional de la salud y no emite diagnósticos. En el plan Premium puedes solicitar que un agente humano de nuestro equipo se sume a la conversación; en ese caso, esa persona lee el historial de esa conversación para poder ayudarte."
                         },
                         {
-                            "number": 8,
+                            "number": 11,
                             "question": "¿Puedo usar la aplicación si no soy ludópata?",
                             "answer": "Sí. La app también es útil si quieres aprender sobre la ludopatía, apoyar a un ser querido o prevenir conductas de riesgo."
                         },
                         {
-                            "number": 9,
+                            "number": 12,
                             "question": "¿Qué pasa si recaigo?",
-                            "answer": "Una recaída no significa fracaso. Es parte del proceso de recuperación. La app te permitirá registrar la experiencia, reflexionar sobre ella y darte consejos para retomar tu camino."
+                            "answer": "Una recaída no significa fracaso: es parte del proceso de recuperación. La app te permite registrar qué pasó (fecha, monto, emoción y detonante), reflexionar sobre ello y recibir una conclusión con consejos para retomar tu camino."
+                        },
+                        {
+                            "number": 13,
+                            "question": "¿En qué idiomas está la app y cómo cambio el idioma?",
+                            "answer": "La aplicación está disponible en español e inglés. Puedes cambiar el idioma desde tu perfil o desde el selector de idioma; el cambio se aplica a toda la app, incluidas estas preguntas frecuentes."
+                        },
+                        {
+                            "number": 14,
+                            "question": "¿La app me enviará notificaciones?",
+                            "answer": "Sí. Recibirás notificaciones sobre mensajes nuevos en tus chats, logros desbloqueados y recordatorios relacionados con tu proceso, como los vencimientos de las deudas que hayas registrado. Puedes consultarlas en el Centro de Notificaciones."
+                        }
+                    ]
+                },
+                {
+                    "id": "cuenta",
+                    "icon": "👤",
+                    "title": "Cuenta y acceso",
+                    "questions": [
+                        {
+                            "number": 15,
+                            "question": "¿Cómo creo mi cuenta?",
+                            "answer": "Puedes registrarte con tu correo electrónico y una contraseña, o entrar directamente con tu cuenta de Google o de Facebook. Si te registras con correo, te enviaremos un código de 6 dígitos para verificar tu dirección antes de poder usar la app."
+                        },
+                        {
+                            "number": 16,
+                            "question": "No me llega el código de verificación, ¿qué hago?",
+                            "answer": "Revisa la carpeta de correo no deseado o spam y confirma que la dirección esté bien escrita. En la pantalla de verificación puedes pulsar “Reenviar código” para recibir uno nuevo. Si aun así no llega, escríbenos desde “Ayuda y Soporte” indicando el correo con el que te registraste."
+                        },
+                        {
+                            "number": 17,
+                            "question": "Olvidé mi contraseña, ¿cómo la recupero?",
+                            "answer": "En la pantalla de inicio de sesión entra en “Recuperar clave” e ingresa tu correo: te enviaremos un código para crear una contraseña nueva. Si iniciaste sesión con Google o Facebook no tienes contraseña en nuestra app, así que debes entrar con ese mismo botón."
+                        },
+                        {
+                            "number": 18,
+                            "question": "¿Puedo cambiar mis datos de perfil?",
+                            "answer": "Sí. Desde “Perfil” puedes actualizar tus datos personales, tu foto y tu apodo, que es el nombre con el que te ve el resto de la comunidad."
+                        },
+                        {
+                            "number": 19,
+                            "question": "¿Cómo elimino mi cuenta y mis datos personales?",
+                            "answer": "Desde “Perfil”, en la zona de peligro, puedes enviar una solicitud de eliminación de datos. Nuestro equipo la revisa y te confirma el resultado; si por alguna razón no puede aplicarse, recibirás el motivo. La eliminación es definitiva: se pierden tus registros, evaluaciones, publicaciones y conversaciones, y no se pueden recuperar. Si tienes una suscripción activa, cancélala antes para que no se renueve."
+                        }
+                    ]
+                },
+                {
+                    "id": "suscripcion",
+                    "icon": "💳",
+                    "title": "Suscripción y pagos",
+                    "questions": [
+                        {
+                            "number": 20,
+                            "question": "¿La aplicación es gratuita?",
+                            "answer": "Sí, puedes usar la app con un plan gratuito. También existe un plan Premium con acceso completo a todas las herramientas de seguimiento y apoyo."
+                        },
+                        {
+                            "number": 21,
+                            "question": "¿Qué incluye exactamente el plan gratuito?",
+                            "answer": [
+                                "Hasta 10 publicaciones en la comunidad.",
+                                "Una conversación con la asistencia, con un máximo de 5 mensajes tuyos.",
+                                "Un compromiso firmado dentro del control de dopamina.",
+                                "El registro de una recaída.",
+                                "Lectura y votación de las estrategias de la comunidad, sin poder crear las tuyas.",
+                                "Los formularios de autoevaluación y la asistencia con agente humano están reservados al plan Premium."
+                            ]
+                        },
+                        {
+                            "number": 22,
+                            "question": "¿Qué obtengo con el plan Premium?",
+                            "answer": [
+                                "Publicaciones, conversaciones de asistencia, compromisos y registros de recaídas sin los límites del plan gratuito.",
+                                "Asistencia con acompañamiento de un agente humano de nuestro equipo.",
+                                "Acceso a los formularios de autoevaluación y a sus informes.",
+                                "Creación de tus propias estrategias.",
+                                "Prioridad en la atención y en el seguimiento de tu caso."
+                            ]
+                        },
+                        {
+                            "number": 23,
+                            "question": "¿Hay una prueba gratuita?",
+                            "answer": "Sí. Al suscribirte por primera vez tienes 7 días de prueba gratuita del plan Premium, y puedes cancelar durante ese periodo si decides no continuar."
+                        },
+                        {
+                            "number": 24,
+                            "question": "¿Qué planes hay y cómo puedo pagar?",
+                            "answer": "Puedes elegir entre plan mensual, trimestral, semestral o anual; los planes más largos tienen descuento sobre el precio mensual. El cobro se procesa a través de Stripe, nuestra pasarela de pagos, y puedes usar tarjeta de crédito, de débito o billeteras digitales compatibles. Nosotros no almacenamos los datos de tu tarjeta."
+                        },
+                        {
+                            "number": 25,
+                            "question": "¿Cómo cancelo mi suscripción?",
+                            "answer": "Desde la sección de suscripción puedes cancelar la renovación automática en cualquier momento. No pierdes el acceso al instante: mantienes las funciones Premium hasta la fecha de vencimiento del periodo que ya pagaste y, después, tu cuenta vuelve al plan gratuito."
+                        },
+                        {
+                            "number": 26,
+                            "question": "Si vuelvo al plan gratuito, ¿pierdo lo que registré?",
+                            "answer": "No. Tu información (recaídas, deudas, compromisos, publicaciones y estrategias) se conserva en tu cuenta. Lo que vuelve a aplicarse son los límites del plan gratuito para crear contenido nuevo y el acceso a las funciones exclusivas de Premium."
+                        },
+                        {
+                            "number": 27,
+                            "question": "Tengo un problema con un cobro o quiero pedir un reembolso",
+                            "answer": "Escríbenos desde “Ayuda y Soporte” indicando la fecha del cobro y el plan contratado, y revisaremos tu caso junto con nuestra pasarela de pagos. Si lo que quieres es evitar el próximo cobro, basta con cancelar la renovación automática desde la sección de suscripción."
+                        }
+                    ]
+                },
+                {
+                    "id": "comunidad",
+                    "icon": "💬",
+                    "title": "Comunidad, publicaciones y chats",
+                    "questions": [
+                        {
+                            "number": 28,
+                            "question": "¿Quién ve lo que publico en la comunidad?",
+                            "answer": "Todo lo que publicas en la comunidad es visible para las demás personas usuarias de la app, junto a tu apodo y tu foto de perfil. No publiques datos que no quieras compartir, como tu dirección, tu teléfono o información de tus cuentas."
+                        },
+                        {
+                            "number": 29,
+                            "question": "¿Puedo participar de forma anónima?",
+                            "answer": "Tus publicaciones siempre se muestran con el apodo y la foto de tu perfil, no de forma anónima. Si prefieres no ser identificable, elige un apodo que no sea tu nombre real y una foto que no te exponga."
+                        },
+                        {
+                            "number": 30,
+                            "question": "¿Qué contenido no está permitido?",
+                            "answer": [
+                                "Promocionar apuestas, casinos o cualquier plataforma de juego.",
+                                "Contenido sexual.",
+                                "Violencia.",
+                                "Acoso, insultos o mensajes de odio.",
+                                "Contenido que incite a la autolesión o al suicidio.",
+                                "Spam, estafas o intentos de vender productos y servicios."
+                            ]
+                        },
+                        {
+                            "number": 31,
+                            "question": "¿Cómo reporto una publicación?",
+                            "answer": "En el menú de la publicación elige “Reportar publicación”, selecciona el motivo y, si quieres, agrega un detalle. Tu reporte es confidencial: a la persona que publicó no se le informa quién la reportó. Cuando cinco personas distintas reportan una misma publicación, esta deja de mostrarse públicamente mientras la administración la revisa."
+                        },
+                        {
+                            "number": 32,
+                            "question": "Reportaron mi publicación, ¿qué pasa ahora?",
+                            "answer": "Mientras está en revisión, la publicación solo la ven tú y la administración. Después de revisarla, se restaura y vuelve a ser pública o se retira definitivamente si incumple las normas de la comunidad. Si una cuenta acumula varias publicaciones retiradas, puede ser dada de baja."
+                        },
+                        {
+                            "number": 33,
+                            "question": "¿Puedo chatear con otras personas?",
+                            "answer": "Sí. Puedes iniciar conversaciones individuales con otras personas usuarias o crear grupos de conversación. Ten en cuenta que quienes participan en un chat pueden leer todo lo que escribes ahí."
+                        }
+                    ]
+                },
+                {
+                    "id": "herramientas",
+                    "icon": "🧰",
+                    "title": "Herramientas de seguimiento",
+                    "questions": [
+                        {
+                            "number": 34,
+                            "question": "¿Para qué sirve el registro de deudas?",
+                            "answer": "Sirve para tener en un solo lugar tus acreedores, montos, intereses, cuotas y pagos, y ver cuánto te falta por pagar y cuál es tu próximo vencimiento. La aplicación no es una entidad financiera: no cobra, no presta y no gestiona pagos reales; solo organiza la información que tú ingresas, por lo que su exactitud depende de los datos que registres."
+                        },
+                        {
+                            "number": 35,
+                            "question": "¿Qué es el compromiso del control de dopamina?",
+                            "answer": "Es una declaración personal en la que identificas los juegos que te afectan, tus motivos para dejarlo y las acciones que vas a tomar, y que firmas dentro de la app. Es un compromiso contigo mismo, con valor motivacional y de seguimiento; no es un documento con efectos legales."
+                        },
+                        {
+                            "number": 36,
+                            "question": "¿Para qué registro mis recaídas?",
+                            "answer": "Registrar una recaída te ayuda a identificar patrones: en qué momento ocurrió, cuánto dinero implicó, qué emoción y qué detonante había detrás. Con esa información recibes una conclusión con recomendaciones y, con el tiempo, puedes ver tu propia evolución."
+                        },
+                        {
+                            "number": 37,
+                            "question": "¿Qué son las estrategias y quién las ve?",
+                            "answer": "Son recursos concretos que ayudan a evitar el juego. Al crear una estrategia eliges si la compartes con toda la comunidad o la mantienes privada; las privadas solo las ves tú. También puedes votar las estrategias de otras personas para destacar las más útiles."
+                        },
+                        {
+                            "number": 38,
+                            "question": "¿Qué son los logros?",
+                            "answer": "Son reconocimientos que se desbloquean a medida que avanzas y participas en la comunidad. Recibirás una notificación cuando consigas uno nuevo y puedes verlos todos en la sección “Mis Logros”."
+                        },
+                        {
+                            "number": 39,
+                            "question": "¿Qué son las donaciones?",
+                            "answer": "Son aportes voluntarios que puedes hacer para sostener la comunidad y financiar los premios de suscripción que se sortean entre las personas usuarias. Son totalmente opcionales: no afectan tu acceso a la app ni a tu proceso de recuperación."
                         }
                     ]
                 },
                 {
                     "id": "privacidad",
                     "icon": "🔒",
-                    "title": "Sobre privacidad y seguridad",
+                    "title": "Privacidad y seguridad",
                     "questions": [
                         {
-                            "number": 10,
-                            "question": "¿Mis datos personales estarán seguros?",
-                            "answer": "Sí. La aplicación protege tu información con sistemas de seguridad y no comparte tus datos con terceros sin tu consentimiento."
+                            "number": 40,
+                            "question": "¿Mis datos personales están seguros?",
+                            "answer": "Sí. Tu información se transmite y se almacena de forma protegida, y el acceso está restringido al personal autorizado que necesita revisarla para prestarte el servicio. Nunca vendemos tus datos ni los compartimos con casas de apuestas, anunciantes o aseguradoras."
                         },
                         {
-                            "number": 11,
-                            "question": "¿La app registra mi ubicación o mis movimientos?",
-                            "answer": "No, salvo que tú lo autorices en funciones específicas (ejemplo: localizar grupos de ayuda cercanos). La privacidad siempre es prioritaria."
-                        },
-                        {
-                            "number": 12,
+                            "number": 41,
                             "question": "¿Quién puede ver mi información dentro de la app?",
-                            "answer": "Tu información de evaluaciones, compromiso y chats, únicamente podrás verlos tú. Si decides compartir con la comunidad historias o estrategias, esta información la podrán ver otros usuarios."
+                            "answer": [
+                                "Solo tú ves tus deudas, tus recaídas, tus compromisos, tus estrategias privadas y los resultados de tus formularios.",
+                                "Tus publicaciones, tus comentarios y tus estrategias públicas los ve el resto de la comunidad.",
+                                "Los mensajes de un chat los ven las personas que participan en esa conversación.",
+                                "Las conversaciones de asistencia las procesa nuestro asistente virtual; si solicitas apoyo humano, el agente de nuestro equipo que atienda tu caso lee esa conversación.",
+                                "La administración puede revisar las publicaciones reportadas, los mensajes enviados a soporte y las solicitudes de eliminación de datos."
+                            ]
+                        },
+                        {
+                            "number": 42,
+                            "question": "¿Comparten mis datos con terceros?",
+                            "answer": "No vendemos tu información ni la compartimos con fines publicitarios. Sí trabajamos con proveedores que hacen posible el servicio y que tratan datos por encargo nuestro: Stripe procesa los pagos de la suscripción y un proveedor de inteligencia artificial procesa las conversaciones de la asistencia. Estos proveedores solo pueden usar esos datos para prestarnos ese servicio."
+                        },
+                        {
+                            "number": 43,
+                            "question": "¿La app registra mi ubicación?",
+                            "answer": "No. La aplicación no accede a tu ubicación ni rastrea tus movimientos."
+                        },
+                        {
+                            "number": 44,
+                            "question": "Comparto mi teléfono con otra persona, ¿cómo protejo mi información?",
+                            "answer": "Cierra sesión cuando termines de usar la app, protege el dispositivo con un código o con tu huella y no guardes la contraseña en un navegador compartido. Ten presente que quien tenga acceso a tu sesión abierta puede ver tus registros personales."
                         }
                     ]
                 },
                 {
-                    "id": "costos-soporte",
-                    "icon": "💰",
-                    "title": "Sobre costos y soporte",
+                    "id": "soporte",
+                    "icon": "🆘",
+                    "title": "Soporte y ayuda externa",
                     "questions": [
                         {
-                            "number": 13,
-                            "question": "¿La aplicación es gratuita?",
-                            "answer": [
-                                "La app tiene una versión gratuita con recursos básicos.",
-                                "También existe una versión premium con herramientas adicionales de seguimiento y apoyo."
-                            ]
+                            "number": 45,
+                            "question": "¿Qué hago si tengo un problema técnico o una sugerencia?",
+                            "answer": "Entra en “Ayuda y Soporte” y descríbenos en el formulario qué ocurrió: un fallo técnico, un problema con tu cuenta o con la suscripción, o una sugerencia para mejorar la app. Nuestro equipo revisa cada mensaje y te contacta por el correo de tu cuenta."
                         },
                         {
-                            "number": 14,
-                            "question": "¿Cómo puedo acceder a la versión premium?",
-                            "answer": "Puedes suscribirte desde la misma app mediante tarjeta de crédito, débito o billeteras digitales seguras."
+                            "number": 46,
+                            "question": "¿Cuánto tardan en responderme?",
+                            "answer": "Revisamos todos los mensajes en orden de llegada y damos prioridad a los usuarios Premium y a los casos urgentes. No atendemos las 24 horas, así que si se trata de una emergencia acude a los servicios de emergencia de tu país o a alguien de confianza."
                         },
                         {
-                            "number": 15,
-                            "question": "¿Qué hago si tengo un problema técnico con la aplicación?",
-                            "answer": "En la sección “Ayuda y Soporte” encontrarás un formulario de contacto o correo electrónico para reportar errores y recibir asistencia."
+                            "number": 47,
+                            "question": "¿Dónde puedo encontrar ayuda profesional fuera de la aplicación?",
+                            "answer": "Te recomendamos consultar con tu médico de cabecera o con un psicólogo especializado en adicciones, y buscar en tu país los servicios públicos de salud mental y los grupos de apoyo para jugadores, como Jugadores Anónimos, que existen en muchas ciudades y también en formato online. Ante una situación de riesgo inmediato, contacta con los servicios de emergencia de tu país."
                         },
                         {
-                            "number": 16,
-                            "question": "¿Dónde puedo encontrar más ayuda fuera de la aplicación?",
-                            "answer": "La app incluye un directorio de números de emergencia, grupos de apoyo locales e internacionales, y profesionales especializados en adicciones al juego."
+                            "number": 48,
+                            "question": "¿Dónde consulto los términos de uso y la política de privacidad?",
+                            "answer": "Puedes consultarlos en cualquier momento desde la sección de información legal de la app. Si tienes dudas sobre cómo tratamos tu información o quieres ejercer tus derechos sobre tus datos, escríbenos desde “Ayuda y Soporte”."
                         }
                     ]
                 }
@@ -1117,7 +1387,13 @@
         "opening_checkout": "Abriendo pago",
         "plan_change_confirm": "Se cobrará ${{price}} ahora por el plan {{plan}} y tu nueva vigencia estimada será hasta {{expiry}}. ¿Deseas continuar?",
         "plan_change_success": "Tu plan fue actualizado correctamente.",
-        "plan_change_error": "No se pudo iniciar el cambio de plan."
+        "plan_change_error": "No se pudo iniciar el cambio de plan.",
+        "eyebrow": "Acceso completo",
+        "recommended": "Recomendado",
+        "per_month_equivalent": "Equivale a ${{price}} por mes",
+        "save_percent": "Ahorras {{percent}}%",
+        "subscribe_for": "Suscribirme por ${{price}}",
+        "secure_payment": "Pago seguro"
     },
     "debts": {
         "title": "Deudas",
@@ -1160,7 +1436,51 @@
         "currency": "Moneda",
         "status": "Estado",
         "yes": "Sí",
-        "no": "No"
+        "no": "No",
+        "warning_never_paid": "Con esta cuota, esta deuda no se termina de pagar nunca",
+        "warning_never_paid_detail": "Solo los intereses suman {{interest}} cada mes, así que la cuota no alcanza a cubrirlos y el saldo sube aunque pagues puntual. Necesitas una cuota mayor que esa cantidad para empezar a reducir la deuda.",
+        "projection_title": "Así queda tu plan",
+        "projection_detail": "Terminas de pagar en {{months}} meses, en {{date}}, y habrás pagado {{interest}} en intereses.",
+        "projection_incomplete": "Escribe la cuota mensual para ver en cuánto tiempo terminas de pagar.",
+        "strategy_label": "Orden de ataque",
+        "strategy_snowball": "Bola de nieve",
+        "strategy_avalanche": "Avalancha",
+        "strategy_due_date": "Próximo vencimiento",
+        "strategy_hint_snowball": "Primero la deuda más pequeña. Tardas un poco más, pero tachas una de la lista antes y eso ayuda a no abandonar.",
+        "strategy_hint_avalanche": "Primero la de mayor interés. Es lo que menos dinero te cuesta a la larga.",
+        "strategy_hint_due_date": "Ordenadas por la fecha de pago más cercana.",
+        "strategy_saving": "La avalancha te ahorraría {{amount}} en intereses.",
+        "payoff_never": "Con la cuota actual, esta deuda no baja",
+        "payoff_months": "{{months}} meses restantes",
+        "paid_of_total": "{{paid}} de {{total}}",
+        "frequency": "Frecuencia de pago",
+        "frequency_monthly": "Mensual",
+        "frequency_biweekly": "Quincenal",
+        "frequency_weekly": "Semanal",
+        "frequency_daily": "Diaria",
+        "frequency_hint_non_monthly": "Los ciclos se cuentan desde la fecha del préstamo.",
+        "ledger_title": "Movimientos",
+        "ledger_subtitle": "De dónde sale tu saldo, movimiento a movimiento.",
+        "movement_disbursement": "Alta de la deuda",
+        "movement_interest": "Interés del ciclo",
+        "movement_payment": "Abono",
+        "movement_fee": "Recargo",
+        "movement_adjustment": "Corrección",
+        "extra_payment_impact": "Con este abono adelantas {{months}} meses y te ahorras {{interest}} en intereses.",
+        "dti_label": "De tu ingreso se va en deuda",
+        "dti_ok": "Te quedan {{remaining}} al mes después de pagar las cuotas.",
+        "dti_warning": "Vas justo: te quedan {{remaining}} al mes. Conviene no asumir más deuda.",
+        "dti_critical": "Esto no se sostiene: solo te quedan {{remaining}} al mes. Busca ayuda para renegociar.",
+        "income_prompt_title": "¿Cuánto ingresas al mes?",
+        "income_prompt_text": "Con ese dato podemos decirte qué parte de lo que entra se va en pagar deuda. Es opcional y solo lo ves tú.",
+        "income_placeholder": "Ingreso mensual",
+        "income_save": "Guardar",
+        "income_change": "Cambiar",
+        "gambling_impact_title": "Los últimos {{months}} meses",
+        "gambling_impact_text": "Perdiste {{gambled}} jugando en {{relapses}} recaídas. En el mismo periodo tu deuda creció {{growth}} solo en intereses.",
+        "compliance_streak": "{{count}} ciclos cumpliendo",
+        "compliance_overdue": "Cuota pendiente",
+        "export": "Exportar"
     },
     "strategies": {
         "title": "Estrategias",
@@ -1184,7 +1504,25 @@
         "voters_title": "Personas que reaccionaron",
         "voters_count": "interacciones totales",
         "likes": "LES GUSTA",
-        "dislikes": "NO LES GUSTA"
+        "dislikes": "NO LES GUSTA",
+        "empty_popular": "Todavía no hay estrategias compartidas por la comunidad.",
+        "saved_tab": "GUARDADAS",
+        "saved_short": "Guardada",
+        "save_action": "Guardar",
+        "unsave_action": "Quitar de guardadas",
+        "saved": "Guardada en tus estrategias",
+        "unsaved": "Quitada de tus estrategias",
+        "save_error": "No se pudo guardar la estrategia",
+        "search_placeholder": "Buscar en las estrategias",
+        "vote_up": "Me funcionó",
+        "vote_down": "No me funcionó",
+        "vote_remove": "Quitar mi voto",
+        "empty_saved": "Aún no has guardado ninguna estrategia. Guarda las que quieras tener a mano.",
+        "search_empty": "No hay estrategias que coincidan con tu búsqueda.",
+        "confirm_vote_up": "¿Marcar que esta estrategia te funcionó? Tu apodo aparecerá entre quienes la votaron.",
+        "confirm_vote_down": "¿Marcar que esta estrategia no te funcionó? Tu apodo aparecerá entre quienes la votaron.",
+        "confirm_change_to_up": "Habías marcado que no te funcionó. ¿Cambiar tu voto a que sí te funcionó?",
+        "confirm_change_to_down": "Habías marcado que te funcionó. ¿Cambiar tu voto a que no te funcionó?"
     },
     "dopamine": {
         "title": "Dopamina",
@@ -1243,7 +1581,6 @@
         "process_intro": "En caso de que sigas con el proceso,",
         "process_notifications": "Te enviaremos notificaciones personalizadas que te ayudarán a dejar tu adicción.",
         "process_report": "Estudiaremos tu caso en base a la información que nos proporciones y te enviaremos un informe con soluciones para mejorar tu vida.",
-        "subscription_note": "Los usuarios suscritos serán nuestra prioridad. También atenderemos todos los casos, aunque los tiempos de respuesta serán más lentos para usuarios gratuitos.",
         "make_commitment": "Hacer Compromiso",
         "commitment_text_intro": "Yo, <strong>{{name}}</strong>, reconozco que el juego en los casinos me ha generado consecuencias negativas en mi vida, en lo económico, emocional, familiar y personal.",
         "commitment_date_intro": "Por esta razón, me comprometo a dejar de jugar en los casinos a partir de la fecha:",
@@ -1277,7 +1614,8 @@
         "delete_flow_confirm": "¿Deseas eliminar este flujo? Solo se pueden eliminar flujos que no estén completados.",
         "flow_deleted_success": "Flujo eliminado con éxito",
         "flow_delete_error": "No se pudo eliminar el flujo",
-        "flow_error": "No se pudo actualizar el flujo de dopamina"
+        "flow_error": "No se pudo actualizar el flujo de dopamina",
+        "response_time_note": " En el plan gratuito la respuesta puede tardar algo más."
     },
     "dopamine_admin": {
         "title": "Gestión de Dopamina",
@@ -1375,5 +1713,36 @@
         "SEK": "Corona Sueca",
         "NOK": "Corona Noruega",
         "DKK": "Corona Danesa"
+    },
+    "moderation": {
+        "menu": "Moderación",
+        "title": "Publicaciones reportadas",
+        "subtitle": "Revisá los reportes de la comunidad y decidí sobre cada publicación.",
+        "filter_under_review": "En revisión",
+        "filter_all": "Todas las reportadas",
+        "report_count": "{{count}} reportes",
+        "author_reported_posts": "{{count}} publicaciones reportadas de esta persona",
+        "media_count": "{{count}} archivos adjuntos",
+        "comments_count": "Ver {{count}} comentarios de quienes reportaron",
+        "no_text": "Sin texto, solo archivos adjuntos.",
+        "under_review_at": "En revisión desde",
+        "restore": "Restaurar",
+        "remove": "Retirar",
+        "confirm_restore_title": "Restaurar publicación",
+        "confirm_restore": "Vuelve a ser pública y se descartan sus reportes. ¿Continuar?",
+        "confirm_remove_title": "Retirar publicación",
+        "confirm_remove": "La publicación deja de estar disponible para todos, incluido su autor. ¿Continuar?",
+        "restored": "Publicación restaurada.",
+        "removed": "Publicación retirada.",
+        "decision_error": "No se pudo aplicar la decisión.",
+        "load_error": "No se pudieron cargar las publicaciones reportadas.",
+        "empty_title": "Nada por revisar",
+        "empty_subtitle": "No hay publicaciones con reportes pendientes.",
+        "footer_note": "Una publicación pasa a revisión automáticamente cuando 5 personas distintas la reportan. El conteo de publicaciones reportadas por autor sirve para decidir si hay que dar de baja la cuenta, algo que se hace de forma manual.",
+        "status": {
+            "published": "Pública",
+            "under_review": "En revisión",
+            "removed": "Retirada"
+        }
     }
 }

@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { Outlet, Link, useLocation, useNavigate } from 'react-router-dom';
-import { LayoutDashboard, Languages, UserCheck, Lightbulb, LogOut, Menu, X, ChevronRight, Globe, Newspaper, MessageSquare, Image, User, FileText, Bell, Award, CreditCard, Trash2, ClipboardCheck, Wallet, Brain, LifeBuoy, RefreshCcw, Crown, CheckCircle2, Loader2, Headphones } from 'lucide-react';
+import { LayoutDashboard, Languages, UserCheck, Lightbulb, LogOut, Menu, X, ChevronRight, Globe, Newspaper, MessageSquare, Image, User, FileText, Bell, Award, CreditCard, Trash2, ClipboardCheck, Wallet, Brain, LifeBuoy, RefreshCcw, Crown, CheckCircle2, Loader2, Headphones, ShieldAlert } from 'lucide-react';
 import { useAuth } from '../context/AuthContext';
 import { useChat } from '../context/ChatContext';
 import { useNotification } from '../context/NotificationContext';
@@ -218,6 +218,7 @@ const MainLayout = () => {
         { path: '/chat', label: t('common.chat') || 'Chat', icon: MessageSquare },
         { path: '/news', label: t('common.news'), icon: Newspaper, roles: [1, 2] },
         { path: '/media', label: t('media_mgmt.title') || 'Media', icon: Image, roles: [1, 2] },
+        { path: '/post-moderation', label: t('moderation.menu'), icon: ShieldAlert, roles: [1, 2] },
         { path: '/achievements', label: t('achievements.title') || 'Achievements', icon: Award },
         { path: '/donations', label: t('donations.title') || 'Donations', icon: CreditCard },
         { path: '/payment-platforms', label: t('payment_platforms.title') || 'Payment Platforms', icon: CreditCard, roles: [1, 2] },

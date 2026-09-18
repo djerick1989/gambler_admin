@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useMemo } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { 
     Plus, Info, LayoutGrid, List as ListIcon, 
@@ -9,6 +9,14 @@ import { useTranslation } from 'react-i18next';
 import { debtService } from '../../services/api';
 import { useAuth } from '../../context/AuthContext';
 import { getLanguageId } from '../../utils/languages';
+import {
+    SORT_STRATEGIES,
+    progressPercent,
+    projectPayoff,
+    sortDebts,
+    strategyInterestGap,
+    totalPaid
+} from '../../utils/debtMath';
 
 const DebtList = () => {
     const { t, i18n } = useTranslation();
@@ -20,6 +28,11 @@ const DebtList = () => {
     const [viewMode, setViewMode] = useState('grid'); // 'grid' or 'list'
     const [currentSlide, setCurrentSlide] = useState(0);
     const [showCancelled, setShowCancelled] = useState(false);
+    // Bola de nieve por defecto: la victoria temprana es lo que sostiene la constancia, y una
+    // estrategia que se abandona a los dos meses no sirve por muy optima que sea.
+    const [strategy, setStrategy] = useState(SORT_STRATEGIES.SNOWBALL);
+    const [incomeDraft, setIncomeDraft] = useState("");
+    const [savingIncome, setSavingIncome] = useState(false);
 
     useEffect(() => {
         if (user?.gambler?.gamblerId) {
@@ -44,6 +57,58 @@ const DebtList = () => {
         }
     };
 
+    const handleSaveIncome = async () => {
+        const amount = Number(incomeDraft);
+        if (!Number.isFinite(amount) || amount <= 0) return;
+
+        setSavingIncome(true);
+        try {
+            const currency = (Array.isArray(data?.summary) ? data.summary[0]?.currency : null) || 'USD';
+            const res = await debtService.updateIncome(user.gambler.gamblerId, {
+                monthlyIncome: amount,
+                currency
+            });
+            if (res.status) {
+                setIncomeDraft("");
+                fetchDebts();
+            }
+        } catch (err) {
+            console.error(err);
+        } finally {
+            setSavingIncome(false);
+        }
+    };
+
+    /**
+     * Descarga un resumen en CSV. Sirve para llevarselo a un asesor o a un familiar, que es la
+     * conversacion en la que estos numeros hacen falta de verdad.
+     */
+    const handleExport = () => {
+        const header = ['Acreedor', 'Moneda', 'Saldo', 'Cuota', 'Interes anual %', 'Frecuencia', 'Dia de pago', 'Estado'];
+        const rows = (data?.debts || []).map(debt => [
+            debt.creditor,
+            debt.currency,
+            debt.currentBalance,
+            debt.monthlyInstallment,
+            debt.annualInterestRate,
+            debt.paymentFrequency || 'Monthly',
+            debt.paymentDay,
+            debt.status
+        ]);
+
+        const escape = (value) => `"${String(value ?? '').replace(/"/g, '""')}"`;
+        const csv = [header, ...rows].map(row => row.map(escape).join(',')).join('\n');
+        // El BOM hace que Excel abra los acentos correctamente.
+        const blob = new Blob([`\uFEFF${csv}`], { type: 'text/csv;charset=utf-8;' });
+
+        const url = URL.createObjectURL(blob);
+        const link = document.createElement('a');
+        link.href = url;
+        link.download = 'deudas.csv';
+        link.click();
+        URL.revokeObjectURL(url);
+    };
+
     const formatDate = (dateStr) => {
         if (!dateStr) return "";
         const date = new Date(dateStr);
@@ -62,6 +127,17 @@ const DebtList = () => {
 
     const summaries = Array.isArray(data?.summary) ? data.summary : (data?.summary ? [data.summary] : []);
 
+    const debtView = useMemo(() => {
+        const all = data?.debts || [];
+        const visible = all.filter(debt => showCancelled ? debt.status === 'Cancelled' : debt.status === 'Active');
+
+        // Las canceladas no se reordenan: ahi el orden de ataque no significa nada.
+        return {
+            debts: showCancelled ? visible : sortDebts(visible, strategy),
+            avalancheSaving: showCancelled ? 0 : strategyInterestGap(visible)
+        };
+    }, [data, showCancelled, strategy]);
+
     useEffect(() => {
         if (summaries.length <= 1) return;
 
@@ -79,8 +155,19 @@ const DebtList = () => {
             </div>
         );
     }
-    const allDebts = data?.debts || [];
-    const debts = allDebts.filter(debt => showCancelled ? debt.status === 'Cancelled' : debt.status === 'Active');
+    const { debts, avalancheSaving } = debtView;
+    const affordability = data?.affordability || null;
+    const gamblingImpact = data?.gamblingImpact || null;
+
+    // El umbral no es decorativo: por encima del 40 % del ingreso, la situacion no se sostiene y
+    // hay que decirlo, no pintarlo del mismo color que un 12 %.
+    const dtiTone = !affordability
+        ? { color: 'var(--text-main)', messageKey: 'debts.dti_ok' }
+        : affordability.debtToIncomePercent >= 40
+            ? { color: '#b91c1c', messageKey: 'debts.dti_critical' }
+            : affordability.debtToIncomePercent >= 25
+                ? { color: '#b45309', messageKey: 'debts.dti_warning' }
+                : { color: '#15803d', messageKey: 'debts.dti_ok' };
 
     return (
         <div style={{ paddingBottom: '5rem' }}>
@@ -160,11 +247,125 @@ const DebtList = () => {
                 )}
             </div>
 
+            {/* Capacidad de pago: sin el ingreso, el modulo solo puede registrar, no aconsejar. */}
+            <div className="glass-card" style={{ padding: '1.25rem', borderRadius: '1.25rem', marginBottom: '1.5rem' }}>
+                {affordability ? (
+                    <div style={{ display: 'flex', flexWrap: 'wrap', gap: '1rem', alignItems: 'center', justifyContent: 'space-between' }}>
+                        <div>
+                            <p style={{ margin: 0, fontSize: '0.85rem', fontWeight: '700', color: 'var(--text-muted)' }}>
+                                {t('debts.dti_label')}
+                            </p>
+                            <p style={{ margin: '0.2rem 0 0', fontSize: '1.6rem', fontWeight: '900', color: dtiTone.color }}>
+                                {affordability.debtToIncomePercent} %
+                            </p>
+                            <p style={{ margin: '0.25rem 0 0', fontSize: '0.88rem', color: 'var(--text-muted)' }}>
+                                {t(dtiTone.messageKey, {
+                                    remaining: formatCurrency(affordability.remainingAfterDebt, affordability.currency)
+                                })}
+                            </p>
+                        </div>
+                        <button
+                            type="button"
+                            onClick={() => setIncomeDraft(String(affordability.monthlyIncome))}
+                            style={{ background: 'transparent', border: 'none', color: 'var(--primary)', fontWeight: '700', cursor: 'pointer' }}
+                        >
+                            {t('debts.income_change')}
+                        </button>
+                    </div>
+                ) : (
+                    <div style={{ display: 'flex', flexWrap: 'wrap', gap: '0.75rem', alignItems: 'center' }}>
+                        <div style={{ flex: '1 1 240px' }}>
+                            <p style={{ margin: 0, fontWeight: '800' }}>{t('debts.income_prompt_title')}</p>
+                            <p style={{ margin: '0.2rem 0 0', fontSize: '0.88rem', color: 'var(--text-muted)' }}>
+                                {t('debts.income_prompt_text')}
+                            </p>
+                        </div>
+                        <input
+                            type="number"
+                            min="0"
+                            value={incomeDraft}
+                            onChange={(e) => setIncomeDraft(e.target.value)}
+                            placeholder={t('debts.income_placeholder')}
+                            style={{ padding: '0.75rem 1rem', borderRadius: '0.75rem', border: '1px solid var(--glass-border)', fontWeight: '700', maxWidth: '160px' }}
+                        />
+                        <button
+                            type="button"
+                            className="btn btn-primary"
+                            disabled={savingIncome || !incomeDraft}
+                            onClick={handleSaveIncome}
+                            style={{ padding: '0.75rem 1.25rem', borderRadius: '0.75rem', fontWeight: '700' }}
+                        >
+                            {savingIncome ? <Loader2 size={18} className="animate-spin" /> : t('debts.income_save')}
+                        </button>
+                    </div>
+                )}
+            </div>
+
+            {/* El cruce que solo puede hacer esta app: lo perdido jugando frente a lo que crecio la deuda. */}
+            {gamblingImpact && (
+                <div className="glass-card" style={{ padding: '1.25rem', borderRadius: '1.25rem', marginBottom: '1.5rem', borderLeft: '4px solid #b91c1c' }}>
+                    <p style={{ margin: 0, fontWeight: '800' }}>{t('debts.gambling_impact_title', { months: gamblingImpact.months })}</p>
+                    <p style={{ margin: '0.4rem 0 0', fontSize: '0.95rem', color: 'var(--text-main)' }}>
+                        {t('debts.gambling_impact_text', {
+                            gambled: formatCurrency(gamblingImpact.amountGambled, gamblingImpact.currency),
+                            relapses: gamblingImpact.relapseCount,
+                            growth: formatCurrency(gamblingImpact.debtGrowth, gamblingImpact.currency)
+                        })}
+                    </p>
+                </div>
+            )}
+
+            {/* Orden de ataque: con varias deudas, por cual empezar cambia el resultado. */}
+            {!showCancelled && debts.length > 1 && (
+                <div className="glass-card" style={{ padding: '1.1rem 1.25rem', borderRadius: '1.25rem', marginBottom: '1.5rem', display: 'flex', flexDirection: 'column', gap: '0.75rem' }}>
+                    <div style={{ display: 'flex', alignItems: 'center', gap: '1rem', flexWrap: 'wrap' }}>
+                        <span style={{ fontSize: '0.9rem', fontWeight: '800', color: 'var(--text-muted)' }}>
+                            {t('debts.strategy_label')}
+                        </span>
+                        <div style={{ display: 'flex', gap: '0.5rem', flexWrap: 'wrap' }}>
+                            {[
+                                { key: SORT_STRATEGIES.SNOWBALL, label: t('debts.strategy_snowball') },
+                                { key: SORT_STRATEGIES.AVALANCHE, label: t('debts.strategy_avalanche') },
+                                { key: SORT_STRATEGIES.DUE_DATE, label: t('debts.strategy_due_date') }
+                            ].map(option => (
+                                <button
+                                    key={option.key}
+                                    type="button"
+                                    onClick={() => setStrategy(option.key)}
+                                    aria-pressed={strategy === option.key}
+                                    style={{
+                                        padding: '0.45rem 0.9rem',
+                                        borderRadius: '0.6rem',
+                                        border: 'none',
+                                        cursor: 'pointer',
+                                        fontWeight: '700',
+                                        transition: 'all 0.2s',
+                                        background: strategy === option.key ? 'var(--primary)' : 'rgba(0,0,0,0.05)',
+                                        color: strategy === option.key ? 'white' : 'var(--text-muted)'
+                                    }}
+                                >
+                                    {option.label}
+                                </button>
+                            ))}
+                        </div>
+                    </div>
+                    <p style={{ margin: 0, fontSize: '0.88rem', color: 'var(--text-muted)' }}>
+                        {strategy === SORT_STRATEGIES.AVALANCHE && t('debts.strategy_hint_avalanche')}
+                        {strategy === SORT_STRATEGIES.DUE_DATE && t('debts.strategy_hint_due_date')}
+                        {strategy === SORT_STRATEGIES.SNOWBALL && (
+                            <>
+                                {t('debts.strategy_hint_snowball')}
+                                {avalancheSaving > 0 && ` ${t('debts.strategy_saving', { amount: formatCurrency(avalancheSaving, debts[0]?.currency) })}`}
+                            </>
+                        )}
+                    </p>
+                </div>
+            )}
+
             {/* Controls */}
             <div style={{ display: 'flex', alignItems: 'center', gap: '1rem', marginBottom: '1.5rem', flexWrap: 'wrap', justifyContent: 'space-between' }}>
                 <div style={{ display: 'flex', alignItems: 'center', gap: '1rem', flexWrap: 'wrap' }}>
                     <div style={{ display: 'flex', alignItems: 'center', gap: '1rem' }}>
-                        <span style={{ fontSize: '0.9rem', fontWeight: '700', color: 'var(--text-muted)' }}>{t('debts.sort_by', 'Sort by:')}</span>
                         <div className="glass-card" style={{ padding: '0.5rem', display: 'flex', gap: '0.5rem', borderRadius: '0.75rem' }}>
                             <button 
                                 onClick={() => setViewMode('grid')}
@@ -180,6 +381,16 @@ const DebtList = () => {
                             </button>
                         </div>
                     </div>
+
+                    {(data?.debts || []).length > 0 && (
+                        <button
+                            type="button"
+                            onClick={handleExport}
+                            style={{ background: 'transparent', border: '1px solid var(--glass-border)', borderRadius: '0.75rem', padding: '0.5rem 1rem', fontWeight: '700', color: 'var(--text-muted)', cursor: 'pointer' }}
+                        >
+                            {t('debts.export')}
+                        </button>
+                    )}
 
                     <div style={{ display: 'flex', alignItems: 'center', gap: '1rem' }}>
                         <span style={{ fontSize: '0.9rem', fontWeight: '700', color: 'var(--text-muted)' }}>{t('debts.show_debts', 'Mostrar deudas:')}</span>
@@ -250,8 +461,15 @@ const DebtList = () => {
                     gap: '1.25rem' 
                 }}>
                     {debts.map(debt => {
-                        const progress = debt.status === 'Cancelled' ? 100 : Math.min(100, Math.max(0, 100 - (debt.currentBalance / debt.initialAmount * 100)));
-                        
+                        // El progreso se mide contra lo que hay que pagar de verdad. Contra el importe
+                        // inicial, en cuanto los intereses lo superan, se quedaba clavado en cero para
+                        // alguien que si estaba pagando todos los meses.
+                        const paid = totalPaid(debt.payments);
+                        const progress = debt.status === 'Cancelled' ? 100 : progressPercent(paid, debt.currentBalance);
+                        const payoff = debt.status === 'Active'
+                            ? projectPayoff(debt.currentBalance, debt.annualInterestRate, debt.monthlyInstallment, debt.paymentFrequency)
+                            : null;
+
                         return (
                             <div 
                                 key={debt.id} 
@@ -306,7 +524,37 @@ const DebtList = () => {
                                         <span style={{ fontWeight: '700' }}>{(debt.annualInterestRate / 12).toFixed(1)} %</span>
                                     </div>
                                 </div>
-                                
+
+                                {debt.status === 'Active' && (
+                                    <div style={{
+                                        marginTop: '0.9rem',
+                                        paddingTop: '0.75rem',
+                                        borderTop: '1px solid var(--glass-border)',
+                                        display: 'flex',
+                                        flexWrap: 'wrap',
+                                        alignItems: 'center',
+                                        justifyContent: 'space-between',
+                                        gap: '0.5rem',
+                                        fontSize: '0.85rem',
+                                        fontWeight: '700'
+                                    }}>
+                                        <span style={{ display: 'inline-flex', alignItems: 'center', gap: '0.4rem', color: payoff ? 'var(--text-muted)' : '#b91c1c' }}>
+                                            {payoff
+                                                ? <><Calendar size={15} />{t('debts.payoff_months', { months: payoff.months })}</>
+                                                : <><AlertCircle size={15} />{t('debts.payoff_never')}</>}
+                                        </span>
+
+                                        {/* Reconocer la constancia es justo lo que este modulo no hacia. */}
+                                        {debt.compliance?.isOverdue ? (
+                                            <span style={{ color: '#b91c1c' }}>{t('debts.compliance_overdue')}</span>
+                                        ) : debt.compliance?.onTimeStreak > 0 ? (
+                                            <span style={{ color: '#15803d' }}>
+                                                {t('debts.compliance_streak', { count: debt.compliance.onTimeStreak })}
+                                            </span>
+                                        ) : null}
+                                    </div>
+                                )}
+
                                 <div style={{ position: 'absolute', right: '1rem', bottom: '1rem' }}>
                                     <ChevronRight size={20} color="var(--text-muted)" />
                                 </div>

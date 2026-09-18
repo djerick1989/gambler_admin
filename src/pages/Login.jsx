@@ -64,7 +64,6 @@ const Login = () => {
                             {t('login.landing_cta')}
                             <ArrowRight size={20} />
                         </Link>
-                        <a href="#login-form" className="landing-secondary-cta">{t('login.landing_login_cta')}</a>
                     </div>
                     <div className="landing-proof">
                         <CheckCircle2 size={18} />
@@ -109,9 +108,9 @@ const Login = () => {
                             <div style={{ position: 'relative' }}>
                                 <Mail size={18} style={{ position: 'absolute', left: '12px', top: '50%', transform: 'translateY(-50%)', color: 'var(--text-muted)' }} />
                                 <input
-                                    type="text"
+                                    type="email"
                                     name="login"
-                                    autoComplete="username"
+                                    autoComplete="email"
                                     placeholder={t('login.email_placeholder')}
                                     style={{ paddingLeft: '2.5rem' }}
                                     value={formData.login}

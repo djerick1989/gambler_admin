@@ -2,7 +2,32 @@ import React, { useState, useEffect } from 'react';
 import { Play, X, ChevronLeft, ChevronRight, Maximize2 } from 'lucide-react';
 import { createPortal } from 'react-dom';
 
-const PostMediaGrid = ({ mediaList = [] }) => {
+/**
+ * Foto del muro.
+ *
+ * Aqui hubo un `loading="lazy"` y se quito a proposito. Sobre el papel es lo correcto: no pedir las
+ * fotos de publicaciones que estan a diez pantallas. En la practica salio mal, porque las fotos que
+ * ya estan guardadas siguen siendo el original de la camara, de varios megas. Diferir una descarga
+ * de varios megas hasta que la foto casi se ve significa empezarla justo cuando la persona llega:
+ * antes ya estaban descargadas de fondo y aparecian al instante, y despues habia que esperarlas.
+ *
+ * Diferir no es la solucion mientras el archivo pese tanto; primero hay que aligerar lo guardado.
+ * Cuando las fotos del bucket pesen como las nuevas, esto vuelve, y entonces basta el atributo del
+ * navegador sin codigo propio.
+ */
+const FotoDelMuro = ({ src, inmediata }) => (
+    <img
+        src={src}
+        alt=""
+        // Descodificar fuera del hilo principal no retrasa la descarga, solo evita que pintar una
+        // foto grande congele el desplazamiento.
+        decoding="async"
+        fetchPriority={inmediata ? 'high' : 'auto'}
+        style={{ width: '100%', height: '100%', objectFit: 'cover' }}
+    />
+);
+
+const PostMediaGrid = ({ mediaList = [], priority = false }) => {
     const [selectedMediaIndex, setSelectedMediaIndex] = useState(null);
 
     if (!mediaList || mediaList.length === 0) return null;
@@ -53,6 +78,12 @@ const PostMediaGrid = ({ mediaList = [] }) => {
                     <div style={{ position: 'relative', width: '100%', height: '100%' }}>
                         <video
                             src={media.mediaUrl}
+                            /* Aqui el video solo hace de portada. Sin esto el navegador se pone a
+                               descargar el video de cada publicacion del muro sin que nadie le haya
+                               dado a reproducir. */
+                            preload="metadata"
+                            muted
+                            playsInline
                             style={{ width: '100%', height: '100%', objectFit: 'cover' }}
                         />
                         <div style={{
@@ -67,11 +98,7 @@ const PostMediaGrid = ({ mediaList = [] }) => {
                         </div>
                     </div>
                 ) : (
-                    <img
-                        src={media.mediaUrl}
-                        alt=""
-                        style={{ width: '100%', height: '100%', objectFit: 'cover' }}
-                    />
+                    <FotoDelMuro src={media.mediaUrl} inmediata={priority} />
                 )}
 
                 {overlayCount > 0 && (

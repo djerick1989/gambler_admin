@@ -3,7 +3,7 @@ import { postCommentService } from '../services/api';
 import { useAuth } from '../context/AuthContext';
 import { useTranslation } from 'react-i18next';
 import { Loader2, Send, Edit2, Trash2, User, X, Check } from 'lucide-react';
-import PremiumAvatarBadge from './PremiumAvatarBadge';
+import UserAvatar from './UserAvatar';
 import { confirmDialog } from '../utils/dialog';
 
 
@@ -133,14 +133,7 @@ const PostComments = ({ postId, onCommentAdded, onCommentDeleted }) => {
             {/* Create Comment Form */}
             {!isAdmin && (
                 <form onSubmit={handleCreateComment} style={{ display: 'flex', gap: '0.75rem', marginBottom: '1.5rem' }}>
-                    <div style={{
-                        width: '32px', height: '32px', borderRadius: '50%',
-                        background: user?.avatar ? `url(${user.avatar}) center/cover` : 'rgba(255,255,255,0.1)',
-                        flexShrink: 0,
-                        position: 'relative'
-                    }}>
-                        {isSubscribed && <PremiumAvatarBadge size={17} top={-7} left={-6} />}
-                    </div>
+                    <UserAvatar avatar={user?.avatar} isPremium={isSubscribed} size={32} />
                     <div style={{ flex: 1, position: 'relative' }}>
                         <input
                             type="text"
@@ -150,10 +143,10 @@ const PostComments = ({ postId, onCommentAdded, onCommentDeleted }) => {
                             style={{
                                 width: '100%',
                                 padding: '0.6rem 2.5rem 0.6rem 1rem',
-                                background: 'rgba(255,255,255,0.03)',
+                                background: 'var(--bg-white)',
                                 border: '1px solid var(--glass-border)',
                                 borderRadius: '1.5rem',
-                                color: 'white',
+                                color: 'var(--text-main)',
                                 fontSize: '0.875rem'
                             }}
                         />
@@ -177,22 +170,16 @@ const PostComments = ({ postId, onCommentAdded, onCommentDeleted }) => {
             <div style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
                 {comments.map(comment => (
                     <div key={comment.postCommentId} style={{ display: 'flex', gap: '0.75rem' }}>
-                        <div style={{
-                            width: '32px', height: '32px', borderRadius: '50%',
-                            background: comment.user?.avatar ? `url(${comment.user.avatar}) center/cover` : 'rgba(255,255,255,0.1)',
-                            flexShrink: 0,
-                            display: 'flex', alignItems: 'center', justifyContent: 'center',
-                            position: 'relative'
-                        }}>
-                            {isSubscribed && String(comment.user?.userId) === String(user?.userId) && (
-                                <PremiumAvatarBadge size={17} top={-7} left={-6} />
-                            )}
-                            {!comment.user?.avatar && <User size={14} color="var(--text-muted)" />}
-                        </div>
+                        <UserAvatar
+                            avatar={comment.user?.avatar}
+                            isPremium={Boolean(comment.user?.isPremium)
+                                || (isSubscribed && String(comment.user?.userId) === String(user?.userId))}
+                            size={32}
+                        />
 
                         <div style={{ flex: 1 }}>
                             <div style={{
-                                background: 'rgba(255,255,255,0.03)',
+                                background: 'var(--bg-light)',
                                 padding: '0.75rem 1rem',
                                 borderRadius: '1rem',
                                 position: 'relative'
@@ -206,9 +193,9 @@ const PostComments = ({ postId, onCommentAdded, onCommentDeleted }) => {
                                             value={editValue}
                                             onChange={(e) => setEditValue(e.target.value)}
                                             style={{
-                                                flex: 1, background: 'rgba(255,255,255,0.05)',
+                                                flex: 1, background: 'var(--bg-white)',
                                                 border: '1px solid var(--primary)', borderRadius: '0.5rem',
-                                                padding: '0.25rem 0.5rem', color: 'white', fontSize: '0.875rem'
+                                                padding: '0.25rem 0.5rem', color: 'var(--text-main)', fontSize: '0.875rem'
                                             }}
                                         />
                                         <button onClick={() => handleUpdateComment(comment.postCommentId)} style={{ background: 'none', border: 'none', color: '#10b981', cursor: 'pointer' }}><Check size={16} /></button>
