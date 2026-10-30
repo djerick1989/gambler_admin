@@ -1,5 +1,6 @@
 import axios from 'axios';
 import { optimizarImagen } from '../utils/imageOptimizer';
+import i18n from '../i18n';
 
 export const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || 'https://api.ludopata.org';
 
@@ -91,7 +92,9 @@ export const subscriptionService = {
       userId,
       planId,
       successUrl,
-      cancelUrl
+      cancelUrl,
+      // La pantalla de pago de Stripe y el aviso de los dias de regalo salen en el idioma de la app.
+      language: i18n.language
     });
     return response.data;
   },
@@ -100,7 +103,8 @@ export const subscriptionService = {
       userId,
       planId,
       successUrl,
-      cancelUrl
+      cancelUrl,
+      language: i18n.language
     });
     return response.data;
   },

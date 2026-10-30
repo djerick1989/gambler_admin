@@ -533,7 +533,7 @@ const SubscriptionPage = () => {
 
                     <div className="subscription-trial">
                         <Gift size={22} />
-                        <span>{t('subscriptions.free_trial')}</span>
+                        <span>{t('subscriptions.first_bonus')}</span>
                     </div>
                 </div>
             </header>

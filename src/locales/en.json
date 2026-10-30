@@ -827,7 +827,7 @@
                         {
                             "number": 23,
                             "question": "Is there a free trial?",
-                            "answer": "Yes. The first time you subscribe you get a 7-day free trial of the Premium plan, and you can cancel during that period if you decide not to continue."
+                            "answer": "There is no free trial, but your first subscription comes with 7 bonus days: you pay for the plan when you subscribe and enjoy the full period plus an extra week before the next charge. You can cancel anytime and keep access until the end of the time you have already paid for."
                         },
                         {
                             "number": 24,
@@ -1355,7 +1355,7 @@
         "save_5": "Save 5%",
         "save_10": "Save 10%",
         "save_20": "Save 20%",
-        "free_trial": "7-day free trial of the premium version included",
+        "first_bonus": "Your first subscription includes 7 bonus days",
         "cancel_anytime": "No commitment. Cancel whenever you want.",
         "manage_title": "My subscription",
         "current_plan": "Current plan",

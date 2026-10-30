@@ -827,7 +827,7 @@
                         {
                             "number": 23,
                             "question": "¿Hay una prueba gratuita?",
-                            "answer": "Sí. Al suscribirte por primera vez tienes 7 días de prueba gratuita del plan Premium, y puedes cancelar durante ese periodo si decides no continuar."
+                            "answer": "No hay prueba gratuita, pero tu primera suscripción trae 7 días de regalo: pagas el plan al suscribirte y disfrutas del periodo completo más una semana extra antes del siguiente cobro. Puedes cancelar cuando quieras y conservas el acceso hasta el final del tiempo que ya pagaste."
                         },
                         {
                             "number": 24,
@@ -1355,7 +1355,7 @@
         "save_5": "Ahorra 5%",
         "save_10": "Ahorra 10%",
         "save_20": "Ahorra 20%",
-        "free_trial": "Prueba gratuita de 7 días de la versión premium incluida",
+        "first_bonus": "Tu primera suscripción incluye 7 días extra de regalo",
         "cancel_anytime": "Sin compromiso. Cancela cuando quieras.",
         "manage_title": "Mi suscripción",
         "current_plan": "Plan actual",
