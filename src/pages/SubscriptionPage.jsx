@@ -17,6 +17,7 @@ import { subscriptionService } from '../services/api';
 import { useAuth } from '../context/AuthContext';
 import { useNotification } from '../context/NotificationContext';
 import { getApiErrorMessage } from '../utils/subscription';
+import LegalLinks from '../components/LegalLinks';
 
 const benefitIcons = [ShieldAlert, Activity, HeartHandshake, CheckCircle2, PiggyBank];
 
@@ -637,6 +638,7 @@ const SubscriptionPage = () => {
                     <span><ShieldCheck size={14} /> {t('subscriptions.secure_payment')}</span>
                     <span><CheckCircle2 size={14} /> {t('subscriptions.cancel_anytime')}</span>
                 </p>
+                <LegalLinks variant="subscribe" style={{ marginTop: '0.5rem' }} />
             </div>
         </div>
     );

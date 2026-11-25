@@ -1,11 +1,36 @@
 <IfModule mod_rewrite.c>
   RewriteEngine On
   RewriteBase /
-  
+
+  # Un solo dominio: www.ludopata.org va a https://ludopata.org con la misma ruta. Tener dos
+  # direcciones partia la sesion (cada dominio guarda la suya) y los enlaces compartidos.
+  # (El paso de http a https ya lo hace la CDN de Hostinger antes de llegar aqui.)
+  RewriteCond %{HTTP_HOST} ^www\.ludopata\.org$ [NC]
+  RewriteRule ^(.*)$ https://ludopata.org/$1 [R=301,L]
+
   # For React Router client-side routing
   RewriteRule ^index\.html$ - [L]
   RewriteCond %{REQUEST_FILENAME} !-f
   RewriteCond %{REQUEST_FILENAME} !-d
   RewriteCond %{REQUEST_FILENAME} !-l
   RewriteRule . /index.html [L]
+</IfModule>
+
+<IfModule mod_headers.c>
+  Header always set X-Content-Type-Options "nosniff"
+  Header always set Referrer-Policy "strict-origin-when-cross-origin"
+  Header always set X-Frame-Options "SAMEORIGIN"
+
+  # Los archivos de /assets llevan un hash en el nombre (index-AbC123.js): si cambian, cambia el
+  # nombre, asi que el navegador puede guardarlos un año. index.html nunca se guarda, para que
+  # cada despliegue se vea en cuanto se publica.
+  <FilesMatch "^index\.html$">
+    Header set Cache-Control "no-cache"
+  </FilesMatch>
+</IfModule>
+
+<IfModule mod_expires.c>
+  ExpiresActive On
+  ExpiresByType application/javascript "access plus 1 year"
+  ExpiresByType text/css "access plus 1 year"
 </IfModule>

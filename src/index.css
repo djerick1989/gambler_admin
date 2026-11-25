@@ -1171,3 +1171,21 @@ h1 {
     grid-column: 1 !important;
   }
 }
+
+/* Enlaces legales al pie de login, registro y suscripción. */
+.legal-links {
+  margin-top: 1rem;
+  font-size: 0.8rem;
+  color: var(--text-muted);
+  text-align: center;
+  line-height: 1.5;
+}
+
+.legal-links a {
+  color: var(--text-muted);
+  text-decoration: underline;
+}
+
+.legal-links a:hover {
+  color: var(--primary);
+}

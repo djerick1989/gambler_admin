@@ -4,6 +4,7 @@ import { authService } from '../services/api';
 import { ArrowRight, CheckCircle2, Facebook, HeartHandshake, ShieldCheck, Target, Twitter, Chrome, Smartphone, Asterisk, WalletCards } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
 import LanguageSwitcher from '../components/LanguageSwitcher';
+import LegalLinks from '../components/LegalLinks';
 
 /**
  * Codigos que devuelve el servidor traducidos a algo que una persona pueda leer.
@@ -242,6 +243,7 @@ const Signup = () => {
                 <div style={{ marginTop: '1rem', textAlign: 'center', fontSize: '0.875rem', color: 'var(--text-muted)' }}>
                     {t('signup.has_account')} <Link to="/login" style={{ color: 'var(--primary)', textDecoration: 'none', fontWeight: '600' }}>{t('signup.login')}</Link>
                 </div>
+                <LegalLinks variant="signup" />
             </div>
         </div >
     );

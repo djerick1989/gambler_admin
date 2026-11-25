@@ -34,4 +34,12 @@ i18n
         }
     });
 
+// El atributo lang del documento sigue al idioma de la app: lo usan los lectores de pantalla y el
+// traductor del navegador, que si no ofrecería traducir una página que ya está en el idioma del usuario.
+const sincronizarLangDelDocumento = (lng) => {
+    if (lng) document.documentElement.lang = lng.split('-')[0];
+};
+sincronizarLangDelDocumento(i18n.resolvedLanguage || i18n.language);
+i18n.on('languageChanged', sincronizarLangDelDocumento);
+
 export default i18n;

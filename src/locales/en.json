@@ -57,7 +57,8 @@
         "no_description": "No description",
         "untitled": "Untitled",
         "untitled_question": "Untitled Question",
-        "unknown": "User"
+        "unknown": "User",
+        "too_many_requests": "Too many attempts in a row. Wait a minute and try again."
     },
     "health_agent": {
         "menu": "AI Assistance",
@@ -767,7 +768,7 @@
                         {
                             "number": 15,
                             "question": "How do I create my account?",
-                            "answer": "You can sign up with your email address and a password, or sign in directly with your Google or Facebook account. If you sign up with email, we will send you a 6-digit code to verify your address before you can use the app."
+                            "answer": "Sign up with your email address and a password. We will send you a 6-digit code to verify your address before you can use the app."
                         },
                         {
                             "number": 16,
@@ -777,7 +778,7 @@
                         {
                             "number": 17,
                             "question": "I forgot my password. How do I recover it?",
-                            "answer": "On the sign-in screen, go to “Recover password” and enter your email: we will send you a code to create a new password. If you signed in with Google or Facebook you do not have a password in our app, so you must sign in with that same button."
+                            "answer": "On the sign-in screen, go to “Recover password” and enter your email: we will send you a code to create a new password."
                         },
                         {
                             "number": 18,
@@ -993,7 +994,7 @@
                         {
                             "number": 48,
                             "question": "Where can I read the terms of use and the privacy policy?",
-                            "answer": "You can review them at any time from the legal information section of the app. If you have questions about how we handle your information or want to exercise your rights over your data, write to us from “Help and Support”."
+                            "answer": "You can read them at any time at ludopata.org/legal: there you will find the Terms of Use, the Privacy Policy and the Cancellation and Refund Policy. They are also linked at the bottom of the sign-up, sign-in and subscription screens. If you have questions about how we handle your information or want to exercise your rights over your data, write to us from “Help and Support” or at info@ludopata.org."
                         }
                     ]
                 }
@@ -1744,5 +1745,10 @@
             "under_review": "Under review",
             "removed": "Taken down"
         }
+    },
+    "legal": {
+        "signup": "By creating your account you accept the <terms>Terms of Use</terms> and the <privacy>Privacy Policy</privacy>.",
+        "subscribe": "By subscribing you accept the <terms>Terms of Use</terms> and the <refunds>Refund Policy</refunds>. The subscription renews automatically until you cancel it.",
+        "footer": "<terms>Terms of Use</terms> · <privacy>Privacy</privacy> · <refunds>Refunds</refunds>"
     }
 }

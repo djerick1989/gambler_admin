@@ -5,6 +5,7 @@ import { ArrowRight, CheckCircle2, HeartHandshake, Lock, Mail, ShieldCheck, Spar
 import { useAuth } from '../context/AuthContext';
 import { useTranslation } from 'react-i18next';
 import LanguageSwitcher from '../components/LanguageSwitcher';
+import LegalLinks from '../components/LegalLinks';
 
 const Login = () => {
     const { t } = useTranslation();
@@ -148,6 +149,7 @@ const Login = () => {
                             {t('login.no_account')} <Link to="/signup" style={{ color: 'var(--primary)', textDecoration: 'none', fontWeight: '600' }}>{t('login.signup')}</Link>
                         </div>
                     </div>
+                    <LegalLinks />
                 </div>
 
             </aside>

@@ -77,6 +77,7 @@ const RelapseList = lazy(() => import('./pages/CustomerRelapse/RelapseList'));
 const RelapseForm = lazy(() => import('./pages/CustomerRelapse/RelapseForm'));
 const RelapseConclusion = lazy(() => import('./pages/CustomerRelapse/RelapseConclusion'));
 const SubscriptionPage = lazy(() => import('./pages/SubscriptionPage'));
+const LegalPage = lazy(() => import('./pages/Legal/LegalPage'));
 
 const CargandoPantalla = () => (
   <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '100vh', color: 'var(--text-muted)' }} />
@@ -133,6 +134,8 @@ function App() {
               <Route path="/auth/social-callback" element={<SocialAuthCallback />} />
               <Route path="/recovery-password" element={<RecoveryPassword />} />
               <Route path="/reset-password" element={<ResetPassword />} />
+              <Route path="/legal" element={<Navigate to="/legal/terms" replace />} />
+              <Route path="/legal/:doc" element={<LegalPage />} />
 
               <Route path="/" element={
                 <ProtectedRoute>

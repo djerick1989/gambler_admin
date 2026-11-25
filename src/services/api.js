@@ -26,6 +26,16 @@ apiClient.interceptors.request.use((config) => {
   return Promise.reject(error);
 });
 
+// La API limita los intentos de login, registro y códigos (429). Su mensaje viene en inglés; aquí
+// se reemplaza por uno traducido para que cada pantalla, que muestra data.message, lo enseñe bien.
+apiClient.interceptors.response.use(undefined, (error) => {
+  if (error.response?.status === 429) {
+    const data = typeof error.response.data === 'object' && error.response.data ? error.response.data : {};
+    error.response.data = { ...data, errorCode: 'TOO_MANY_REQUESTS', message: i18n.t('common.too_many_requests') };
+  }
+  return Promise.reject(error);
+});
+
 export const authService = {
   signin: async (data) => {
     const response = await apiClient.post('/api/Auth/signin', data);
